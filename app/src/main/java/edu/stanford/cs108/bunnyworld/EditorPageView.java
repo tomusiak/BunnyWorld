@@ -1,3 +1,5 @@
+package edu.stanford.cs108.bunnyworld;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;

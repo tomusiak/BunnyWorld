@@ -1,7 +1,9 @@
+package edu.stanford.cs108.bunnyworld;
+
 import android.graphics.Canvas;
 
 /*
-    The Shape class represents an object that has been added
+    The edu.stanford.cs108.bunnyworld.Shape class represents an object that has been added
     to an editor page view.
  */
 public class Shape {
