@@ -4,22 +4,72 @@
     It will display the current page view, the page management buttons, the resources
     drawer with all addable objects in it. -->
 
-
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <edu.stanford.cs108.bunnyworld.EditorPageView>
-        </edu.stanford.cs108.bunnyworld.EditorPageView>
+       <Spinner
+           android:id="@+id/pageSpinner"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:spinnerMode="dropdown"
+           android:layout_weight="1">
 
+       </Spinner>
 
+        <Spinner
+            android:id="@+id/shapeSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_weight="1">
+
+        </Spinner>
+
+        <Spinner
+            android:id="@+id/scriptSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_weight="1">
+        </Spinner>
 
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black"/>
+
+    // custom page view
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="3">
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black"/>
+
+    // custom inventory view
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+    </LinearLayout>
+
+</LinearLayout>
 
