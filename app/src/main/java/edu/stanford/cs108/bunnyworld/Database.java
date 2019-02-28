@@ -6,7 +6,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "DB";
-    public Database(Context context) {
+    private static Database instance;
+    public static synchronized Database getInstance(Context context) {
+        if (instance == null) {
+            instance = new Database(context.getApplicationContext());
+        }
+        return instance;
+    }
+    private Database(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
     private int numPages;
@@ -34,7 +41,6 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(createInventory);
         numPages = 1;
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
@@ -52,5 +58,9 @@ public class Database extends SQLiteOpenHelper {
                 "height REAL)";
         db.execSQL(createNewPage);
         numPages = numPages + 1;
+    }
+
+    public void addNewObject(SQLiteDatabase db, Shape shape, Integer page) {
+
     }
 }
