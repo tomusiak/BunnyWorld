@@ -9,15 +9,48 @@ public class Database extends SQLiteOpenHelper {
     public Database(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
-
+    private int numPages;
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        String createPageOne = "CREATE TABLE " + "Page1" + "(" +
+                "imgName TEXT PRIMARY KEY, " +
+                "text TEXT, " +
+                "hidden INTEGER, " +
+                "moveable INTEGER, " +
+                "x REAL, " +
+                "y REAL, " +
+                "width REAL, " +
+                "height REAL)";
+        String createInventory = "CREATE TABLE " + "Inventory" + "(" +
+                "imgName TEXT PRIMARY KEY, " +
+                "text TEXT, " +
+                "hidden INTEGER, " +
+                "moveable INTEGER, " +
+                "x REAL, " +
+                "y REAL, " +
+                "width REAL, " +
+                "height REAL)";
+        db.execSQL(createPageOne);
+        db.execSQL(createInventory);
+        numPages = 1;
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-
+    public void createNewPage(SQLiteDatabase db) {
+        String tableName = "Page" + Integer.toString(numPages);
+        String createNewPage = "CREATE TABLE " + "PageOne" + "(" +
+                "imgName TEXT PRIMARY KEY, " +
+                "text TEXT, " +
+                "hidden INTEGER, " +
+                "moveable INTEGER, " +
+                "x REAL, " +
+                "y REAL, " +
+                "width REAL, " +
+                "height REAL)";
+        db.execSQL(createNewPage);
+        numPages = numPages + 1;
+    }
 }
