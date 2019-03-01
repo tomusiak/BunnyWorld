@@ -5,10 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import edu.stanford.cs108.bunnyworld.EditorPageView;
-import edu.stanford.cs108.bunnyworld.R;
-
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -25,7 +21,7 @@ import android.text.*;
  */
 public class EditorActivity extends AppCompatActivity {
 
-    ArrayList<EditorPageView> pages;
+    ArrayList<PageView> pages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

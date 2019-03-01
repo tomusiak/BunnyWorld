@@ -8,13 +8,13 @@ import java.util.ArrayList;
 /*
     Custom View class for an editor page.
  */
-public class EditorPageView {
+public class PageView {
 
     ArrayList<Shape> shapes;
     String PageName;
 
     /* Constructor for custom bunny world canvas */
-    public EditorPageView(Context context, AttributeSet attrs, String name) {
+    public PageView(Context context, AttributeSet attrs, String name) {
         PageName = name;
 
     }
