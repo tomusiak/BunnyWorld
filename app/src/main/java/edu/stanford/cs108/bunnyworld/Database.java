@@ -5,8 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 class Database extends SQLiteOpenHelper {
-    private SQLiteDatabase db;
-    private static final String DATABASE_NAME = "DB";
+    private static final String DATABASE_NAME = "BunnyDB.db";
     private static Database instance;
     private int numPages;
 
@@ -22,7 +21,6 @@ class Database extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
-        this.db = db;
         String createPageOne = "CREATE TABLE Page1 " + "(" +
                 "imgName TEXT PRIMARY KEY, " +
                 "text TEXT, " +
@@ -50,7 +48,9 @@ class Database extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
     public void createNewPage() {
+        SQLiteDatabase db = this.getWritableDatabase();
         String tableName = "Page" + Integer.toString(numPages);
         String createNewPage = "CREATE TABLE " + "PageOne" + "(" +
                 "imgName TEXT PRIMARY KEY, " +
@@ -66,6 +66,7 @@ class Database extends SQLiteOpenHelper {
     }
 
     public void addNewObject(Shape shape, Integer page) {
+        SQLiteDatabase db = this.getWritableDatabase();
         String currentPage = "Page" + Integer.toString(page);
         String shapeName = shape.imgName;
         String shapeText = shape.text;
@@ -85,6 +86,5 @@ class Database extends SQLiteOpenHelper {
                 shapeWidth + "," +
                 shapeHeight + ")";
         db.execSQL(insertStr);
-
     }
 }
