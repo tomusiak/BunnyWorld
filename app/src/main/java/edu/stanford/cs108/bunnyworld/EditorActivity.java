@@ -23,7 +23,7 @@ import android.text.*;
     pages that the user may wish to create, and display the possible
     resource objects that can be added to the pages.
  */
-public class MainActivity extends AppCompatActivity {
+public class EditorActivity extends AppCompatActivity {
 
     ArrayList<EditorPageView> pages;
 
