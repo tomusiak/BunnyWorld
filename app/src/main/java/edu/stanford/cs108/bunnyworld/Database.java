@@ -3,7 +3,7 @@ package edu.stanford.cs108.bunnyworld;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
+// I did some stuff.
 class Database extends SQLiteOpenHelper {
     private SQLiteDatabase db;
     private static final String DATABASE_NAME = "DB";
