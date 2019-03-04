@@ -4,7 +4,15 @@
     It will display the current page view, the page management buttons, the resources
     drawer with all addable objects in it. -->
 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
+<<<<<<< HEAD
 <LinearLayout
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,19 +20,72 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditorActivity">
-
-
+=======
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+       <Spinner
+           android:id="@+id/pageSpinner"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:spinnerMode="dropdown"
+           android:layout_weight="1">
+
+       </Spinner>
+
+        <Spinner
+            android:id="@+id/shapeSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_weight="1">
+
+        </Spinner>
+
+        <Spinner
+            android:id="@+id/scriptSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_weight="1">
+        </Spinner>
+>>>>>>> d839aa0ae48dc21f29c602ff3c9b1d774ddc4574
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black"/>
+
+    // custom page view
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="3">
+
+<<<<<<< HEAD
         <edu.stanford.cs108.bunnyworld.EditorPageView
             android:layout_width="match_parent"
             android:layout_height="290dp"
             android:id="@+id/canvas"/>
 
+=======
+    </LinearLayout>
+>>>>>>> d839aa0ae48dc21f29c602ff3c9b1d774ddc4574
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black"/>
 
+    // custom inventory view
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
     </LinearLayout>
 

@@ -13,16 +13,15 @@ import java.util.ArrayList;
 /*
     Custom View class for an editor page.
  */
-public class EditorPageView extends View {
+public class PageView {
 
     ArrayList<Shape> shapes;
     String PageName;
 
     /* Constructor for custom bunny world canvas */
-    public EditorPageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        Paint background = new Paint();
-        background.setColor(Color.rgb(30, 190, 190));
+    public PageView(Context context, AttributeSet attrs, String name) {
+        PageName = name;
+
     }
 
     /* adds a new shape to the page */

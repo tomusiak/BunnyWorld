@@ -7,7 +7,6 @@ import android.graphics.Canvas;
     to an editor page view.
  */
 public class Shape {
-
     /* enum for the possible shape types */
     public enum ShapeType {
         IMAGE,
