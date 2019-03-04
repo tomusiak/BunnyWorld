@@ -1,22 +1,28 @@
 package edu.stanford.cs108.bunnyworld;
 
 import android.content.Context;
+import android.app.Activity;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.View;
+
 import java.util.ArrayList;
 
 /*
     Custom View class for an editor page.
  */
-public class EditorPageView {
+public class EditorPageView extends View {
 
     ArrayList<Shape> shapes;
     String PageName;
 
     /* Constructor for custom bunny world canvas */
-    public EditorPageView(Context context, AttributeSet attrs, String name) {
-        PageName = name;
-
+    public EditorPageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        Paint background = new Paint();
+        background.setColor(Color.rgb(30, 190, 190));
     }
 
     /* adds a new shape to the page */
