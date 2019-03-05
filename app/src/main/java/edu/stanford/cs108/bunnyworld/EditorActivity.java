@@ -245,32 +245,31 @@ public class EditorActivity extends AppCompatActivity {
 
     }
 
+    // change this to list the pages so the user can see options
     private void goToNewPageDialog() {
+       /* ArrayList<String> names = new ArrayList<>();
+        for (String page: pages.keySet()) {
+            names.add(page);
+        }
+        final String[] pageNames = names.toArray(new String[pages.size()]);
         AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
         newPagePrompt.setTitle("Input Name Of Page To Go To: ");
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        newPagePrompt.setView(input);
-        newPagePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        newPagePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String newPageName = input.getText().toString();
-                Toast pageNameToast = Toast.makeText(getApplicationContext(),"[PAGE NAME]",Toast.LENGTH_LONG);
+            public void onClick(DialogInterface dialog, int selection) {
+                String newPageName = pageNames[selection];
+                Toast pageNameToast = Toast.makeText(getApplicationContext(),newPageName,Toast.LENGTH_LONG);
                 pageNameToast.show();
                 switchPages(newPageName);
             }
         });
-        newPagePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        newPagePrompt.show();
+
+        AlertDialog dialog = newPagePrompt.create();
+        dialog.show();*/
     }
 
     private void switchPages(String newPage) {
-
+        currPage = newPage;
     }
 
     // Saves current game state into the database.
