@@ -22,18 +22,23 @@ import android.text.*;
  */
 public class EditorActivity extends AppCompatActivity {
 
-    ArrayList<PageView> pages;
+    private int numShapes;
+    private int numPages;
+    private HashMap<String, ArrayList<Shape>> pages;
+    private String currPage;
+
+    // add copy and paste functionality
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        Spinner pageSpinner = (Spinner) findViewById(R.id.pageSpinner);
+        // Page Options Spinner
+        Spinner pageSpinner = findViewById(R.id.pageSpinner);
         String[] pageOptions = new String[]{"Page Options:", "Create Page", "Name Page", "Delete Page", "Open Page"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
-
         pageSpinner.setSelection(0);
         pageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -42,8 +47,9 @@ public class EditorActivity extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
-                        Toast addPageToast = Toast.makeText(getApplicationContext(),"[PAGE NAME] Added",Toast.LENGTH_LONG);
+                        Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_LONG);
                         addPageToast.show();
+                        addPage();
                         break;
                     case 2:
                         renamePageDialog();
@@ -51,6 +57,7 @@ public class EditorActivity extends AppCompatActivity {
                     case 3:
                         Toast toast = Toast.makeText(getApplicationContext(),"Page Deleted",Toast.LENGTH_SHORT);
                         toast.show();
+                        deletePage();
                         break;
                     case 4:
                         goToNewPageDialog();
@@ -64,13 +71,11 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
 
-
-
-        Spinner shapeSpinner = (Spinner) findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Name Shape", "See Shape", "Edit Shape", "Delete Shape"};
+        // Shape Options Spinner
+        Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Name Shape", "Edit Shape", "Delete Shape"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
-
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -78,8 +83,7 @@ public class EditorActivity extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
-                        Toast addToast = Toast.makeText(getApplicationContext(),"Shape Added",Toast.LENGTH_SHORT);
-                        addToast.show();
+                        addShape();
                         break;
                     case 2:
                         renameShapeDialog();
@@ -87,10 +91,9 @@ public class EditorActivity extends AppCompatActivity {
                     case 3:
                         break;
                     case 4:
-                        break;
-                    case 5:
                         Toast deleteToast = Toast.makeText(getApplicationContext(),"Shape Deleted",Toast.LENGTH_SHORT);
                         deleteToast.show();
+                        deleteShape();
                         break;
                 }
             }
@@ -101,13 +104,11 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
 
-
-        Spinner scriptSpinner = (Spinner) findViewById(R.id.scriptSpinner);
+        // Scrip Options Spinenr
+        Spinner scriptSpinner = findViewById(R.id.scriptSpinner);
         String[] scriptOptions = new String[]{"Script Options:", "Create Script", "Show Script"};
         ArrayAdapter<String> scriptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, scriptOptions);
         scriptSpinner.setAdapter(scriptAdapter);
-        showCustomDialog();
-
         scriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -127,51 +128,88 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
 
+        showCustomDialog();
+
+    }
+
+    private void addPage() {
+        ArrayList<Shape> newPage = new ArrayList<>();
+        numPages++;
+        String pageName = "page" + numPages;
+        currPage = pageName;
+        pages.put(pageName, newPage);
+    }
+
+    private void deletePage() {
+        pages.remove(currPage);
+        // update custom view to display another page
+        // figure out starter page
+    }
+
+    private void addShape() {
+        numShapes++;
+        String shapeName = "shape" + numShapes;
+        Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
+        addToast.show();
+    }
+
+    private void deleteShape() {
     }
 
     private void renamePageDialog() {
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Input New Name For Page: ");
+        AlertDialog.Builder renamePagePrompt = new AlertDialog.Builder(this);
+        renamePagePrompt.setTitle("Input New Name For Page: ");
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        dialog.setView(input);
-        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        renamePagePrompt.setView(input);
+        renamePagePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newPageName = input.getText().toString();
+                renamePage(newPageName);
             }
         });
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        renamePagePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-        dialog.show();
+        renamePagePrompt.show();
 
+    }
+
+    private void renamePage(String newName) {
+        ArrayList<Shape> page = pages.remove(currPage);
+        pages.put(newName, page);
     }
 
     private void renameShapeDialog() {
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setTitle("Input New Name For Shape: ");
+        AlertDialog.Builder renameShapePrompt = new AlertDialog.Builder(this);
+        renameShapePrompt.setTitle("Input New Name For Shape: ");
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        dialog.setView(input);
-        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        renameShapePrompt.setView(input);
+        renameShapePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newPageName = input.getText().toString();
+                renameShape(newPageName);
             }
         });
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        renameShapePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-        dialog.show();
+        renameShapePrompt.show();
+    }
+
+    private void renameShape(String newName) {
+
     }
 
     private void showCustomDialog() {
@@ -181,40 +219,58 @@ public class EditorActivity extends AppCompatActivity {
                 "Create New Game",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
+                        loadNewGame();
                     }
                 });
         dialog.setNegativeButton(
                 "Open Existing Game",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
+                        loadExistingGame();
                     }
                 });
         dialog.show();
     }
 
+    private void loadNewGame() {
+        numShapes = 0;
+        numPages = 0;
+        pages = new HashMap<>();
+        addPage();
+        Toast addToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
+        addToast.show();
+    }
+
+    private void loadExistingGame(){
+
+    }
+
     private void goToNewPageDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Input Name Of Page To Go To: ");
+        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
+        newPagePrompt.setTitle("Input Name Of Page To Go To: ");
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        builder.setView(input);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        newPagePrompt.setView(input);
+        newPagePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newPageName = input.getText().toString();
                 Toast pageNameToast = Toast.makeText(getApplicationContext(),"[PAGE NAME]",Toast.LENGTH_LONG);
                 pageNameToast.show();
+                switchPages(newPageName);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        newPagePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-        builder.show();
+        newPagePrompt.show();
+    }
+
+    private void switchPages(String newPage) {
+
     }
     // Saves current game state into the database.
     public void saveGame(String saveName, HashMap<String, ArrayList<Shape>> shapeMap) {
