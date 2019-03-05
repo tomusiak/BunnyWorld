@@ -27,14 +27,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Make New Gane"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:onClick="makeGame"/>
         <Button
             android:id="@+id/play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Play"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:onClick="playGame"/>
 
     </LinearLayout>
 
