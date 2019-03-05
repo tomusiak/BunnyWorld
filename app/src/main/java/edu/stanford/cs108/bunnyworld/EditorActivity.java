@@ -156,6 +156,7 @@ public class EditorActivity extends AppCompatActivity {
     private void deleteShape() {
     }
 
+    // prompts the user to input a new name for the page
     private void renamePageDialog() {
 
         AlertDialog.Builder renamePagePrompt = new AlertDialog.Builder(this);
@@ -185,6 +186,7 @@ public class EditorActivity extends AppCompatActivity {
         pages.put(newName, page);
     }
 
+    // prompts the user to input a new name for the shape
     private void renameShapeDialog() {
 
         AlertDialog.Builder renameShapePrompt = new AlertDialog.Builder(this);
@@ -212,6 +214,7 @@ public class EditorActivity extends AppCompatActivity {
 
     }
 
+    // prompts the user to either load a new game or load an existing game
     private void showCustomDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage("Create a new game or open an existing game?");
