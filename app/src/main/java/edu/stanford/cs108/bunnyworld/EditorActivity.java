@@ -272,7 +272,6 @@ public class EditorActivity extends AppCompatActivity {
     private void switchPages(String newPage) {
 
     }
-
     // Saves current game state into the database.
     public void saveGame(String saveName, HashMap<String, ArrayList<Shape>> shapeMap) {
         Database db = Database.getInstance(getApplicationContext());

@@ -76,10 +76,10 @@ class Database extends SQLiteOpenHelper {
 
     private void addNewObject(Shape shape, String page, String save) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String shapeName = shape.imgName;
-        String shapeText = shape.text;
-        int shapeHidden = shape.hidden ? 1 : 0;
-        int shapeMoveable = shape.moveable ? 1 : 0;
+        String shapeName = shape.getImageName();
+        String shapeText = shape.getText();
+        int shapeHidden = shape.getHiddenStatus() ? 1 : 0;
+        int shapeMoveable = shape.getMoveableStatus() ? 1 : 0;
         double shapeX = shape.getX();
         double shapeY = shape.getY();
         double shapeWidth = shape.getWidth();
@@ -132,16 +132,18 @@ class Database extends SQLiteOpenHelper {
                 double shapeY = cursor.getDouble(6);
                 double shapeWidth = cursor.getDouble(7);
                 double shapeHeight =  cursor.getDouble(8);
-                Shape newShape = new Shape();
-                newShape.imgName = shapeName;
-                newShape.text = shapeText;
-                newShape.hidden = shapeHidden == 1;
-                newShape.moveable = shapeMoveable == 1;
-                newShape.x = shapeX;
-                newShape.y = shapeY;
-                newShape.width = shapeWidth;
-                newShape.height = shapeHeight;
+                Shape newShape = new Shape(0, shapeName, shapeText, shapeX,
+                        shapeY, shapeWidth, shapeHeight);
+                newShape.setShapeName(shapeName);
+                newShape.setText(shapeText);
+                newShape.setHidden(shapeHidden == 1);
+                newShape.setMoveable(shapeMoveable == 1);
+                newShape.setX(shapeX);
+                newShape.setY(shapeY);
+                newShape.setWidth(shapeWidth);
+                newShape.setHeight(shapeHeight);
                 currentShapeList.add(newShape);
+
                 if (!cursor.isLast()) {
                     cursor.moveToNext();
                 }

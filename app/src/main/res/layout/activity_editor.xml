@@ -17,14 +17,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-       <Spinner
-           android:id="@+id/pageSpinner"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:spinnerMode="dropdown"
-           android:layout_weight="1">
+        <Spinner
+            android:id="@+id/pageSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_weight="1">
 
-       </Spinner>
+        </Spinner>
 
         <Spinner
             android:id="@+id/shapeSpinner"
@@ -62,6 +62,14 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@android:color/black"/>
+
+    // custom inventory view
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+    </LinearLayout>
 
 </LinearLayout>
 

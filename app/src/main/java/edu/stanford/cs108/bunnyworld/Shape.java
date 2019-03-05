@@ -1,5 +1,8 @@
 package edu.stanford.cs108.bunnyworld;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+
 /*
     The edu.stanford.cs108.bunnyworld.Shape class represents an object that has been added
     to an editor page view.
@@ -20,6 +23,8 @@ public class Shape {
     private static final int DEFAULT_FONT_SIZE = 24;
 
     private String script;
+
+    Bitmap bitmap;
 
     /**
      * Constructor for Shape class
@@ -86,6 +91,12 @@ public class Shape {
     }
 
     /**
+     * Modifier method for text being displayed
+     * @param text the user-set name of the shape
+     */
+    public void setText(String text) { this.text = text; };
+
+    /**
      * Modifier method that sets the script of the shape
      * Pre-Condition: Script is in the correct converted format after user clicks relevant buttons
      * @param script the new script of the shape
@@ -95,7 +106,7 @@ public class Shape {
     }
     /**
      * Accessor method that returns the script of the shape
-     * @param script the current script
+     * @param //script the current script
      */
     public String getScript() {
         return this.script;
@@ -200,4 +211,21 @@ public class Shape {
     public boolean getHiddenStatus() {
         return this.hidden;
     }
+
+
+    /**
+     * Updates the internal shape to store its current bitmap representation
+     *
+     * Note: does not need to be saved in the database. This just holds on
+     * to the bitmap rendering for when it actually needs to be loaded.
+     *
+     * @param bm
+     */
+    public void setBitmap(Bitmap bm) { bitmap = bm; }
+
+    /**
+     * Gives the bitmap representation of the image
+     * @return the stored bitmap image
+     */
+    public Bitmap getBitmap() { return bitmap; }
 }
