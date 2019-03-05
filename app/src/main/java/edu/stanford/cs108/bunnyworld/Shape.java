@@ -30,7 +30,7 @@ public class Shape {
     double width;
 
     /* Constructor for shape object */
-    public Shape(ShapeType type) {
+    public Shape() {
 
     }
 

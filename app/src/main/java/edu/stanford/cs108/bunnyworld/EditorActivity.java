@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -26,7 +27,7 @@ public class EditorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_editor);
 
         Spinner pageSpinner = (Spinner) findViewById(R.id.pageSpinner);
         String[] pageOptions = new String[]{"Page Options:", "Create Page", "Name Page", "Delete Page", "Open Page"};
@@ -63,6 +64,8 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
 
+
+
         Spinner shapeSpinner = (Spinner) findViewById(R.id.shapeSpinner);
         String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Name Shape", "See Shape", "Edit Shape", "Delete Shape"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
@@ -97,6 +100,7 @@ public class EditorActivity extends AppCompatActivity {
 
             }
         });
+
 
         Spinner scriptSpinner = (Spinner) findViewById(R.id.scriptSpinner);
         String[] scriptOptions = new String[]{"Script Options:", "Create Script", "Show Script"};
@@ -211,5 +215,11 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    // Saves current game state into the database.
+    public void saveGame(String saveName, HashMap<String, ArrayList<Shape>> shapeMap) {
+        Database db = Database.getInstance(getApplicationContext());
+        db.saveGame(saveName, shapeMap);
     }
 }
