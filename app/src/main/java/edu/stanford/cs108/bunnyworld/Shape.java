@@ -87,7 +87,7 @@ public class Shape {
 
     /**
      * Modifier method for text being displayed
-     * @param text the user-set name of the shape
+     * @param text the user-set text
      */
     public void setText(String text) { this.text = text; };
 
