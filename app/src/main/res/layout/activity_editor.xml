@@ -63,13 +63,5 @@
         android:layout_height="2dp"
         android:background="@android:color/black"/>
 
-    // custom inventory view
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-
-    </LinearLayout>
-
 </LinearLayout>
 

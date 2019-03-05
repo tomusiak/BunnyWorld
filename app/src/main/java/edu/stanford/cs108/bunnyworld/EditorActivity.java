@@ -22,7 +22,7 @@ import android.text.*;
  */
 public class EditorActivity extends AppCompatActivity {
 
-    ArrayList<PageView> pages;
+    // HashMap
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
