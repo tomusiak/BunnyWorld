@@ -1,25 +1,29 @@
 package edu.stanford.cs108.bunnyworld;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 class Database extends SQLiteOpenHelper {
     private static String DATABASE_NAME = "BunnyDB.db";
     private static Database instance;
-    private int numPages;
+    private static ArrayList<String> pageList;
 
     public static synchronized Database getInstance(Context context) {
+        if (instance == null) {
+            instance = new Database(context.getApplicationContext());
+        }
         return instance;
     }
 
-    private Database(Context context, String name) {
+    private Database(Context context) {
         super(context, DATABASE_NAME, null, 1);
+        pageList = new ArrayList<String>();
     }
 
     public void onCreate(SQLiteDatabase db) {
@@ -48,7 +52,6 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(createPageOne);
         db.execSQL(createInventory);
         db.execSQL(databaseOrganizer);
-        numPages = 1;
     }
 
     @Override
@@ -56,11 +59,11 @@ class Database extends SQLiteOpenHelper {
 
     }
 
-    public void createNewPage() {
+    public void createNewPage(String page) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String tableName = "Page" + Integer.toString(numPages);
-        String createNewPage = "CREATE TABLE " + "PageOne" + "(" +
+        String createNewPage = "CREATE TABLE " + page + "(" +
                 "imgName TEXT PRIMARY KEY, " +
+                "save TEXT, " +
                 "text TEXT, " +
                 "hidden INTEGER, " +
                 "moveable INTEGER, " +
@@ -69,7 +72,6 @@ class Database extends SQLiteOpenHelper {
                 "width REAL, " +
                 "height REAL)";
         db.execSQL(createNewPage);
-        numPages = numPages + 1;
     }
 
     private void addNewObject(Shape shape, String page, String save) {
@@ -82,6 +84,10 @@ class Database extends SQLiteOpenHelper {
         double shapeY = shape.getY();
         double shapeWidth = shape.getWidth();
         double shapeHeight = shape.getHeight();
+        if (!pageList.contains(page)) {
+            createNewPage(page);
+            pageList.add(page);
+        }
         String insertStr = "INSERT INTO " + page + " VALUES "
                 + "('" + shapeName + "'," +
                 save + "'," +
@@ -109,4 +115,40 @@ class Database extends SQLiteOpenHelper {
         }
     }
 
+    public HashMap<String, ArrayList<Shape>> loadGame(String saveFile) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        HashMap<String, ArrayList<Shape>> fullShapeList = new HashMap<String, ArrayList<Shape>>();
+        for (int i = 0; i < pageList.size(); i++) {
+            String currentPage = pageList.get(i);
+            String query = "SELECT * FROM " + currentPage + " WHERE save == " + saveFile;
+            Cursor cursor = db.rawQuery(query, null);
+            ArrayList<Shape> currentShapeList = new ArrayList<Shape>();
+            for (int j = 0; j < cursor.getColumnCount(); j++) {
+                String shapeName = cursor.getString(0);
+                String shapeText = cursor.getString(2);
+                int shapeHidden = cursor.getInt(3);
+                int shapeMoveable = cursor.getInt(4);
+                double shapeX = cursor.getDouble(5);
+                double shapeY = cursor.getDouble(6);
+                double shapeWidth = cursor.getDouble(7);
+                double shapeHeight =  cursor.getDouble(8);
+                Shape newShape = new Shape();
+                newShape.imgName = shapeName;
+                newShape.text = shapeText;
+                newShape.hidden = shapeHidden == 1;
+                newShape.moveable = shapeMoveable == 1;
+                newShape.x = shapeX;
+                newShape.y = shapeY;
+                newShape.width = shapeWidth;
+                newShape.height = shapeHeight;
+                currentShapeList.add(newShape);
+                if (!cursor.isLast()) {
+                    cursor.moveToNext();
+                }
+            }
+            cursor.close();
+            fullShapeList.put(currentPage, currentShapeList);
+        }
+        return fullShapeList;
+    }
 }

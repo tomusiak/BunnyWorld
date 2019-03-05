@@ -12,8 +12,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class PlayActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
 
+public class PlayActivity extends AppCompatActivity {
+    static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +25,7 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     private void loadGame() {
+        String saveGame = ""; // User input save name goes here.
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage("Play a game you made or the standard experience?");
         dialog.setPositiveButton(
@@ -38,6 +42,13 @@ public class PlayActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
+                grabDatabase(saveGame); // Dumps save information into the HashMap containing pages and shapes.
         dialog.show();
+    }
+
+    // Imports save data once user decides to play.
+    public void grabDatabase(String saveName) {
+        Database thisDatabase = Database.getInstance(getApplicationContext()); // Gets context.
+        fullShapeList = thisDatabase.loadGame(saveName);
     }
 }
