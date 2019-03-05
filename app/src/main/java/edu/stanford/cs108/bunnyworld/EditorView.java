@@ -2,188 +2,123 @@ package edu.stanford.cs108.bunnyworld;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * TODO: document your custom view class.
  */
 public class EditorView extends View {
-    private String mExampleString; // TODO: use a default from R.string...
-    private int mExampleColor = Color.RED; // TODO: use a default from R.color...
-    private float mExampleDimension = 0; // TODO: use a default from R.dimen...
-    private Drawable mExampleDrawable;
+    //canvas
+    private Canvas canvas;
 
-    private TextPaint mTextPaint;
-    private float mTextWidth;
-    private float mTextHeight;
+    ArrayList<Shape> pageState = new ArrayList<Shape>();
+    ArrayList<Shape> starters = new ArrayList<Shape>();
+    Shape selected;
 
-    public EditorView(Context context) {
-        super(context);
-        init(null, 0);
-    }
+    float canvasWidth = canvas.getWidth();
+    float canvasHeight = canvas.getHeight();
+
+    BitmapDrawable carrotDrawable, carrot2Drawable, deathDrawable, duckDrawable, fireDrawable, mysticDrawable;
+
+    // myPaint is a placeHolder
+    Paint myPaint = new Paint();
+    Paint selectPaint = new Paint();
+
 
     public EditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init();
+        drawStarters();
+
+        // myPaint is a placeholder
+        myPaint.setColor(Color.rgb(255,0,0));
+        myPaint.setStyle(Paint.Style.FILL);
+
+        selectPaint.setColor(Color.rgb(0,0,255));
+        selectPaint.setStyle(Paint.Style.STROKE);
     }
 
-    public EditorView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init(attrs, defStyle);
+    private void init() {
+        selected = null;
+
+        // set up all our starters
+        carrotDrawable =
+                (BitmapDrawable) getResources().getDrawable(R.drawable.carrot);
+        carrot2Drawable =
+                (BitmapDrawable) getResources().getDrawable(R.drawable.carrot2);
+        deathDrawable =
+                (BitmapDrawable) getResources().getDrawable(R.drawable.death);
+        duckDrawable =
+                (BitmapDrawable) getResources().getDrawable(R.drawable.duck);
+        fireDrawable =
+                (BitmapDrawable) getResources().getDrawable(R.drawable.fire);
+        mysticDrawable =
+                (BitmapDrawable) getResources().getDrawable(R.drawable.mystic);
     }
 
-    private void init(AttributeSet attrs, int defStyle) {
-        // Load attributes
-        final TypedArray a = getContext().obtainStyledAttributes(
-                attrs, R.styleable.EditorView, defStyle, 0);
+    public void drawStarters() {
+        Bitmap carrotBitmap = carrotDrawable.getBitmap();
+        Bitmap carrot2Bitmap = carrot2Drawable.getBitmap();
+        Bitmap deathBitmap = deathDrawable.getBitmap();
+        Bitmap duckBitmap= duckDrawable.getBitmap();
+        Bitmap fireBitmap = fireDrawable.getBitmap();
+        Bitmap mysticBitmap = mysticDrawable.getBitmap();
 
-        mExampleString = a.getString(
-                R.styleable.EditorView_exampleString);
-        mExampleColor = a.getColor(
-                R.styleable.EditorView_exampleColor,
-                mExampleColor);
-        // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
-        // values that should fall on pixel boundaries.
-        mExampleDimension = a.getDimension(
-                R.styleable.EditorView_exampleDimension,
-                mExampleDimension);
+        float left1 = (float)0.0625*canvasWidth;
+        float left2 = (float)0.375*canvasWidth;
+        float left3 = (float)0.6875*canvasWidth;
 
-        if (a.hasValue(R.styleable.EditorView_exampleDrawable)) {
-            mExampleDrawable = a.getDrawable(
-                    R.styleable.EditorView_exampleDrawable);
-            mExampleDrawable.setCallback(this);
+        double shapeHeight = 0.25*canvasWidth;
+        double heightSpacer = (0.25*canvasHeight - 2*shapeHeight)/3;
+        double inventoryStart = 0.75*canvasHeight;
+
+        float height1 = (float)(inventoryStart+heightSpacer);
+        float height2 = (float)(height1+shapeHeight+heightSpacer);
+
+        canvas.drawBitmap(carrotBitmap,left1,height1,null);
+        canvas.drawBitmap(carrot2Bitmap,left2,height1,null);
+        canvas.drawBitmap(deathBitmap,left3,height1,null);
+        canvas.drawBitmap(duckBitmap,left1,height2,null);
+        canvas.drawBitmap(fireBitmap,left2,height2,null);
+        canvas.drawBitmap(mysticBitmap,left3,height2,null);
+    }
+
+    // call this from EditorActivity every time the page state is edited
+    public ArrayList<Shape> drawPage(ArrayList<Shape> newPageState) {
+        pageState = newPageState;
+
+        clearCanvas();
+
+        /* TO DO: not sure how to reference file name */
+        for (int i = 0; i < pageState.size(); i++) {
+            Shape currentShape = pageState.get(i);
+            canvas.drawRect((float)currentShape.getX(), (float)currentShape.getY(),
+                    (float)(currentShape.getX()+currentShape.getWidth()),
+                    (float)(currentShape.getY()+currentShape.getHeight()), myPaint);
         }
 
-        a.recycle();
-
-        // Set up a default TextPaint object
-        mTextPaint = new TextPaint();
-        mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setTextAlign(Paint.Align.LEFT);
-
-        // Update TextPaint and text measurements from attributes
-        invalidateTextPaintAndMeasurements();
+        return pageState;
     }
 
-    private void invalidateTextPaintAndMeasurements() {
-        mTextPaint.setTextSize(mExampleDimension);
-        mTextPaint.setColor(mExampleColor);
-        mTextWidth = mTextPaint.measureText(mExampleString);
-
-        Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
-        mTextHeight = fontMetrics.bottom;
+    // passes a reference to the canvas
+    public Canvas getCanvas() {
+        return canvas;
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-        int paddingLeft = getPaddingLeft();
-        int paddingTop = getPaddingTop();
-        int paddingRight = getPaddingRight();
-        int paddingBottom = getPaddingBottom();
-
-        int contentWidth = getWidth() - paddingLeft - paddingRight;
-        int contentHeight = getHeight() - paddingTop - paddingBottom;
-
-        // Draw the text.
-        canvas.drawText(mExampleString,
-                paddingLeft + (contentWidth - mTextWidth) / 2,
-                paddingTop + (contentHeight + mTextHeight) / 2,
-                mTextPaint);
-
-        // Draw the example drawable on top of the text.
-        if (mExampleDrawable != null) {
-            mExampleDrawable.setBounds(paddingLeft, paddingTop,
-                    paddingLeft + contentWidth, paddingTop + contentHeight);
-            mExampleDrawable.draw(canvas);
-        }
-    }
-
-    /**
-     * Gets the example string attribute value.
-     *
-     * @return The example string attribute value.
-     */
-    public String getExampleString() {
-        return mExampleString;
-    }
-
-    /**
-     * Sets the view's example string attribute value. In the example view, this string
-     * is the text to draw.
-     *
-     * @param exampleString The example string attribute value to use.
-     */
-    public void setExampleString(String exampleString) {
-        mExampleString = exampleString;
-        invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Gets the example color attribute value.
-     *
-     * @return The example color attribute value.
-     */
-    public int getExampleColor() {
-        return mExampleColor;
-    }
-
-    /**
-     * Sets the view's example color attribute value. In the example view, this color
-     * is the font color.
-     *
-     * @param exampleColor The example color attribute value to use.
-     */
-    public void setExampleColor(int exampleColor) {
-        mExampleColor = exampleColor;
-        invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Gets the example dimension attribute value.
-     *
-     * @return The example dimension attribute value.
-     */
-    public float getExampleDimension() {
-        return mExampleDimension;
-    }
-
-    /**
-     * Sets the view's example dimension attribute value. In the example view, this dimension
-     * is the font size.
-     *
-     * @param exampleDimension The example dimension attribute value to use.
-     */
-    public void setExampleDimension(float exampleDimension) {
-        mExampleDimension = exampleDimension;
-        invalidateTextPaintAndMeasurements();
-    }
-
-    /**
-     * Gets the example drawable attribute value.
-     *
-     * @return The example drawable attribute value.
-     */
-    public Drawable getExampleDrawable() {
-        return mExampleDrawable;
-    }
-
-    /**
-     * Sets the view's example drawable attribute value. In the example view, this drawable is
-     * drawn above the text.
-     *
-     * @param exampleDrawable The example drawable attribute value to use.
-     */
-    public void setExampleDrawable(Drawable exampleDrawable) {
-        mExampleDrawable = exampleDrawable;
+    // clears the canvas
+    private void clearCanvas() {
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
     }
 }
