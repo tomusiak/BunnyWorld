@@ -216,7 +216,6 @@ public class EditorActivity extends AppCompatActivity {
         });
         builder.show();
     }
-
     // Saves current game state into the database.
     public void saveGame(String saveName, HashMap<String, ArrayList<Shape>> shapeMap) {
         Database db = Database.getInstance(getApplicationContext());
