@@ -86,6 +86,12 @@ public class Shape {
     }
 
     /**
+     * Modifier method for text being displayed
+     * @param text the user-set name of the shape
+     */
+    public void setText(String text) { this.text = text; };
+
+    /**
      * Modifier method that sets the script of the shape
      * Pre-Condition: Script is in the correct converted format after user clicks relevant buttons
      * @param script the new script of the shape
@@ -95,7 +101,7 @@ public class Shape {
     }
     /**
      * Accessor method that returns the script of the shape
-     * @param script the current script
+     * @param //script the current script
      */
     public String getScript() {
         return this.script;
