@@ -17,6 +17,8 @@ public class Page {
      */
     public Page(String name, String uniquePageID) {
         shapes = new ArrayList<Shape>();
+        displayName = name;
+        pageID = uniquePageID;
 
     }
 
