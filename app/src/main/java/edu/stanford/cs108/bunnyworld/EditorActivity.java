@@ -203,6 +203,25 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
         goToPrompt.show();
+
+        /*ArrayList<String> names = new ArrayList<>();
+        // builds arraylist of page display names for user to select
+        for (String uniquePageID: pages.keySet()) {
+            names.add(pages.get(uniquePageID).getDisplayName());
+        }
+        final String[] pageNames = names.toArray(new String[pages.size()]);
+        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
+        newPagePrompt.setTitle("Select Name of Page: ");
+        newPagePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String newPageName = pageNames[selection];
+                // from the selected display name, pull the original page object
+                String uniqueID = displayNameToID.get(newPageName);
+                currScript += uniqueID + " ";
+            }
+        });
+        newPagePrompt.show();*/
     }
 
     private void scriptPlayDialog() {
