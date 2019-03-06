@@ -285,9 +285,13 @@ public class EditorActivity extends AppCompatActivity {
         Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
         addToast.show();
 
+        // example of building a shape from a shape image name
         String shapeImgName = "carrot";
         Shape shape = new Shape(numShapes, shapeImgName, "",
                 0, 0, 50, 50);
+
+        editorView.renderShape(shape);
+        editorView.drawPage();
 
     }
 
