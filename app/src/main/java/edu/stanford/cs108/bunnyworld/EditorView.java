@@ -104,6 +104,7 @@ public class EditorView extends View {
     public void changeCurrentPage(Page page) {
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
+        drawPage(); // update canvas to draw this new page
     }
 
     /**
@@ -120,10 +121,9 @@ public class EditorView extends View {
             Shape currentShape = shapes.get(i);
             String imageID = currentShape.getImageName();
 
-            // create a bitmap and store it inside the current shape
+            int bitmapID = getResources().getIdentifier(imageID, "drawable", getContext().getPackageName());
             BitmapDrawable drawableBM =
-                    (BitmapDrawable) getResources().getDrawable(R.drawable.(imageID));
-
+                    (BitmapDrawable) getResources().getDrawable(bitmapID);
             currentShape.setBitmap(drawableBM.getBitmap());
 
         }
@@ -151,8 +151,9 @@ public class EditorView extends View {
         String imageID = shape.getImageName();
 
         // create a bitmap and store it inside the current shape
+        int bitmapDrawableID = getResources().getIdentifier(imageID, "drawable", getContext().getPackageName());
         BitmapDrawable drawableBM =
-                (BitmapDrawable) getResources().getDrawable(R.drawable.(imageID));
+                (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
 
         shape.setBitmap(drawableBM.getBitmap());
     }

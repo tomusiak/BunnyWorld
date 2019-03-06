@@ -279,6 +279,11 @@ public class EditorActivity extends AppCompatActivity {
         String shapeName = "shape" + numShapes;
         Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
         addToast.show();
+
+        String shapeImgName = "carrot";
+        Shape shape = new Shape(numShapes, shapeImgName, "",
+                0, 0, 50, 50);
+
     }
 
     private void deleteShape() {
