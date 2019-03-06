@@ -23,7 +23,8 @@ public class EditorView extends View {
     //canvas
     private Canvas canvas;
 
-    ArrayList<Shape> pageState = new ArrayList<Shape>();
+    //ArrayList<Shape> pageState = new ArrayList<Shape>();
+    Page currentPage;
     ArrayList<Shape> starters = new ArrayList<Shape>();
     Shape selected;
 
@@ -95,21 +96,65 @@ public class EditorView extends View {
         canvas.drawBitmap(mysticBitmap,left3,height2,null);
     }
 
-    // call this from EditorActivity every time the page state is edited
-    public ArrayList<Shape> drawPage(ArrayList<Shape> newPageState) {
-        pageState = newPageState;
+    /**
+     * Update the current working page displayed in the editor view to
+     * be the new one passed in
+     * @param page
+     */
+    public void changeCurrentPage(Page page) {
+        currentPage = page;
+        renderBitmaps(page); // render all the bitmaps for the page
+    }
+
+    /**
+     * Render all of the bitmap images for the current active page and
+     * save them to the page's shape objects. Each shape object stores
+     * its own bitmap inside.
+     * @param page
+     */
+    public void renderBitmaps(Page page) {
+        ArrayList<Shape> shapes = page.getList();  // get list of shapes from page
+
+        // render the bitmap for each shape
+        for(int i = 0; i < shapes.size(); i++) {
+            Shape currentShape = shapes.get(i);
+            String imageID = currentShape.getImageName();
+
+            // create a bitmap and store it inside the current shape
+            BitmapDrawable drawableBM =
+                    (BitmapDrawable) getResources().getDrawable(R.drawable.(imageID));
+
+            currentShape.setBitmap(drawableBM.getBitmap());
+
+        }
+    }
+
+    /**
+     * Renders the current page in question on the canvas by calling the
+     * page's render function.
+     */
+    public void drawPage() {
 
         clearCanvas();
+        currentPage.render(canvas);
+    }
 
-        /* TO DO: not sure how to reference file name */
-        for (int i = 0; i < pageState.size(); i++) {
-            Shape currentShape = pageState.get(i);
-            canvas.drawRect((float)currentShape.getX(), (float)currentShape.getY(),
-                    (float)(currentShape.getX()+currentShape.getWidth()),
-                    (float)(currentShape.getY()+currentShape.getHeight()), myPaint);
-        }
 
-        return pageState;
+    /**
+     * Renders a single shape's bitmap.
+     *
+     * Note: must be called manuallly after a new shape with
+     * an image is created.
+     * @param shape to render the bitmap for
+     */
+    public void renderShape(Shape shape) {
+        String imageID = shape.getImageName();
+
+        // create a bitmap and store it inside the current shape
+        BitmapDrawable drawableBM =
+                (BitmapDrawable) getResources().getDrawable(R.drawable.(imageID));
+
+        shape.setBitmap(drawableBM.getBitmap());
     }
 
     // passes a reference to the canvas
