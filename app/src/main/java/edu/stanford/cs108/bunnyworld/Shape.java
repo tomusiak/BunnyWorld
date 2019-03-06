@@ -1,85 +1,231 @@
 package edu.stanford.cs108.bunnyworld;
 
-import android.graphics.Canvas;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 
 /*
     The edu.stanford.cs108.bunnyworld.Shape class represents an object that has been added
     to an editor page view.
  */
 public class Shape {
-    /* enum for the possible shape types */
-    public enum ShapeType {
-        IMAGE,
-        TEXT,   // takes presedence over image
-        RECT,
+    private String shapeName;
+    private String image;
+    private String text;
+    private double x;
+    private double y;
+    private double height;
+    private double width;
+
+    private boolean moveable;
+    private boolean hidden;
+
+    private int fontSize;
+    private static final int DEFAULT_FONT_SIZE = 24;
+
+    private String script;
+
+    Bitmap bitmap;
+
+    /**
+     * Constructor for Shape class
+     * @param shapeNumber the number of the Shape being created relative to all Shapes
+     * @param imageName name of image, i.e. "bunny.png" - can be empty String
+     * @param textName user-inputted text to appear in single line - can be empty String
+     * @param xCoord upper left hand x coordinate
+     * @param yCoord upper left hand y coordinate
+     * @param width width of image or text being displayed
+     * @param height height of image or text being displayed
+     */
+    public Shape(int shapeNumber, String imageName, String textName,
+                 double xCoord, double yCoord, double width, double height) {
+
+        // Default format is "shape1", "shape2", etc.
+        this.shapeName = "shape" + shapeNumber;
+
+        this.image = imageName;
+        this.text = textName;
+        this.x = xCoord;
+        this.y = yCoord;
+        this.height = height;
+        this.width = width;
+
+        // Shapes are moveable and un-hidden as a default
+        this.moveable = true;
+        this.hidden = false;
+        // Default font size is 24
+        this.fontSize = DEFAULT_FONT_SIZE;
+
+        // Script will be set once it's read in from interface
+        this.script = "";
     }
 
-
-    String imgName; // stores name of the image it draws
-    String text;    // text displayed by image
-    Boolean hidden;
-    Boolean moveable;   // whether or not shape can be moved by user
-
-    String script;  // stores script that object does
-
-    // screen coordinates
-    double x;
-    double y;
-
-    double height;
-    double width;
-
-    /* Constructor for shape object */
-    public Shape() {
-
+    /**
+     * Accessor method for current shape name
+     * @return String the name of the shape
+     */
+    public String getShapeName() {
+        return this.shapeName;
+    }
+    /**
+     * Modifier method for shape name
+     * @param name the user-set name of the shape
+     */
+    public void setShapeName(String name) {
+        this.shapeName = name;
     }
 
-    /* can set whether object is visible or not */
-    public void setVisibility(Boolean value) {
-        hidden = value;
+    /**
+     * Accessor method for current image name being displayed
+     * @return String the name of the image being displayed, empty String "" if not available
+     */
+    public String getImageName() {
+        return this.image;
     }
 
-    public void setMoveable(Boolean value) {
-        moveable = value;
+    /**
+     * Accessor method for current text being displayed
+     * @return String the name of the image being displayed, empty String "" if not available
+     */
+    public String getText() {
+        return this.text;
     }
 
-    /* update the displayed text in the shape */
-    public void updateText(String text) {
-        this.text = text;
+    /**
+     * Modifier method for text being displayed
+     * @param text the user-set name of the shape
+     */
+    public void setText(String text) { this.text = text; };
+
+    /**
+     * Modifier method that sets the script of the shape
+     * Pre-Condition: Script is in the correct converted format after user clicks relevant buttons
+     * @param script the new script of the shape
+     */
+    public void setScript(String script) {
+        this.script = script;
+    }
+    /**
+     * Accessor method that returns the script of the shape
+     * @param //script the current script
+     */
+    public String getScript() {
+        return this.script;
     }
 
-    /* updates image of this shape */
-    public void updateImage(String imageName) {
-        imgName = imageName;
-    }
-
-    /* draws the shape to the canvas, or WorldEditorView */
-    public void draw(Canvas canvas) {
-
-    }
-
-    /* move the shape and update its coordinates */
-    public void move(Canvas canvas, double newx, double newy) {
-
-    }
-
-    /* get x coordinate of the shape object (upper left corner) */
+    /**
+     * The following are accessor methods for Shape properties (x, y, width, height)
+     */
     public double getX() {
-        return x;
+        return this.x;
     }
-
-    /* get x coordinate of the shape object (upper left corner) */
     public double getY() {
-        return y;
+        return this.y;
     }
-
-    /* get the height of this shape */
-    public double getHeight() {
-        return height;
-    }
-
-    /* get the width of this shape */
     public double getWidth() {
-        return width;
+        return this.width;
     }
+    public double getHeight() {
+        return this.height;
+    }
+
+    /**
+     * The following are modifier methods that set Shape properties (x, y, width, height)
+     */
+    public void setX(double newX) {
+        this.x = newX;
+    }
+    public void setY(double newY) {
+        this.y = newY;
+    }
+    public void setWidth(double newWidth) {
+        this.width = newWidth;
+    }
+    public void setHeight(double newHeight) {
+        this.height = newHeight;
+    }
+
+    /**
+     * Moves Shape to new location by setting new x and y coordinates for location
+     * @param newX upper left hand corner x value for new location
+     * @param newY upper left hand corner y value for new location
+     */
+    public void move(double newX, double newY) {
+        this.x = newX;
+        this.y = newY;
+    }
+
+    /**
+     * Sets new size of Shape given new width and height
+     * @param newWidth new width of Shape
+     * @param newHeight new height of Shape
+     */
+    public void resize(double newWidth, double newHeight) {
+        this.width = newWidth;
+        this.height = newHeight;
+    }
+
+    /**
+     * Accessor method for font size
+     * @return current font size
+     */
+    public int getFontSize() {
+        return this.fontSize;
+    }
+
+    /**
+     * Modifier method to set font size (default is 24)
+     * @param size the new size to be set
+     */
+    public void setFontSize(int size) {
+        this.fontSize = size;
+    }
+
+    /**
+     * Allows user to set Shape to be moveable or not
+     * @param isMoveable true or false for moveability
+     */
+    public void setMoveable(boolean isMoveable) {
+        this.moveable = isMoveable;
+    }
+
+    /**
+     * Gets whether Shape is moveable or not, could be used as a check before calling move()
+     * @return whether Shape is currently moveable
+     */
+    public boolean getMoveableStatus() {
+        return this.moveable;
+    }
+
+    /**
+     * Sets shape to be hidden or unhidden
+     * @param isHidden true and false for hidden and not hidden
+     */
+    public void setHidden(boolean isHidden) {
+        this.hidden = isHidden;
+    }
+
+    /**
+     * Returns whether the shape is hidden or not
+     * @return true and false for hidden and not hidden
+     */
+    public boolean getHiddenStatus() {
+        return this.hidden;
+    }
+
+
+    /**
+     * Updates the internal shape to store its current bitmap representation
+     *
+     * Note: does not need to be saved in the database. This just holds on
+     * to the bitmap rendering for when it actually needs to be loaded.
+     *
+     * @param bm
+     */
+    public void setBitmap(Bitmap bm) { bitmap = bm; }
+
+    /**
+     * Gives the bitmap representation of the image
+     * @return the stored bitmap image
+     */
+    public Bitmap getBitmap() { return bitmap; }
 }
