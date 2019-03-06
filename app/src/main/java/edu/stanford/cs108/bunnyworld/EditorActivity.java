@@ -261,8 +261,7 @@ public class EditorActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         currScript = currScript.substring(0, currScript.length() - 1);
-                        System.out.println(currScript);
-                        System.out.println("cool");
+                        currScript += ";";
                         dialog.cancel();
                     }
                 });
