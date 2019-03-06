@@ -191,7 +191,7 @@ public class EditorActivity extends AppCompatActivity {
         goToPrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                currScript += input + " ";
+                currScript += input.getText().toString() + " ";
             }
         });
         goToPrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -204,7 +204,7 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void scriptPlayDialog() {
-        final String[] scriptSounds = new String[]{"On Click", "On Enter", "On Drop"};
+        final String[] scriptSounds = new String[]{"CarrotCarrotCarrot", "EvilLaugh", "Fire", "Hooray", "Munch", "Munching", "Woof"};
         AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
         playPrompt.setTitle("Select Script Trigger: ");
         playPrompt.setItems(scriptSounds, new DialogInterface.OnClickListener() {
@@ -225,7 +225,7 @@ public class EditorActivity extends AppCompatActivity {
         shapeNamePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                currScript += input + " ";
+                currScript += input.getText().toString() + " ";
             }
         });
         shapeNamePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -261,6 +261,8 @@ public class EditorActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         currScript = currScript.substring(0, currScript.length() - 1);
+                        System.out.println(currScript);
+                        System.out.println("cool");
                         dialog.cancel();
                     }
                 });
