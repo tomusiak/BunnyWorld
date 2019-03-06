@@ -22,10 +22,11 @@ import android.text.*;
  */
 public class EditorActivity extends AppCompatActivity {
 
+    // use unique ID when looking up in hashmaps and when adding to script
     private int numShapes;
-    private int numPages;
-    //private HashMap<String, ArrayList<Shape>> pages;
-    private HashMap<String, Page> pages;
+    private int numPages;  // number of pages created so far, accumulative
+    private HashMap<String, Page> pages; // map the unique page IDs to Page objects
+    private HashMap<String, String> displayNameToID;
     private String currPage;
     private String currScript;
     EditorView editorView;
@@ -239,11 +240,15 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void addPage() {
-        Page newPage = new Page();
+
         numPages++;
-        String pageName = "page" + numPages;
-        currPage = pageName;
-        pages.put(pageName, newPage);
+        String uniquePageID = "page" + numPages; // create unique identifier for page
+        String pageName = uniquePageID + "";     // modifiable default page name
+        currPage = uniquePageID;
+        displayNameToID.put(pageName, uniquePageID);
+
+        Page newPage = new Page(pageName, uniquePageID);
+        pages.put(uniquePageID, newPage);
     }
 
     private void addMoreDialog() {
@@ -392,6 +397,7 @@ public class EditorActivity extends AppCompatActivity {
         numShapes = 0;
         numPages = 0;
         pages = new HashMap<>();
+        displayNameToID = new HashMap<>();
         addPage();
         Toast addToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
         addToast.show();
@@ -406,8 +412,9 @@ public class EditorActivity extends AppCompatActivity {
     // change this to list the pages so the user can see options
     private void goToNewPageDialog() {
         ArrayList<String> names = new ArrayList<>();
-        for (String page: pages.keySet()) {
-            names.add(page);
+        // builds arraylist of page display names for user to select
+        for (String uniquePageID: pages.keySet()) {
+            names.add(pages.get(uniquePageID).getDisplayName());
         }
         final String[] pageNames = names.toArray(new String[pages.size()]);
         AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
@@ -418,14 +425,19 @@ public class EditorActivity extends AppCompatActivity {
                 String newPageName = pageNames[selection];
                 Toast pageNameToast = Toast.makeText(getApplicationContext(),newPageName,Toast.LENGTH_SHORT);
                 pageNameToast.show();
-                switchPages(newPageName);
+
+                // from the selected display name, pull the original page object
+                String uniqueID = displayNameToID.get(newPageName);
+                switchPages(uniqueID);
             }
         });
         newPagePrompt.show();
     }
 
-    private void switchPages(String newPage) {
-        currPage = newPage;
+    private void switchPages(String pageName) {
+        currPage = pageName;
+        Page newPage = pages.get(currPage);
+        editorView.changeCurrentPage(newPage);
     }
     // Saves current game state into the database.
     public void saveGame(String saveName, HashMap<String, ArrayList<Shape>> shapeMap) {
