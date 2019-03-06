@@ -83,6 +83,10 @@ public class Page {
      */
     public void clearShapes() { shapes.clear(); }
 
+    /**
+     * Get the unique identifier of this page
+     * @return the page's unique ID number
+     */
     public String getPageID() { return pageID; }
 
     public String getDisplayName() { return displayName; }
