@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +28,7 @@ class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String databaseOrganizer = "CREATE TABLE SaveTable " + "(" +
                 "name TEXT PRIMARY KEY)";
-        String createPageOne = "CREATE TABLE Page1 " + "(" +
+        String createAutoSave = "CREATE TABLE AutoSave " + "(" +
                 "imgName TEXT PRIMARY KEY, " +
                 "save TEXT, " +
                 "text TEXT, " +
@@ -49,7 +48,7 @@ class Database extends SQLiteOpenHelper {
                 "y REAL, " +
                 "width REAL, " +
                 "height REAL)";
-        db.execSQL(createPageOne);
+        db.execSQL(createAutoSave);
         db.execSQL(createInventory);
         db.execSQL(databaseOrganizer);
     }
@@ -111,6 +110,30 @@ class Database extends SQLiteOpenHelper {
             ArrayList<Shape> allShapes = entry.getValue();
             for (int i = 0; i < allShapes.size(); i++) {
                 addNewObject(allShapes.get(i), page, saveName);
+            }
+        }
+    }
+
+    public void autoSave(HashMap<String, ArrayList<Shape>> shapeMap) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String dropTable = "DROP TABLE IF EXISTS AutoSave";
+        String createAutoSave = "CREATE TABLE AutoSave " + "(" +
+                "imgName TEXT PRIMARY KEY, " +
+                "save TEXT, " +
+                "text TEXT, " +
+                "hidden INTEGER, " +
+                "moveable INTEGER, " +
+                "x REAL, " +
+                "y REAL, " +
+                "width REAL, " +
+                "height REAL)";
+        db.execSQL(dropTable);
+        db.execSQL(createAutoSave);
+        for (Map.Entry<String, ArrayList<Shape>> entry : shapeMap.entrySet()) {
+            String page = entry.getKey();
+            ArrayList<Shape> allShapes = entry.getValue();
+            for (int i = 0; i < allShapes.size(); i++) {
+                addNewObject(allShapes.get(i), page, "AutoSave");
             }
         }
     }
