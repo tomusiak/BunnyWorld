@@ -13,6 +13,7 @@ import android.app.*;
 import android.content.*;
 import android.widget.*;
 import android.text.*;
+import java.security.AccessController.*;
 
 /*
     edu.stanford.cs108.bunnyworld.EditorActivity Class is the class that encapsulates an instance
@@ -24,7 +25,8 @@ public class EditorActivity extends AppCompatActivity {
 
     private int numShapes;
     private int numPages;
-    private HashMap<String, ArrayList<Shape>> pages;
+    //private HashMap<String, ArrayList<Shape>> pages;
+    private HashMap<String, Page> pages;
     private String currPage;
     private String currScript;
 
@@ -140,25 +142,23 @@ public class EditorActivity extends AppCompatActivity {
 
     private void scriptTriggersDialog() {
         final String[] scriptTriggers = new String[]{"On Click", "On Enter", "On Drop"};
-        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
-        newPagePrompt.setTitle("Select Script Trigger: ");
-        newPagePrompt.setItems(scriptTriggers, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder triggersPrompt = new AlertDialog.Builder(this);
+        triggersPrompt.setTitle("Select Script Trigger: ");
+        triggersPrompt.setItems(scriptTriggers, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 currScript += scriptTriggers[selection] + " ";
                 scriptActionsDialog();
             }
         });
-
-        AlertDialog dialog = newPagePrompt.create();
-        dialog.show();
+        triggersPrompt.show();
     }
 
     private void scriptActionsDialog() {
         final String[] scriptActions = new String[]{"Go To", "Play", "Hide", "Show"};
-        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
-        newPagePrompt.setTitle("Select Script Action: ");
-        newPagePrompt.setItems(scriptActions, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder actionsPrompt = new AlertDialog.Builder(this);
+        actionsPrompt.setTitle("Select Script Action: ");
+        actionsPrompt.setItems(scriptActions, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 currScript += scriptActions[selection] + " ";
@@ -179,9 +179,7 @@ public class EditorActivity extends AppCompatActivity {
                 }
             }
         });
-
-        AlertDialog dialog = newPagePrompt.create();
-        dialog.show();
+        actionsPrompt.show();
     }
 
     private void scriptGoToDialog() {
@@ -207,17 +205,15 @@ public class EditorActivity extends AppCompatActivity {
 
     private void scriptPlayDialog() {
         final String[] scriptSounds = new String[]{"On Click", "On Enter", "On Drop"};
-        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
-        newPagePrompt.setTitle("Select Script Trigger: ");
-        newPagePrompt.setItems(scriptSounds, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
+        playPrompt.setTitle("Select Script Trigger: ");
+        playPrompt.setItems(scriptSounds, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 currScript += scriptSounds[selection] + " ";
             }
         });
-
-        AlertDialog dialog = newPagePrompt.create();
-        dialog.show();
+        playPrompt.show();
     }
 
     private void scriptShapeNameDialog() {
@@ -242,11 +238,12 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void addPage() {
-        ArrayList<Shape> newPage = new ArrayList<>();
+        Page newPage = new Page();
         numPages++;
         String pageName = "page" + numPages;
         currPage = pageName;
         pages.put(pageName, newPage);
+        //EditorView view = (EditorView) ((Activity) getContext()).findViewById(R.id.Edit);
     }
 
     private void addMoreDialog() {
@@ -304,9 +301,7 @@ public class EditorActivity extends AppCompatActivity {
                 pageNameToast.show();
             }
         });
-
-        AlertDialog dialog = deleteShapePrompt.create();
-        dialog.show();
+        deleteShapePrompt.show();
     }
 
     // prompts the user to input a new name for the page
@@ -334,8 +329,8 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void renamePage(String newName) {
-        ArrayList<Shape> page = pages.remove(currPage);
-        pages.put(newName, page);
+        //ArrayList<Shape> page = pages.remove(currPage);
+        //pages.put(newName, page);
     }
 
     // prompts the user to input a new name for the shape
@@ -396,6 +391,12 @@ public class EditorActivity extends AppCompatActivity {
         addToast.show();
     }
 
+    // deal with this once Allan adds database method that returns names of games
+    private void loadExistingGame(){
+        Database db = Database.getInstance(getApplicationContext());
+        //db.loadGame()
+    }
+
     // change this to list the pages so the user can see options
     private void goToNewPageDialog() {
         ArrayList<String> names = new ArrayList<>();
@@ -414,9 +415,7 @@ public class EditorActivity extends AppCompatActivity {
                 switchPages(newPageName);
             }
         });
-
-        AlertDialog dialog = newPagePrompt.create();
-        dialog.show();
+        newPagePrompt.show();
     }
 
     private void switchPages(String newPage) {
@@ -426,11 +425,5 @@ public class EditorActivity extends AppCompatActivity {
     public void saveGame(String saveName, HashMap<String, ArrayList<Shape>> shapeMap) {
         Database db = Database.getInstance(getApplicationContext());
         db.saveGame(saveName, shapeMap);
-    }
-
-    // deal with this once Allan adds database method that returns names of games
-    private void loadExistingGame(){
-        Database db = Database.getInstance(getApplicationContext());
-        //db.loadGame()
     }
 }
