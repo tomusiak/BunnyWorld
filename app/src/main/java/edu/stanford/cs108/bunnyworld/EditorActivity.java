@@ -13,7 +13,6 @@ import android.app.*;
 import android.content.*;
 import android.widget.*;
 import android.text.*;
-import java.security.AccessController.*;
 
 /*
     edu.stanford.cs108.bunnyworld.EditorActivity Class is the class that encapsulates an instance
@@ -29,6 +28,7 @@ public class EditorActivity extends AppCompatActivity {
     private HashMap<String, Page> pages;
     private String currPage;
     private String currScript;
+    EditorView editorView;
 
     // add copy and paste functionality
 
@@ -36,6 +36,7 @@ public class EditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+        editorView = findViewById(R.id.editorView);
 
         // Page Options Spinner
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
@@ -243,7 +244,6 @@ public class EditorActivity extends AppCompatActivity {
         String pageName = "page" + numPages;
         currPage = pageName;
         pages.put(pageName, newPage);
-        //EditorView view = (EditorView) ((Activity) getContext()).findViewById(R.id.Edit);
     }
 
     private void addMoreDialog() {
