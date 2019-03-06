@@ -411,8 +411,7 @@ public class EditorActivity extends AppCompatActivity {
 
     // change this to list the pages so the user can see options
     private void goToNewPageDialog() {
-        System.out.println("cool");
-        /*ArrayList<String> names = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
         // builds arraylist of page display names for user to select
         for (String uniquePageID: pages.keySet()) {
             names.add(pages.get(uniquePageID).getDisplayName());
@@ -432,7 +431,7 @@ public class EditorActivity extends AppCompatActivity {
                 switchPages(uniqueID);
             }
         });
-        newPagePrompt.show();*/
+        newPagePrompt.show();
     }
 
     private void switchPages(String pageName) {
