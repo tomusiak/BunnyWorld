@@ -7,13 +7,17 @@ import java.util.ArrayList;
 public class Page {
 
     ArrayList<Shape> shapes;
+    String displayName;
+    String pageID;
+
 
     /**
      * Constructor for the Page Class. This is the empty
      * constructor used for buiding a brand new page in the editor.
      */
-    public Page() {
+    public Page(String name, String uniquePageID) {
         shapes = new ArrayList<Shape>();
+
     }
 
     /**
@@ -78,5 +82,9 @@ public class Page {
      * clean.
      */
     public void clearShapes() { shapes.clear(); }
+
+    public String getPageID() { return pageID; }
+
+    public String getDisplayName() { return displayName; }
 
 }
