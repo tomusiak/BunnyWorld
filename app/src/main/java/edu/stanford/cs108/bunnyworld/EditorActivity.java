@@ -26,6 +26,7 @@ public class EditorActivity extends AppCompatActivity {
     private int numPages;
     private HashMap<String, ArrayList<Shape>> pages;
     private String currPage;
+    private ArrayList<Shape> currentPage;
 
     // add copy and paste functionality
 
@@ -154,6 +155,7 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void deleteShape() {
+
     }
 
     private void renamePageDialog() {
