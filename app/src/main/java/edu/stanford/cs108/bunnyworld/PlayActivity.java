@@ -44,6 +44,7 @@ public class PlayActivity extends AppCompatActivity {
                 });
                 grabDatabase(saveGame); // Dumps save information into the HashMap containing pages and shapes.
         dialog.show();
+
     }
 
     // Imports save data once user decides to play.
