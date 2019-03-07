@@ -12,7 +12,6 @@ import java.util.Map;
 class Database extends SQLiteOpenHelper {
     private static String DATABASE_NAME = "BunnyDB.db";
     private static Database instance;
-    private static ArrayList<String> pageList;
 
     public static synchronized Database getInstance(Context context) {
         if (instance == null) {
@@ -23,35 +22,24 @@ class Database extends SQLiteOpenHelper {
 
     private Database(Context context) {
         super(context, DATABASE_NAME, null, 1);
-        pageList = new ArrayList<String>();
     }
 
     public void onCreate(SQLiteDatabase db) {
-        String databaseOrganizer = "CREATE TABLE SaveTable " + "(" +
-                "name TEXT PRIMARY KEY)";
-        String createPageOne = "CREATE TABLE Page1 " + "(" +
-                "imgName TEXT PRIMARY KEY, " +
-                "save TEXT, " +
+        String createShapeDatabase = "CREATE TABLE ShapeDatabase " + "(" +
+                "shapeName TEXT, " +
+                "image TEXT, " +
                 "text TEXT, " +
-                "hidden INTEGER, " +
-                "moveable INTEGER, " +
                 "x REAL, " +
                 "y REAL, " +
+                "height REAL, " +
                 "width REAL, " +
-                "height REAL)";
-        String createInventory = "CREATE TABLE " + "InventoryTable" + "(" +
-                "imgName TEXT PRIMARY KEY, " +
-                "save TEXT, " +
-                "text TEXT, " +
-                "hidden INTEGER, " +
                 "moveable INTEGER, " +
-                "x REAL, " +
-                "y REAL, " +
-                "width REAL, " +
-                "height REAL)";
-        db.execSQL(createPageOne);
-        db.execSQL(createInventory);
-        db.execSQL(databaseOrganizer);
+                "hidden INTEGER, " +
+                "fontSize INTEGER, " +
+                "script TEXT, " +
+                "PAGE TEXT PRIMARY KEY, " +
+                "SAVE TEXT PRIMARY KEY) ";
+        db.execSQL(createShapeDatabase);
     }
 
     @Override
@@ -59,58 +47,40 @@ class Database extends SQLiteOpenHelper {
 
     }
 
-    public void createNewPage(String page) {
+    public void saveGame(String saveName, HashMap<String, Page> pages) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String createNewPage = "CREATE TABLE " + page + "(" +
-                "imgName TEXT PRIMARY KEY, " +
-                "save TEXT, " +
-                "text TEXT, " +
-                "hidden INTEGER, " +
-                "moveable INTEGER, " +
-                "x REAL, " +
-                "y REAL, " +
-                "width REAL, " +
-                "height REAL)";
-        db.execSQL(createNewPage);
-    }
-
-    private void addNewObject(Shape shape, String page, String save) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String shapeName = shape.getImageName();
-        String shapeText = shape.getText();
-        int shapeHidden = shape.getHiddenStatus() ? 1 : 0;
-        int shapeMoveable = shape.getMoveableStatus() ? 1 : 0;
-        double shapeX = shape.getX();
-        double shapeY = shape.getY();
-        double shapeWidth = shape.getWidth();
-        double shapeHeight = shape.getHeight();
-        if (!pageList.contains(page)) {
-            createNewPage(page);
-            pageList.add(page);
-        }
-        String insertStr = "INSERT INTO " + page + " VALUES "
-                + "('" + shapeName + "'," +
-                save + "'," +
-                shapeText + "'," +
-                shapeHidden + "," +
-                shapeMoveable + "," +
-                shapeX + "," +
-                shapeY + "," +
-                shapeWidth + "," +
-                shapeHeight + ")";
-        db.execSQL(insertStr);
-    }
-
-    public void saveGame(String saveName, HashMap<String, ArrayList<Shape>> shapeMap) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String newSave = "INSERT INTO SaveTable VALUES " + "('" +
-                saveName + "')";
-        db.execSQL(newSave);
-        for (Map.Entry<String, ArrayList<Shape>> entry : shapeMap.entrySet()) {
-            String page = entry.getKey();
-            ArrayList<Shape> allShapes = entry.getValue();
-            for (int i = 0; i < allShapes.size(); i++) {
-                addNewObject(allShapes.get(i), page, saveName);
+        for (Map.Entry<String, Page> entry : pages.entrySet()) { // Source: https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap (Only this one line)
+            String pageName = entry.getKey();
+            Page currentPage = entry.getValue();
+            ArrayList<Shape> shapeList = currentPage.getShapes();
+            for (int i = 0; i < shapeList.size(); i++) {
+                Shape currentShape = shapeList.get(i);
+                String shapeName = currentShape.getShapeName();
+                String imageName = currentShape.getImageName();
+                String text = currentShape.getText();
+                double x = currentShape.getX();
+                double y = currentShape.getY();
+                double height = currentShape.getHeight();
+                double width = currentShape.getWidth();
+                int moveable = currentShape.getMoveableStatus() ? 1 : 0;
+                int hidden = currentShape.getHiddenStatus() ? 1 : 0;
+                int fontSize = currentShape.getFontSize();
+                String script = currentShape.getScript();
+                String insertStr = "INSERT INTO ShapeDatabase VALUES "
+                    + "('" + shapeName + "', '" +
+                    imageName + "', '" +
+                    text + "'," +
+                    x + "," +
+                    y + "," +
+                    height+ "," +
+                    width + "," +
+                    moveable + "," +
+                    hidden + "," +
+                    fontSize + ", '" +
+                    script + "', '" +
+                    pageName + "', '" +
+                    saveName + "')";
+                db.execSQL(insertStr);
             }
         }
     }
@@ -118,8 +88,8 @@ class Database extends SQLiteOpenHelper {
     public HashMap<String, ArrayList<Shape>> loadGame(String saveFile) {
         SQLiteDatabase db = this.getWritableDatabase();
         HashMap<String, ArrayList<Shape>> fullShapeList = new HashMap<String, ArrayList<Shape>>();
-        for (int i = 0; i < pageList.size(); i++) {
-            String currentPage = pageList.get(i);
+        for (int i = 0; i < 8; i++) {
+            String currentPage = "PLACEHOLDER";
             String query = "SELECT * FROM " + currentPage + " WHERE save == " + saveFile;
             Cursor cursor = db.rawQuery(query, null);
             ArrayList<Shape> currentShapeList = new ArrayList<Shape>();

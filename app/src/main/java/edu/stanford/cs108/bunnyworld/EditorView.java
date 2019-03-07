@@ -28,8 +28,8 @@ public class EditorView extends View {
     ArrayList<Shape> starters = new ArrayList<Shape>();
     Shape selected;
 
-    float canvasWidth = canvas.getWidth();
-    float canvasHeight = canvas.getHeight();
+    float canvasWidth;
+    float canvasHeight;
 
     BitmapDrawable carrotDrawable, carrot2Drawable, deathDrawable, duckDrawable, fireDrawable, mysticDrawable;
 
@@ -54,6 +54,9 @@ public class EditorView extends View {
     private void init() {
         selected = null;
 
+        //canvasWidth = canvas.getWidth();
+        //canvasHeight = canvas.getHeight();
+
         // set up all our starters
         carrotDrawable =
                 (BitmapDrawable) getResources().getDrawable(R.drawable.carrot);
@@ -70,30 +73,30 @@ public class EditorView extends View {
     }
 
     public void drawStarters() {
-        Bitmap carrotBitmap = carrotDrawable.getBitmap();
-        Bitmap carrot2Bitmap = carrot2Drawable.getBitmap();
-        Bitmap deathBitmap = deathDrawable.getBitmap();
-        Bitmap duckBitmap= duckDrawable.getBitmap();
-        Bitmap fireBitmap = fireDrawable.getBitmap();
-        Bitmap mysticBitmap = mysticDrawable.getBitmap();
-
-        float left1 = (float)0.0625*canvasWidth;
-        float left2 = (float)0.375*canvasWidth;
-        float left3 = (float)0.6875*canvasWidth;
-
-        double shapeHeight = 0.25*canvasWidth;
-        double heightSpacer = (0.25*canvasHeight - 2*shapeHeight)/3;
-        double inventoryStart = 0.75*canvasHeight;
-
-        float height1 = (float)(inventoryStart+heightSpacer);
-        float height2 = (float)(height1+shapeHeight+heightSpacer);
-
-        canvas.drawBitmap(carrotBitmap,left1,height1,null);
-        canvas.drawBitmap(carrot2Bitmap,left2,height1,null);
-        canvas.drawBitmap(deathBitmap,left3,height1,null);
-        canvas.drawBitmap(duckBitmap,left1,height2,null);
-        canvas.drawBitmap(fireBitmap,left2,height2,null);
-        canvas.drawBitmap(mysticBitmap,left3,height2,null);
+//        Bitmap carrotBitmap = carrotDrawable.getBitmap();
+//        Bitmap carrot2Bitmap = carrot2Drawable.getBitmap();
+//        Bitmap deathBitmap = deathDrawable.getBitmap();
+//        Bitmap duckBitmap= duckDrawable.getBitmap();
+//        Bitmap fireBitmap = fireDrawable.getBitmap();
+//        Bitmap mysticBitmap = mysticDrawable.getBitmap();
+//
+//        float left1 = (float)0.0625*canvasWidth;
+//        float left2 = (float)0.375*canvasWidth;
+//        float left3 = (float)0.6875*canvasWidth;
+//
+//        double shapeHeight = 0.25*canvasWidth;
+//        double heightSpacer = (0.25*canvasHeight - 2*shapeHeight)/3;
+//        double inventoryStart = 0.75*canvasHeight;
+//
+//        float height1 = (float)(inventoryStart+heightSpacer);
+//        float height2 = (float)(height1+shapeHeight+heightSpacer);
+//
+//        canvas.drawBitmap(carrotBitmap,left1,height1,null);
+//        canvas.drawBitmap(carrot2Bitmap,left2,height1,null);
+//        canvas.drawBitmap(deathBitmap,left3,height1,null);
+//        canvas.drawBitmap(duckBitmap,left1,height2,null);
+//        canvas.drawBitmap(fireBitmap,left2,height2,null);
+//        canvas.drawBitmap(mysticBitmap,left3,height2,null);
     }
 
     /**
@@ -104,6 +107,7 @@ public class EditorView extends View {
     public void changeCurrentPage(Page page) {
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
+        drawPage(); // update canvas to draw this new page
     }
 
     /**
@@ -120,10 +124,9 @@ public class EditorView extends View {
             Shape currentShape = shapes.get(i);
             String imageID = currentShape.getImageName();
 
-            // create a bitmap and store it inside the current shape
+            int bitmapID = getResources().getIdentifier(imageID, "drawable", getContext().getPackageName());
             BitmapDrawable drawableBM =
-                    (BitmapDrawable) getResources().getDrawable(R.drawable.(imageID));
-
+                    (BitmapDrawable) getResources().getDrawable(bitmapID);
             currentShape.setBitmap(drawableBM.getBitmap());
 
         }
@@ -151,8 +154,9 @@ public class EditorView extends View {
         String imageID = shape.getImageName();
 
         // create a bitmap and store it inside the current shape
+        int bitmapDrawableID = getResources().getIdentifier(imageID, "drawable", getContext().getPackageName());
         BitmapDrawable drawableBM =
-                (BitmapDrawable) getResources().getDrawable(R.drawable.(imageID));
+                (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
 
         shape.setBitmap(drawableBM.getBitmap());
     }
@@ -165,5 +169,13 @@ public class EditorView extends View {
     // clears the canvas
     private void clearCanvas() {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        this.canvas = canvas;
+        super.onDraw(canvas);
+        //drawPage();
+
     }
 }
