@@ -16,7 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PlayActivity extends AppCompatActivity {
+
+
     static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
