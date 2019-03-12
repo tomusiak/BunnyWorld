@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.nfc.Tag;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,22 +34,22 @@ class Database extends SQLiteOpenHelper {
      */
     public void onCreate(SQLiteDatabase db) {
         String createShapeDatabase = "CREATE TABLE ShapeDatabase " + "(" +
-                "shapeName TEXT, " +
-                "image TEXT, " +
-                "text TEXT, " +
-                "x REAL, " +
-                "y REAL, " +
-                "height REAL, " +
-                "width REAL, " +
-                "moveable INTEGER, " +
-                "hidden INTEGER, " +
-                "fontSize INTEGER, " +
-                "script TEXT, " +
-                "pageName TEXT, " +
-                "PAGEID TEXT PRIMARY KEY, " +
-                "SAVE TEXT PRIMARY KEY) ";
+                "shapeName TEXT," +
+                "image TEXT," +
+                "text TEXT," +
+                "x REAL," +
+                "y REAL," +
+                "height REAL," +
+                "width REAL," +
+                "moveable INTEGER," +
+                "hidden INTEGER," +
+                "fontSize INTEGER," +
+                "script TEXT," +
+                "pageName TEXT," +
+                "PAGEID TEXT," +
+                "SAVE TEXT," +
+                "PRIMARY KEY(PAGEID, SAVE))";
         db.execSQL(createShapeDatabase);
-        db.close();
     }
 
     @Override
@@ -58,9 +61,9 @@ class Database extends SQLiteOpenHelper {
      * dumped into the database with accompanying page information. Before the game is saved, saveGame ensures that it does not create a
      * duplicate by deleting any values with the original save name.
      */
-    public void saveGame(String saveName, HashMap<String, Page> pages) {
+    private void saveGame(String saveName, HashMap<String, Page> pages) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String checkQuery = "SELECT * FROM ShapeDatabase WHERE saveName == " + saveName;
+        String checkQuery = "SELECT * FROM ShapeDatabase WHERE SAVE = " + "'" + saveName + "'";
         Cursor cursor = db.rawQuery(checkQuery,null);
         if (cursor.getCount() != 0) {
             deleteSave(saveName);
@@ -102,7 +105,6 @@ class Database extends SQLiteOpenHelper {
                 db.execSQL(insertStr);
             }
         }
-        db.close();
     }
 
     /** Loads the game by parsing the database row-by-row. A new HashMap is opened at the beginning. Each
@@ -110,7 +112,7 @@ class Database extends SQLiteOpenHelper {
      * already exists in the HashMap, a new shape is created, its parameters are set according to the table, and it
      * is added to the corresponding page. If the pageID does not exist, a new page is made.
      */
-    public HashMap<String, Page> loadGame(String saveFile) {
+    private HashMap<String, Page> loadGame(String saveFile) {
         int shapeCounter = 0; // Keeps track of which shape is added in sequence. This is highly unlikely to match the original.
         SQLiteDatabase db = this.getWritableDatabase();
         HashMap<String, Page> fullShapeList = new HashMap<> ();
@@ -121,12 +123,12 @@ class Database extends SQLiteOpenHelper {
             String pageID = cursor.getString(12);
             String thisSave = cursor.getString(13);
             Page newPage = null;
-            if (fullShapeList.get(pageID) == null && thisSave == saveFile) {
+            if (fullShapeList.get(pageID).equals(null) && thisSave.equals(saveFile)) {
                 newPage = new Page(pageName, pageID);
-            } else if (thisSave == saveFile && fullShapeList.get(pageID) != null) {
+            } else if (thisSave.equals(saveFile) && fullShapeList.get(pageID) != null) {
                 newPage = fullShapeList.get(pageID);
             }
-            if (thisSave == saveFile) {
+            if (thisSave.equals(saveFile)) {
                 String shapeName = cursor.getString(0);
                 String imageName = cursor.getString(1);
                 String text = cursor.getString(2);
@@ -151,7 +153,6 @@ class Database extends SQLiteOpenHelper {
             }
         }
         cursor.close();
-        db.close();
         return fullShapeList;
     }
 
@@ -159,9 +160,8 @@ class Database extends SQLiteOpenHelper {
      */
     public void deleteSave (String saveName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String deleteSave = "DELETE FROM ShapeDatabase WHERE SAVE == " + saveName;
-        db.execSQL(deleteSave);
-        db.close();
+        String deleteSave = "DELETE FROM ShapeDatabase WHERE SAVE = '" + saveName + "'";
+        db.execSQL( deleteSave );
     }
 
     /** Autosaves by deleting the old autoSave and then creating a new autoSave save.
@@ -175,9 +175,8 @@ class Database extends SQLiteOpenHelper {
      */
     public void updateGameName(String oldName, String newName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String updateSave = "UPDATE ShapeDatabase SET SAVE == " + newName + " WHERE SAVE == " + oldName;
+        String updateSave = "UPDATE ShapeDatabase SET SAVE = " + newName + " WHERE SAVE = " + oldName;
         db.execSQL(updateSave);
-        db.close();
     }
 
     /** Returns ArrayList with the name of each game. To do this, performs a SQL query where it
@@ -192,8 +191,17 @@ class Database extends SQLiteOpenHelper {
         while (cursor.moveToNext()) {
             gameList.add(cursor.getString(0));
         }
-        db.close();
         cursor.close();
         return gameList;
+    }
+
+    /** Used to test various components.
+     * */
+    private void testerMethod() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery( "SELECT * FROM ShapeDatabase" , null );
+        String[] columnNames = cursor.getColumnNames();
+        Log.v( "horse", columnNames[13] );
+        cursor.close();
     }
 }
