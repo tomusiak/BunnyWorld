@@ -317,7 +317,7 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * Adds shape to screen and tracks it internally
+     * Adds shape to the page and tracks it internally
      */
     private void addShape() {
         makePopUp();
@@ -335,22 +335,31 @@ public class EditorActivity extends AppCompatActivity {
         currentPage.addShape(shape);
         // System.out.println("Adding shape.");
 
-        editorView.renderShape(shape);
-        //editorView.drawPage();
+        editorView.renderShape(shape);  // renders the bitmaps for the newly added shape
     }
 
     /**
      * TODO: Makes shape appear on screen
      */
     private void makePopUp() {
-
+        AddShapeDialog makeShape = new AddShapeDialog();
+        makeShape.show(getSupportFragmentManager(), "make shape");
     }
 
     /**
      * TODO: Deletes shape from screen
-     */
+     * Deletes the selected shape on the canvas. Displays helpful toasts based
+     * upon success of deletion.
+    */
     private void deleteShape() {
-
+        if(editorView.deleteShape()) {
+            Toast addToast = Toast.makeText(getApplicationContext(),"Shape successfully deleted.",Toast.LENGTH_SHORT);
+            addToast.show();
+        } else {
+            // show toast message if deletion did not work
+            Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
+            addToast.show();
+        }
     }
 
     /**
@@ -533,15 +542,23 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void switchPages(String pageName) {
         currPage = pageName;
-        Page newPage = pages.get(currPage);
-        //editorView.changeCurrentPage(newPage);
+        Page nextPage = pages.get(currPage);
+        editorView.changeCurrentPage(nextPage);
     }
 
     /**
      * Saves current game state into the database.
      */
-    public void saveGame(String saveName, HashMap<String, Page> pageMap) {
+    public void saveGame(View view) {
         Database db = Database.getInstance(getApplicationContext());
-        db.saveGame(saveName, pageMap);
+        db.autoSave(getPages());
+    }
+
+    /**
+     * Helper method to get pages
+     * @return pages
+     */
+    private HashMap<String, Page> getPages() {
+        return pages;
     }
 }

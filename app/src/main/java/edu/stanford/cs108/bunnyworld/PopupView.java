@@ -22,9 +22,6 @@ public class PopupView extends View {
     public PopupView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
-        //drawStarters();
-
-
     }
 
 
@@ -88,7 +85,7 @@ public class PopupView extends View {
         float left3 = (float)0.6875*canvasWidth;
 
         double shapeHeight = 0.25*canvasWidth;
-        double heightSpacer = (canvasHeight - 2*shapeHeight)/3;
+        double heightSpacer = 0.0625*canvasWidth;
 
         float height1 = (float)(heightSpacer);
         float height2 = (float)(height1+shapeHeight+heightSpacer);
