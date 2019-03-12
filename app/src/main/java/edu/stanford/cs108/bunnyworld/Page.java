@@ -9,12 +9,12 @@ import java.util.ArrayList;
 
 public class Page {
 
-    ArrayList<Shape> shapes;
-    String displayName;
-    String pageID;
+    private ArrayList<Shape> shapes;
+    private String displayName;
+    private String pageID;
 
-    Shape selected;  // holds onto the selected shape
-    Paint borderColor;
+    private Shape selected;  // holds onto the selected shape
+    private Paint borderColor;
 
 
     /**
