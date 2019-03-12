@@ -8,12 +8,14 @@ import java.util.HashMap;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.app.*;
 import android.content.*;
 import android.widget.*;
 import android.text.*;
+import android.app.Fragment;
 
 /*
     edu.stanford.cs108.bunnyworld.EditorActivity Class is the class that encapsulates an instance
@@ -298,7 +300,8 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void makePopUp() {
-
+        AddShapeDialog makeShape = new AddShapeDialog();
+        makeShape.show(getSupportFragmentManager(), "make shape");
     }
 
     private void deleteShape() {
