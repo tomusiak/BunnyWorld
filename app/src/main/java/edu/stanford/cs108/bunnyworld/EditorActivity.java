@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import android.view.LayoutInflater;
@@ -321,7 +322,7 @@ public class EditorActivity extends AppCompatActivity {
                 pages.remove(uniqueID);
                 // update custom view to reflect this
                 // figure out starter page
-                Toast pageNameToast = Toast.makeText(getApplicationContext(), pageName + " Deleted",Toast.LENGTH_SHORT);
+                Toast pageNameToast = Toast.makeText(getApplicationContext(), pageName + " Deleted", Toast.LENGTH_SHORT);
                 pageNameToast.show();
             }
         });
@@ -336,21 +337,22 @@ public class EditorActivity extends AppCompatActivity {
         }
         final String[] pageNames = names.toArray(new String[pages.size()]);
         AlertDialog.Builder pageToRenamePrompt = new AlertDialog.Builder(this);
-        pageToRenamePrompt.setTitle("Page To Delete: ");
+        pageToRenamePrompt.setTitle("Page To Rename: ");
         pageToRenamePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 String pageName = pageNames[selection];
                 String uniqueID = displayNameToID.get(pageName);
-                renamePageDialog(uniqueID);
+                renamePageDialog(uniqueID, pageNames);
             }
         });
         pageToRenamePrompt.show();
     }
 
     // prompts the user to input a new name for the page
-    private void renamePageDialog(final String uniqueID) {
-
+    private void renamePageDialog(final String uniqueID, String[] names) {
+        final ArrayList<String> pageList = new ArrayList<>(Arrays.asList(names));
+        final String[] pageNames = names;
         AlertDialog.Builder renamePagePrompt = new AlertDialog.Builder(this);
         renamePagePrompt.setTitle("Input New Name For Page: ");
         final EditText input = new EditText(this);
@@ -360,7 +362,13 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newPageName = input.getText().toString();
-                renamePage(newPageName, uniqueID);
+                if (pageList.contains(newPageName)) {
+                    Toast pageRenameError = Toast.makeText(getApplicationContext(), "Page Name Already Used", Toast.LENGTH_SHORT);
+                    pageRenameError.show();
+                    renamePageDialog(uniqueID, pageNames);
+                } else {
+                    renamePage(newPageName, uniqueID);
+                }
             }
         });
         renamePagePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -374,8 +382,8 @@ public class EditorActivity extends AppCompatActivity {
 
     private void renamePage(String newName, String uniqueID) {
         Page page = pages.remove(uniqueID);
-        //ArrayList<Shape> page = pages.remove(currPage);
-        //pages.put(newName, page);
+        page.changeDisplayName(newName);
+        pages.put(newName, page);
     }
 
     // prompts the user to input a new name for the shape
