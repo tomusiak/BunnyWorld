@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.lang.reflect.Array;
@@ -20,16 +21,17 @@ import java.util.ArrayList;
  * TODO: document your custom view class.
  */
 public class EditorView extends View {
-    //canvas
+
     //private Canvas canvas; // storing the canvas is broken, use onDraw method instead
 
-    //ArrayList<Shape> pageState = new ArrayList<Shape>();
     Page currentPage;
     ArrayList<Shape> starters = new ArrayList<Shape>();
     Shape selected;
 
-    float canvasWidth;
-    float canvasHeight;
+    // Touch activity float variables
+    float x1, y1;   // x and y coordinate of initial press to the screen
+    float x2, y2;   // x and y coordinate of when user lifts finger
+    float top, left, bottom, right;
 
     BitmapDrawable carrotDrawable, carrot2Drawable, deathDrawable, duckDrawable, fireDrawable, mysticDrawable;
 
@@ -173,22 +175,69 @@ public class EditorView extends View {
         invalidate();
     }
 
-//    // passes a reference to the canvas
-//    public Canvas getCanvas() {
-//        return canvas;
-//    }
-
     // clears the canvas
     private void clearCanvas(Canvas canvas) {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
     }
 
+
+    /**
+     * Override onDraw method. This will update the canvas to reflect the
+     * most recent updates to the pages and objects.
+     *
+     * This is only called when the current view is invalidated and forced
+     * to update. This only occurs 1. at the beginning and 2. when invalidate()
+     * is called.
+     * @param canvas
+     */
     @Override
     protected void onDraw(Canvas canvas) {
-        //this.canvas = canvas;
+
         super.onDraw(canvas);
         drawPage(canvas);
 
 
+    }
+
+    /**
+     * Override onTouch Event. This is responsible for reading the touch
+     * activity to tell where the user clicks and update the x and y coords
+     * accordingly.
+     *
+     * @param event motion event
+     * @return success
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            // record coordinate where user presses down
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                y1 = event.getY();
+                break;
+            // record coordinate where user lifts finger
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                y2 = event.getY();
+
+                if (x1>x2) {
+                    left = x2;
+                    right = x1;
+                } else {
+                    left = x1;
+                    right = x2;
+                }
+
+                if (y1>y2) {
+                    top = y2;
+                    bottom = y1;
+                } else {
+                    top = y1;
+                    bottom = y2;
+                }
+                invalidate();   // forces canvas update
+        }
+        return true;
     }
 }
