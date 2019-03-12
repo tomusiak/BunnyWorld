@@ -13,8 +13,9 @@ public class Page {
     private String displayName;
     private String pageID;
 
-    private Shape selected;  // holds onto the selected shape
-    private Paint borderColor;
+    private Shape selected;     // holds onto the selected shape
+    private Paint borderColor;  // color for selection box
+    private Paint transBoxFill;
 
 
     /**
@@ -29,7 +30,14 @@ public class Page {
 
         // initialize selection color
         borderColor = new Paint();
+        borderColor.setStyle(Paint.Style.STROKE);
+        borderColor.setStrokeWidth(10);
         borderColor.setColor(Color.rgb(190, 21, 21));
+
+        // initialize transparent box color
+        transBoxFill = new Paint();
+        transBoxFill.setStyle(Paint.Style.FILL);
+        transBoxFill.setColor(Color.TRANSPARENT);
 
     }
 
@@ -80,7 +88,10 @@ public class Page {
                             (float)currentShape.getRight() + 10,
                             (float)currentShape.getBottom() + 10);
 
+                    // draw transparent box and colored selection border
+                    canvas.drawRect(shapeBorder, transBoxFill);
                     canvas.drawRect(shapeBorder, borderColor);
+
                 }
 
                 // if this shape is hidden, display it as semi-transparent

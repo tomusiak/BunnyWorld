@@ -203,8 +203,8 @@ public class EditorView extends View {
             }
         }
 
+        // create new bitmap that has transparency
         Bitmap myBitmap = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
-
         myBitmap.setPixels(pixels, 0, bm.getWidth(), 0, 0, bm.getWidth(), bm.getHeight());
 
         // update the shape's internal bitmap and set its attributes
