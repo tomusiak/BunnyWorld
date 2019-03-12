@@ -53,12 +53,14 @@ public class Page {
      */
     public void render(Canvas canvas) {
         // render each shape onto the canvas
+        System.out.println("attempt to render...");
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
             // if shape has a valid bitmap image
             if(currentShape.getImageName() != "") {
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                         (float)currentShape.getY(), null);
+                System.out.println("Rendered.");
 
             }
 
