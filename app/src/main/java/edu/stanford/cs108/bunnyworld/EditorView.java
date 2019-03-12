@@ -116,9 +116,10 @@ public class EditorView extends View {
      * @param page
      */
     public void changeCurrentPage(Page page) {
+        // set selected to null before changing the page
+        if(currentPage != null) currentPage.selected = null;
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
-        //drawPage(canvas); // update canvas to draw this new page
         invalidate();
     }
 

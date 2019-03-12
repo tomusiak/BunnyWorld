@@ -450,8 +450,8 @@ public class EditorActivity extends AppCompatActivity {
 
     private void switchPages(String pageName) {
         currPage = pageName;
-        Page newPage = pages.get(currPage);
-        //editorView.changeCurrentPage(newPage);
+        Page nextPage = pages.get(currPage);
+        editorView.changeCurrentPage(nextPage);
     }
     // Saves current game state into the database.
     public void saveGame(String saveName, HashMap<String, Page> pageMap) {
