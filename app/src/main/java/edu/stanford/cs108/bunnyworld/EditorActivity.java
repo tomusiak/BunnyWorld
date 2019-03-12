@@ -402,6 +402,7 @@ public class EditorActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String newPageName = input.getText().toString();
                 renameShape(newPageName);
+               // Shape selectedShape =
             }
         });
         renameShapePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
