@@ -112,7 +112,7 @@ class Database extends SQLiteOpenHelper {
      * already exists in the HashMap, a new shape is created, its parameters are set according to the table, and it
      * is added to the corresponding page. If the pageID does not exist, a new page is made.
      */
-    private HashMap<String, Page> loadGame(String saveFile) {
+    public HashMap<String, Page> loadGame(String saveFile) {
         int shapeCounter = 0; // Keeps track of which shape is added in sequence. This is highly unlikely to match the original.
         SQLiteDatabase db = this.getWritableDatabase();
         HashMap<String, Page> fullShapeList = new HashMap<> ();
