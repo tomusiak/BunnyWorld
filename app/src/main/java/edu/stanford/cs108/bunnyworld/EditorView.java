@@ -229,12 +229,7 @@ public class EditorView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-//        Shape selected = shapeAtXY(x1, y1);
-//        if(currentPage != null) currentPage.selectShape(selected);
-
         drawPage(canvas);
-
     }
 
     /**
@@ -279,6 +274,13 @@ public class EditorView extends View {
                     bottom = y2;
                 }
 
+            case MotionEvent.ACTION_MOVE:
+                xDelta = event.getX();
+                yDelta = event.getY();
+
+                if(currentPage != null && currentPage.selected != null) {
+                    currentPage.selected.move(xDelta, yDelta);
+                }
 
                 invalidate();   // forces canvas update
         }

@@ -152,8 +152,9 @@ public class Shape {
      * @param newY upper left hand corner y value for new location
      */
     public void move(double newX, double newY) {
-        this.x = newX;
-        this.y = newY;
+
+        this.x = newX - (width / 2);
+        this.y = newY - (height / 2);
     }
 
     /**
