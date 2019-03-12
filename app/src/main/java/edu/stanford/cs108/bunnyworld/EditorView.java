@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.lang.reflect.Array;
@@ -20,16 +21,17 @@ import java.util.ArrayList;
  * TODO: document your custom view class.
  */
 public class EditorView extends View {
-    //canvas
-    private Canvas canvas;
 
-    //ArrayList<Shape> pageState = new ArrayList<Shape>();
+    //private Canvas canvas; // storing the canvas is broken, use onDraw method instead
+
     Page currentPage;
     ArrayList<Shape> starters = new ArrayList<Shape>();
     Shape selected;
 
-    float canvasWidth = canvas.getWidth();
-    float canvasHeight = canvas.getHeight();
+    // Touch activity float variables
+    float x1, y1;   // x and y coordinate of initial press to the screen
+    float x2, y2;   // x and y coordinate of when user lifts finger
+    float top, left, bottom, right;
 
     BitmapDrawable carrotDrawable, carrot2Drawable, deathDrawable, duckDrawable, fireDrawable, mysticDrawable;
 
@@ -54,6 +56,9 @@ public class EditorView extends View {
     private void init() {
         selected = null;
 
+        //canvasWidth = canvas.getWidth();
+        //canvasHeight = canvas.getHeight();
+
         // set up all our starters
         carrotDrawable =
                 (BitmapDrawable) getResources().getDrawable(R.drawable.carrot);
@@ -70,30 +75,36 @@ public class EditorView extends View {
     }
 
     public void drawStarters() {
-        Bitmap carrotBitmap = carrotDrawable.getBitmap();
-        Bitmap carrot2Bitmap = carrot2Drawable.getBitmap();
-        Bitmap deathBitmap = deathDrawable.getBitmap();
-        Bitmap duckBitmap= duckDrawable.getBitmap();
-        Bitmap fireBitmap = fireDrawable.getBitmap();
-        Bitmap mysticBitmap = mysticDrawable.getBitmap();
 
-        float left1 = (float)0.0625*canvasWidth;
-        float left2 = (float)0.375*canvasWidth;
-        float left3 = (float)0.6875*canvasWidth;
 
-        double shapeHeight = 0.25*canvasWidth;
-        double heightSpacer = (0.25*canvasHeight - 2*shapeHeight)/3;
-        double inventoryStart = 0.75*canvasHeight;
+        // this is commented out due to the reason that canvasWidth & canvasHeight
+        // are not able to be assigned in the init() method for the reason that canvas
+        // is only accessible in the onDraw method
 
-        float height1 = (float)(inventoryStart+heightSpacer);
-        float height2 = (float)(height1+shapeHeight+heightSpacer);
-
-        canvas.drawBitmap(carrotBitmap,left1,height1,null);
-        canvas.drawBitmap(carrot2Bitmap,left2,height1,null);
-        canvas.drawBitmap(deathBitmap,left3,height1,null);
-        canvas.drawBitmap(duckBitmap,left1,height2,null);
-        canvas.drawBitmap(fireBitmap,left2,height2,null);
-        canvas.drawBitmap(mysticBitmap,left3,height2,null);
+//        Bitmap carrotBitmap = carrotDrawable.getBitmap();
+//        Bitmap carrot2Bitmap = carrot2Drawable.getBitmap();
+//        Bitmap deathBitmap = deathDrawable.getBitmap();
+//        Bitmap duckBitmap= duckDrawable.getBitmap();
+//        Bitmap fireBitmap = fireDrawable.getBitmap();
+//        Bitmap mysticBitmap = mysticDrawable.getBitmap();
+//
+//        float left1 = (float)0.0625*canvasWidth;
+//        float left2 = (float)0.375*canvasWidth;
+//        float left3 = (float)0.6875*canvasWidth;
+//
+//        double shapeHeight = 0.25*canvasWidth;
+//        double heightSpacer = (0.25*canvasHeight - 2*shapeHeight)/3;
+//        double inventoryStart = 0.75*canvasHeight;
+//
+//        float height1 = (float)(inventoryStart+heightSpacer);
+//        float height2 = (float)(height1+shapeHeight+heightSpacer);
+//
+//        canvas.drawBitmap(carrotBitmap,left1,height1,null);
+//        canvas.drawBitmap(carrot2Bitmap,left2,height1,null);
+//        canvas.drawBitmap(deathBitmap,left3,height1,null);
+//        canvas.drawBitmap(duckBitmap,left1,height2,null);
+//        canvas.drawBitmap(fireBitmap,left2,height2,null);
+//        canvas.drawBitmap(mysticBitmap,left3,height2,null);
     }
 
     /**
@@ -104,6 +115,8 @@ public class EditorView extends View {
     public void changeCurrentPage(Page page) {
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
+        //drawPage(canvas); // update canvas to draw this new page
+        invalidate();
     }
 
     /**
@@ -120,23 +133,25 @@ public class EditorView extends View {
             Shape currentShape = shapes.get(i);
             String imageID = currentShape.getImageName();
 
-            // create a bitmap and store it inside the current shape
+            int bitmapID = getResources().getIdentifier(imageID, "drawable", getContext().getPackageName());
             BitmapDrawable drawableBM =
-                    (BitmapDrawable) getResources().getDrawable(R.drawable.(imageID));
-
+                    (BitmapDrawable) getResources().getDrawable(bitmapID);
             currentShape.setBitmap(drawableBM.getBitmap());
 
         }
+
+        invalidate();
     }
 
     /**
      * Renders the current page in question on the canvas by calling the
      * page's render function.
      */
-    public void drawPage() {
+    public void drawPage(Canvas canvas) {
 
-        clearCanvas();
-        currentPage.render(canvas);
+        //clearCanvas(canvas);
+        System.out.println("CURRENT PAGE IS " + currentPage);
+        if(currentPage != null) currentPage.render(canvas);
     }
 
 
@@ -151,19 +166,78 @@ public class EditorView extends View {
         String imageID = shape.getImageName();
 
         // create a bitmap and store it inside the current shape
+        int bitmapDrawableID = getResources().getIdentifier(imageID, "drawable", getContext().getPackageName());
         BitmapDrawable drawableBM =
-                (BitmapDrawable) getResources().getDrawable(R.drawable.(imageID));
+                (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
 
         shape.setBitmap(drawableBM.getBitmap());
-    }
 
-    // passes a reference to the canvas
-    public Canvas getCanvas() {
-        return canvas;
+        invalidate();
     }
 
     // clears the canvas
-    private void clearCanvas() {
+    private void clearCanvas(Canvas canvas) {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+    }
+
+
+    /**
+     * Override onDraw method. This will update the canvas to reflect the
+     * most recent updates to the pages and objects.
+     *
+     * This is only called when the current view is invalidated and forced
+     * to update. This only occurs 1. at the beginning and 2. when invalidate()
+     * is called.
+     * @param canvas
+     */
+    @Override
+    protected void onDraw(Canvas canvas) {
+
+        super.onDraw(canvas);
+        drawPage(canvas);
+
+
+    }
+
+    /**
+     * Override onTouch Event. This is responsible for reading the touch
+     * activity to tell where the user clicks and update the x and y coords
+     * accordingly.
+     *
+     * @param event motion event
+     * @return success
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            // record coordinate where user presses down
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                y1 = event.getY();
+                break;
+            // record coordinate where user lifts finger
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                y2 = event.getY();
+
+                if (x1>x2) {
+                    left = x2;
+                    right = x1;
+                } else {
+                    left = x1;
+                    right = x2;
+                }
+
+                if (y1>y2) {
+                    top = y2;
+                    bottom = y1;
+                } else {
+                    top = y1;
+                    bottom = y2;
+                }
+                invalidate();   // forces canvas update
+        }
+        return true;
     }
 }

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -13,7 +14,6 @@ import android.app.*;
 import android.content.*;
 import android.widget.*;
 import android.text.*;
-import java.security.AccessController.*;
 
 /*
     edu.stanford.cs108.bunnyworld.EditorActivity Class is the class that encapsulates an instance
@@ -23,12 +23,15 @@ import java.security.AccessController.*;
  */
 public class EditorActivity extends AppCompatActivity {
 
+    // use unique ID when looking up in hashmaps and when adding to script
     private int numShapes;
-    private int numPages;
-    //private HashMap<String, ArrayList<Shape>> pages;
-    private HashMap<String, Page> pages;
+    private int numPages;  // number of pages created so far, accumulative
+    private HashMap<String, Page> pages; // map the unique page IDs to Page objects
+    private HashMap<String, String> displayNameToID;
     private String currPage;
+    private Page currentPage;
     private String currScript;
+    EditorView editorView;
 
     // add copy and paste functionality
 
@@ -183,21 +186,21 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void scriptGoToDialog() {
+        ArrayList<String> names = new ArrayList<>();
+        // builds arraylist of page display names for user to select
+        for (String uniquePageID: pages.keySet()) {
+            names.add(pages.get(uniquePageID).getDisplayName());
+        }
+        final String[] pageNames = names.toArray(new String[pages.size()]);
         AlertDialog.Builder goToPrompt = new AlertDialog.Builder(this);
-        goToPrompt.setTitle("Input Name of Page: ");
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        goToPrompt.setView(input);
-        goToPrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        goToPrompt.setTitle("Select Name of Page: ");
+        goToPrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                currScript += input.getText().toString() + " ";
-            }
-        });
-        goToPrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onClick(DialogInterface dialog, int selection) {
+                String newPageName = pageNames[selection];
+                // from the selected display name, pull the original page object
+                String uniqueID = displayNameToID.get(newPageName);
+                currScript += uniqueID + " ";
             }
         });
         goToPrompt.show();
@@ -238,12 +241,17 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void addPage() {
-        Page newPage = new Page();
         numPages++;
-        String pageName = "page" + numPages;
-        currPage = pageName;
-        pages.put(pageName, newPage);
-        //EditorView view = (EditorView) ((Activity) getContext()).findViewById(R.id.Edit);
+        String uniquePageID = "page" + numPages; // create unique identifier for page
+        String pageName = uniquePageID + "";     // modifiable default page name
+        currPage = uniquePageID;
+        displayNameToID.put(pageName, uniquePageID);
+
+        Page newPage = new Page(pageName, uniquePageID);
+        pages.put(uniquePageID, newPage);
+
+        currentPage = newPage;
+        editorView.changeCurrentPage(currentPage);  // update the current page in the view
     }
 
     private void addMoreDialog() {
@@ -268,17 +276,29 @@ public class EditorActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void deletePage() {
-        pages.remove(currPage);
-        // update custom view to display another page
-        // figure out starter page
-    }
-
     private void addShape() {
+        makePopUp();
+
         numShapes++;
         String shapeName = "shape" + numShapes;
         Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
         addToast.show();
+
+        // example of building a shape from a shape image name
+        String shapeImgName = "carrot";
+        Shape shape = new Shape(numShapes, shapeImgName, "",
+                20, 20, 50, 50);
+
+        currentPage.addShape(shape);
+        System.out.println("adding shape.");
+
+        editorView.renderShape(shape);
+        //editorView.drawPage();
+
+    }
+
+    private void makePopUp() {
+
     }
 
     private void deleteShape() {
@@ -297,7 +317,10 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 String pageName = pageNames[selection];
-                pages.remove(pageName);
+                String uniqueID = displayNameToID.get(pageName);
+                pages.remove(uniqueID);
+                // update custom view to reflect this
+                // figure out starter page
                 Toast pageNameToast = Toast.makeText(getApplicationContext(), pageName + " Deleted",Toast.LENGTH_SHORT);
                 pageNameToast.show();
             }
@@ -384,9 +407,11 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void loadNewGame() {
+        editorView = findViewById(R.id.editorView);
         numShapes = 0;
         numPages = 0;
         pages = new HashMap<>();
+        displayNameToID = new HashMap<>();
         addPage();
         Toast addToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
         addToast.show();
@@ -401,8 +426,9 @@ public class EditorActivity extends AppCompatActivity {
     // change this to list the pages so the user can see options
     private void goToNewPageDialog() {
         ArrayList<String> names = new ArrayList<>();
-        for (String page: pages.keySet()) {
-            names.add(page);
+        // builds arraylist of page display names for user to select
+        for (String uniquePageID: pages.keySet()) {
+            names.add(pages.get(uniquePageID).getDisplayName());
         }
         final String[] pageNames = names.toArray(new String[pages.size()]);
         AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
@@ -413,18 +439,23 @@ public class EditorActivity extends AppCompatActivity {
                 String newPageName = pageNames[selection];
                 Toast pageNameToast = Toast.makeText(getApplicationContext(),newPageName,Toast.LENGTH_SHORT);
                 pageNameToast.show();
-                switchPages(newPageName);
+
+                // from the selected display name, pull the original page object
+                String uniqueID = displayNameToID.get(newPageName);
+                switchPages(uniqueID);
             }
         });
         newPagePrompt.show();
     }
 
-    private void switchPages(String newPage) {
-        currPage = newPage;
+    private void switchPages(String pageName) {
+        currPage = pageName;
+        Page newPage = pages.get(currPage);
+        //editorView.changeCurrentPage(newPage);
     }
     // Saves current game state into the database.
-    public void saveGame(String saveName, HashMap<String, ArrayList<Shape>> shapeMap) {
+    public void saveGame(String saveName, HashMap<String, Page> pageMap) {
         Database db = Database.getInstance(getApplicationContext());
-        db.saveGame(saveName, shapeMap);
+        db.saveGame(saveName, pageMap);
     }
 }

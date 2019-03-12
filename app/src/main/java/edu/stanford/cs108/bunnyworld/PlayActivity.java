@@ -16,7 +16,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PlayActivity extends AppCompatActivity {
-    static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
+
+    // Commented out this first line and replaced with a Hashmap<String, Page> to match agreed upon structures
+    //static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
+    static HashMap<String, Page> pageMap; // Maps string keys to page objects
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +48,12 @@ public class PlayActivity extends AppCompatActivity {
                 });
                 grabDatabase(saveGame); // Dumps save information into the HashMap containing pages and shapes.
         dialog.show();
+
     }
 
     // Imports save data once user decides to play.
     public void grabDatabase(String saveName) {
         Database thisDatabase = Database.getInstance(getApplicationContext()); // Gets context.
-        fullShapeList = thisDatabase.loadGame(saveName);
+        pageMap = thisDatabase.loadGame(saveName);
     }
 }

@@ -7,13 +7,19 @@ import java.util.ArrayList;
 public class Page {
 
     ArrayList<Shape> shapes;
+    String displayName;
+    String pageID;
+
 
     /**
      * Constructor for the Page Class. This is the empty
      * constructor used for buiding a brand new page in the editor.
      */
-    public Page() {
+    public Page(String name, String uniquePageID) {
         shapes = new ArrayList<Shape>();
+        displayName = name;
+        pageID = uniquePageID;
+
     }
 
     /**
@@ -47,12 +53,14 @@ public class Page {
      */
     public void render(Canvas canvas) {
         // render each shape onto the canvas
+        System.out.println("attempt to render...");
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
             // if shape has a valid bitmap image
             if(currentShape.getImageName() != "") {
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                         (float)currentShape.getY(), null);
+                System.out.println("Rendered.");
 
             }
 
@@ -78,5 +86,17 @@ public class Page {
      * clean.
      */
     public void clearShapes() { shapes.clear(); }
+
+    public ArrayList<Shape> getShapes() {
+        return shapes;
+    }
+
+    /**
+     * Get the unique identifier of this page
+     * @return the page's unique ID number
+     */
+    public String getPageID() { return pageID; }
+
+    public String getDisplayName() { return displayName; }
 
 }
