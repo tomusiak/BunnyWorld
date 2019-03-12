@@ -24,9 +24,11 @@ public class EditorView extends View {
 
     //private Canvas canvas; // storing the canvas is broken, use onDraw method instead
 
+    private int TRANSPARENT = Color.WHITE;
     Page currentPage;
     ArrayList<Shape> starters = new ArrayList<Shape>();
     Shape selected;
+
 
     // Touch activity float variables
     float x1, y1;   // x and y coordinate of initial press to the screen
@@ -56,6 +58,7 @@ public class EditorView extends View {
 
     private void init() {
         selected = null;
+
 
         //canvasWidth = canvas.getWidth();
         //canvasHeight = canvas.getHeight();
@@ -190,8 +193,22 @@ public class EditorView extends View {
         BitmapDrawable drawableBM =
                 (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
 
+        // get bitmap from image resource and adjust the transparent pixels
         Bitmap bm = drawableBM.getBitmap();
-        shape.setBitmap(bm);
+        int[] pixels = new int[bm.getHeight() * bm.getWidth()];
+        bm.getPixels(pixels, 0, bm.getWidth(), 0, 0, bm.getWidth(), bm.getHeight());
+        for(int p = 0; p < bm.getHeight() * bm.getWidth(); p++) {
+            if(pixels[p] == TRANSPARENT) {
+                pixels[p] = Color.alpha(Color.TRANSPARENT);
+            }
+        }
+
+        Bitmap myBitmap = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
+
+        myBitmap.setPixels(pixels, 0, bm.getWidth(), 0, 0, bm.getWidth(), bm.getHeight());
+
+        // update the shape's internal bitmap and set its attributes
+        shape.setBitmap(myBitmap);
         shape.setWidth(bm.getWidth());
         shape.setHeight(bm.getHeight());
 
