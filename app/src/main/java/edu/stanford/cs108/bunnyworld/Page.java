@@ -123,6 +123,12 @@ public class Page {
     public String getDisplayName() { return displayName; }
 
     /**
+     * Updates this page's display name.
+     * @param name to change displayName to
+     */
+    public void changeDisplayName(String name) { displayName = name; }
+
+    /**
      * Set a specific shape on the page as selected
      * @param select shape to be marked as selected
      */

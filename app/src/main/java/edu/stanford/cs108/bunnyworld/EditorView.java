@@ -229,8 +229,8 @@ public class EditorView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Shape selected = shapeAtXY(x1, y1);
-        if(currentPage != null) currentPage.selectShape(selected);
+//        Shape selected = shapeAtXY(x1, y1);
+//        if(currentPage != null) currentPage.selectShape(selected);
 
         drawPage(canvas);
 
@@ -252,6 +252,10 @@ public class EditorView extends View {
             case MotionEvent.ACTION_DOWN:
                 x1 = event.getX();
                 y1 = event.getY();
+
+                Shape selected = shapeAtXY(x1, y1);
+                if(currentPage != null) currentPage.selectShape(selected);
+
                 break;
             // record coordinate where user lifts finger
             case MotionEvent.ACTION_UP:
@@ -273,17 +277,6 @@ public class EditorView extends View {
                     top = y1;
                     bottom = y2;
                 }
-               // break;
-
-//            case MotionEvent.ACTION_MOVE:
-//                xDelta = event.getX();
-//                yDelta = event.getY();
-//
-//                if(currentPage != null && currentPage.selected != null) {
-//                    currentPage.selected.move(xDelta, yDelta);
-//                }
-
-
 
 
                 invalidate();   // forces canvas update
