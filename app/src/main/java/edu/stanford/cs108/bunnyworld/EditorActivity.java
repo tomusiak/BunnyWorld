@@ -308,10 +308,15 @@ public class EditorActivity extends AppCompatActivity {
      * Deletes the selected shape on the canvas.
      */
     private void deleteShape() {
-
-
-
-
+        // if we
+        if(editorView.deleteShape()) {
+            Toast addToast = Toast.makeText(getApplicationContext(),"Shape successfully deleted.",Toast.LENGTH_SHORT);
+            addToast.show();
+        } else {
+            // show toast message if deletion did not work
+            Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
+            addToast.show();
+        }
     }
 
     private void deletePageDialog() {

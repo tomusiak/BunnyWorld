@@ -159,8 +159,9 @@ public class EditorView extends View {
 
 
     /**
-     * Deletes the
-     * @return
+     * Deletes the currently selected shape if one exists & returns true
+     * upon success. Also will force the canvas to reflect this update.
+     * @return true/false bases upon success of deletion
      */
     public boolean deleteShape() {
 
@@ -170,8 +171,7 @@ public class EditorView extends View {
             invalidate();
             return true;
         }
-
-        return false;
+        return false;   // no shape to delete
     }
 
 
