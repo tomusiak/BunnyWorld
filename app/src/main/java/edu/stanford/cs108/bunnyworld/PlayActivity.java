@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 public class PlayActivity extends AppCompatActivity {
 
-
+    Page currentPage = new Page;
     static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
 
     @Override
@@ -53,6 +53,6 @@ public class PlayActivity extends AppCompatActivity {
     // Imports save data once user decides to play.
     public void grabDatabase(String saveName) {
         Database thisDatabase = Database.getInstance(getApplicationContext()); // Gets context.
-        fullShapeList = thisDatabase.loadGame(saveName);
+        //fullShapeList = thisDatabase.loadGame(saveName);
     }
 }

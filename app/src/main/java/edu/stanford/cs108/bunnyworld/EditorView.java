@@ -25,7 +25,6 @@ public class EditorView extends View {
 
     //ArrayList<Shape> pageState = new ArrayList<Shape>();
     Page currentPage;
-    ArrayList<Shape> starters = new ArrayList<Shape>();
     Shape selected;
 
     float canvasWidth;
@@ -40,8 +39,6 @@ public class EditorView extends View {
 
     public EditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
-        drawStarters();
 
         // myPaint is a placeholder
         myPaint.setColor(Color.rgb(255,0,0));
@@ -51,53 +48,6 @@ public class EditorView extends View {
         selectPaint.setStyle(Paint.Style.STROKE);
     }
 
-    private void init() {
-        selected = null;
-
-        //canvasWidth = canvas.getWidth();
-        //canvasHeight = canvas.getHeight();
-
-        // set up all our starters
-        carrotDrawable =
-                (BitmapDrawable) getResources().getDrawable(R.drawable.carrot);
-        carrot2Drawable =
-                (BitmapDrawable) getResources().getDrawable(R.drawable.carrot2);
-        deathDrawable =
-                (BitmapDrawable) getResources().getDrawable(R.drawable.death);
-        duckDrawable =
-                (BitmapDrawable) getResources().getDrawable(R.drawable.duck);
-        fireDrawable =
-                (BitmapDrawable) getResources().getDrawable(R.drawable.fire);
-        mysticDrawable =
-                (BitmapDrawable) getResources().getDrawable(R.drawable.mystic);
-    }
-
-    public void drawStarters() {
-//        Bitmap carrotBitmap = carrotDrawable.getBitmap();
-//        Bitmap carrot2Bitmap = carrot2Drawable.getBitmap();
-//        Bitmap deathBitmap = deathDrawable.getBitmap();
-//        Bitmap duckBitmap= duckDrawable.getBitmap();
-//        Bitmap fireBitmap = fireDrawable.getBitmap();
-//        Bitmap mysticBitmap = mysticDrawable.getBitmap();
-//
-//        float left1 = (float)0.0625*canvasWidth;
-//        float left2 = (float)0.375*canvasWidth;
-//        float left3 = (float)0.6875*canvasWidth;
-//
-//        double shapeHeight = 0.25*canvasWidth;
-//        double heightSpacer = (0.25*canvasHeight - 2*shapeHeight)/3;
-//        double inventoryStart = 0.75*canvasHeight;
-//
-//        float height1 = (float)(inventoryStart+heightSpacer);
-//        float height2 = (float)(height1+shapeHeight+heightSpacer);
-//
-//        canvas.drawBitmap(carrotBitmap,left1,height1,null);
-//        canvas.drawBitmap(carrot2Bitmap,left2,height1,null);
-//        canvas.drawBitmap(deathBitmap,left3,height1,null);
-//        canvas.drawBitmap(duckBitmap,left1,height2,null);
-//        canvas.drawBitmap(fireBitmap,left2,height2,null);
-//        canvas.drawBitmap(mysticBitmap,left3,height2,null);
-    }
 
     /**
      * Update the current working page displayed in the editor view to
