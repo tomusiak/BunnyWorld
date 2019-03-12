@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     private String script;
     AnimationDrawable rocketAnimation;
 
+    // CHANGE TO SET OF CLAUSES
+
     // actions
     private static final String GOTO = "goto";
     private static final String PLAY = "play";

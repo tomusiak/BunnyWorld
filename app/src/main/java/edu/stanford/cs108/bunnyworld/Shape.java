@@ -1,7 +1,6 @@
 package edu.stanford.cs108.bunnyworld;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 
 /*
     The edu.stanford.cs108.bunnyworld.Shape class represents an object that has been added
@@ -24,6 +23,7 @@ public class Shape {
     private int fontSize;
     private static final int DEFAULT_FONT_SIZE = 24;
 
+    // Script stored as a list of Strings; scripts can have multiple command clauses
     private String script;
 
     Bitmap bitmap;
@@ -94,7 +94,7 @@ public class Shape {
 
     /**
      * Modifier method for text being displayed
-     * @param text the user-set name of the shape
+     * @param text the user-set text
      */
     public void setText(String text) { this.text = text; };
 

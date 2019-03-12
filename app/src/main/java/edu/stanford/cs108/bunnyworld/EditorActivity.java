@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -276,6 +277,8 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void addShape() {
+        makePopUp();
+
         numShapes++;
         String shapeName = "shape" + numShapes;
         Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
@@ -291,6 +294,10 @@ public class EditorActivity extends AppCompatActivity {
 
         editorView.renderShape(shape);
         //editorView.drawPage();
+
+    }
+
+    private void makePopUp() {
 
     }
 
