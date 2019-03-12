@@ -304,7 +304,13 @@ public class EditorActivity extends AppCompatActivity {
         makeShape.show(getSupportFragmentManager(), "make shape");
     }
 
+    /**
+     * Deletes the selected shape on the canvas.
+     */
     private void deleteShape() {
+
+
+
 
     }
 
