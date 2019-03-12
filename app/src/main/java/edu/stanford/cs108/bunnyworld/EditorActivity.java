@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -19,28 +18,31 @@ import android.text.*;
     edu.stanford.cs108.bunnyworld.EditorActivity Class is the class that encapsulates an instance
     of the BunnyWorld editor. It is responsible for managing all the
     pages that the user may wish to create, and display the possible
-    resource objects that can be added to the pages.
+    resource objects that can be added to the pages. It also translates button commands into Shape script.
  */
 public class EditorActivity extends AppCompatActivity {
 
-    // use unique ID when looking up in hashmaps and when adding to script
-    private int numShapes;
-    private int numPages;  // number of pages created so far, accumulative
-    private HashMap<String, Page> pages; // map the unique page IDs to Page objects
-    private HashMap<String, String> displayNameToID;
+    private int numShapes; // Tracks unique ID of shape when looking up in HashMap and adding to script
+    private int numPages;  // Tracks cumulative number of pages created so far
+    private HashMap<String, Page> pages; // Maps unique Page IDs to Page objects
+    private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
     private String currPage;
     private Page currentPage;
     private String currScript;
-    EditorView editorView;
+    private EditorView editorView;
 
-    // add copy and paste functionality
+    /* TODO: Add copy and paste functionality */
 
+    /**
+     * Sets up spinners and their respective functions upon creation of page
+     * @param savedInstanceState current saved state to be initialized
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        // Page Options Spinner
+        // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
         String[] pageOptions = new String[]{"Page Options:", "Create Page", "Name Page", "Delete Page", "Open Page"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
@@ -72,11 +74,11 @@ public class EditorActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                // Do nothing
             }
         });
 
-        // Shape Options Spinner
+        // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
         String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Name Shape", "Edit Shape", "Delete Shape"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
@@ -104,11 +106,11 @@ public class EditorActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                // Do nothing
             }
         });
 
-        // Scrip Options Spinner
+        // Initialize spinner for script options
         final Spinner scriptSpinner = findViewById(R.id.scriptSpinner);
         String[] scriptOptions = new String[]{"Script Options:", "Create Script", "Show Script"};
         ArrayAdapter<String> scriptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, scriptOptions);
@@ -130,19 +132,27 @@ public class EditorActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                // Do nothing
             }
         });
-
         showCustomDialog();
-
     }
 
+    /**
+     * Generates script given clicked commands
+     * Pre-condition: User has gone through the other spinners and clicked sufficient options to generate a valid script
+     */
     private void handleScript() {
+        // Initializes empty String to add new script
         currScript = "";
         scriptTriggersDialog();
+        // TODO: in Shape, setScript(getScript() + currScript)
     }
 
+    /**
+     * Converts trigger-related button clicks into script text and adds to currScript
+     * Calls scriptActionsDialog() method to set script actions after trigger option is saved
+     */
     private void scriptTriggersDialog() {
         final String[] scriptTriggers = new String[]{"On Click", "On Enter", "On Drop"};
         AlertDialog.Builder triggersPrompt = new AlertDialog.Builder(this);
@@ -151,12 +161,17 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 currScript += scriptTriggers[selection] + " ";
+                // Allows users to set actions after setting triggers
                 scriptActionsDialog();
             }
         });
         triggersPrompt.show();
     }
 
+    /**
+     * Converts action-related button clicks into script text and adds to currScript
+     * Calls respective methods for each action to continue adding to currScript
+     */
     private void scriptActionsDialog() {
         final String[] scriptActions = new String[]{"Go To", "Play", "Hide", "Show"};
         AlertDialog.Builder actionsPrompt = new AlertDialog.Builder(this);
@@ -185,9 +200,12 @@ public class EditorActivity extends AppCompatActivity {
         actionsPrompt.show();
     }
 
+    /**
+     * Parses and adds "go to" + Page command to currScript
+     */
     private void scriptGoToDialog() {
+        // Generates ArrayList of all current page display names for the user to select from
         ArrayList<String> names = new ArrayList<>();
-        // builds arraylist of page display names for user to select
         for (String uniquePageID: pages.keySet()) {
             names.add(pages.get(uniquePageID).getDisplayName());
         }
@@ -198,7 +216,7 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 String newPageName = pageNames[selection];
-                // from the selected display name, pull the original page object
+                // From the selected display name, pull the original page object
                 String uniqueID = displayNameToID.get(newPageName);
                 currScript += uniqueID + " ";
             }
@@ -206,7 +224,11 @@ public class EditorActivity extends AppCompatActivity {
         goToPrompt.show();
     }
 
+    /**
+     * Parses and adds "play" + SoundName command to currScript
+     */
     private void scriptPlayDialog() {
+        // Predetermined list of names of sounds
         final String[] scriptSounds = new String[]{"CarrotCarrotCarrot", "EvilLaugh", "Fire", "Hooray", "Munch", "Munching", "Woof"};
         AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
         playPrompt.setTitle("Select Script Trigger: ");
@@ -219,18 +241,23 @@ public class EditorActivity extends AppCompatActivity {
         playPrompt.show();
     }
 
+    /**
+     * Allows for custom input of Shape names by the user
+     */
     private void scriptShapeNameDialog() {
         AlertDialog.Builder shapeNamePrompt = new AlertDialog.Builder(this);
         shapeNamePrompt.setTitle("Input Name of Shape: ");
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         shapeNamePrompt.setView(input);
+        // Saves Shape name
         shapeNamePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 currScript += input.getText().toString() + " ";
             }
         });
+        // Enables cancel option
         shapeNamePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -240,10 +267,16 @@ public class EditorActivity extends AppCompatActivity {
         shapeNamePrompt.show();
     }
 
+    /**
+     * Creates new Page and initializes relevant internal variables
+     */
     private void addPage() {
         numPages++;
-        String uniquePageID = "page" + numPages; // create unique identifier for page
-        String pageName = uniquePageID + "";     // modifiable default page name
+        // Creates internal unique page ID
+        String uniquePageID = "page" + numPages;
+        // Creates user-modifiable default page name
+        String pageName = uniquePageID + "";
+        // Sets current page to be the newly created internal unique page ID
         currPage = uniquePageID;
         displayNameToID.put(pageName, uniquePageID);
 
@@ -251,12 +284,18 @@ public class EditorActivity extends AppCompatActivity {
         pages.put(uniquePageID, newPage);
 
         currentPage = newPage;
-        editorView.changeCurrentPage(currentPage);  // update the current page in the view
+        // Updates the current page in the view
+        editorView.changeCurrentPage(currentPage);
     }
 
+    /**
+     * Enables loop to add more commands to dialog
+     * Pre-condition: User has already added some dialog on the first go-around
+     */
     private void addMoreDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage("Add More Actions to Script Trigger?");
+        // Enables option to add more commands
         dialog.setPositiveButton(
                 "Yes",
                 new DialogInterface.OnClickListener() {
@@ -264,6 +303,7 @@ public class EditorActivity extends AppCompatActivity {
                         scriptActionsDialog();
                     }
                 });
+        // Enables option to not add more commands
         dialog.setNegativeButton(
                 "NO",
                 new DialogInterface.OnClickListener() {
@@ -276,6 +316,9 @@ public class EditorActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Adds shape to screen and tracks it internally
+     */
     private void addShape() {
         makePopUp();
 
@@ -284,28 +327,37 @@ public class EditorActivity extends AppCompatActivity {
         Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
         addToast.show();
 
-        // example of building a shape from a shape image name
+        // Sample: Building a shape from a shape image name
         String shapeImgName = "carrot";
         Shape shape = new Shape(numShapes, shapeImgName, "",
                 20, 20, 50, 50);
 
         currentPage.addShape(shape);
-        System.out.println("adding shape.");
+        // System.out.println("Adding shape.");
 
         editorView.renderShape(shape);
         //editorView.drawPage();
-
     }
 
+    /**
+     * TODO: Makes shape appear on screen
+     */
     private void makePopUp() {
 
     }
 
+    /**
+     * TODO: Deletes shape from screen
+     */
     private void deleteShape() {
 
     }
 
+    /**
+     * Deletes selected page from internal data structures and external view
+     */
     private void deletePageDialog() {
+        // Gets names of all pages
         ArrayList<String> names = new ArrayList<>();
         for (String page: pages.keySet()) {
             names.add(page);
@@ -316,11 +368,12 @@ public class EditorActivity extends AppCompatActivity {
         deleteShapePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
+                // Removes correct page from pages
                 String pageName = pageNames[selection];
                 String uniqueID = displayNameToID.get(pageName);
                 pages.remove(uniqueID);
-                // update custom view to reflect this
-                // figure out starter page
+                // TODO: update custom view to reflect this
+                // TODO: figure out starter page
                 Toast pageNameToast = Toast.makeText(getApplicationContext(), pageName + " Deleted",Toast.LENGTH_SHORT);
                 pageNameToast.show();
             }
@@ -328,14 +381,16 @@ public class EditorActivity extends AppCompatActivity {
         deleteShapePrompt.show();
     }
 
-    // prompts the user to input a new name for the page
+    /**
+     * Takes in user input to rename page in internal structures and external view
+     */
     private void renamePageDialog() {
-
         AlertDialog.Builder renamePagePrompt = new AlertDialog.Builder(this);
         renamePagePrompt.setTitle("Input New Name For Page: ");
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         renamePagePrompt.setView(input);
+        // Enables add option
         renamePagePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -343,6 +398,7 @@ public class EditorActivity extends AppCompatActivity {
                 renamePage(newPageName);
             }
         });
+        // Enables cancel option
         renamePagePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -352,19 +408,25 @@ public class EditorActivity extends AppCompatActivity {
         renamePagePrompt.show();
     }
 
+    /**
+     * TODO: Helper method to rename page internally
+     * @param newName the new name of the page
+     */
     private void renamePage(String newName) {
         //ArrayList<Shape> page = pages.remove(currPage);
         //pages.put(newName, page);
     }
 
-    // prompts the user to input a new name for the shape
+    /**
+     * Prompts user to input a new name for the shape
+     */
     private void renameShapeDialog() {
-
         AlertDialog.Builder renameShapePrompt = new AlertDialog.Builder(this);
         renameShapePrompt.setTitle("Input New Name For Shape: ");
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
         renameShapePrompt.setView(input);
+        // Enables saving new name
         renameShapePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -372,6 +434,7 @@ public class EditorActivity extends AppCompatActivity {
                 renameShape(newPageName);
             }
         });
+        // Cancels save
         renameShapePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -381,14 +444,21 @@ public class EditorActivity extends AppCompatActivity {
         renameShapePrompt.show();
     }
 
+    /**
+     * TODO: Helper method to rename shape internally
+     * @param newName the new name of the shape
+     */
     private void renameShape(String newName) {
 
     }
 
-    // prompts the user to either load a new game or load an existing game
+    /**
+     * Prompts the user to either load a new game or load an existing game
+     */
     private void showCustomDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage("Create a new game or open an existing game?");
+        // Creates new game
         dialog.setPositiveButton(
                 "Create New Game",
                 new DialogInterface.OnClickListener() {
@@ -396,6 +466,7 @@ public class EditorActivity extends AppCompatActivity {
                         loadNewGame();
                     }
                 });
+        // Opens existing game
         dialog.setNegativeButton(
                 "Open Existing Game",
                 new DialogInterface.OnClickListener() {
@@ -406,6 +477,9 @@ public class EditorActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Helper method to add and load new game
+     */
     private void loadNewGame() {
         editorView = findViewById(R.id.editorView);
         numShapes = 0;
@@ -417,16 +491,21 @@ public class EditorActivity extends AppCompatActivity {
         addToast.show();
     }
 
-    // deal with this once Allan adds database method that returns names of games
+    /**
+     * TODO: complete once database method that returns names of games is complete
+     */
     private void loadExistingGame(){
         Database db = Database.getInstance(getApplicationContext());
         //db.loadGame()
     }
 
-    // change this to list the pages so the user can see options
+    /**
+     * TODO: Change this to list the pages so the user can see options
+     * Goes to new page based on user input
+     */
     private void goToNewPageDialog() {
         ArrayList<String> names = new ArrayList<>();
-        // builds arraylist of page display names for user to select
+        // Builds ArrayList of page display names for user to select
         for (String uniquePageID: pages.keySet()) {
             names.add(pages.get(uniquePageID).getDisplayName());
         }
@@ -440,7 +519,7 @@ public class EditorActivity extends AppCompatActivity {
                 Toast pageNameToast = Toast.makeText(getApplicationContext(),newPageName,Toast.LENGTH_SHORT);
                 pageNameToast.show();
 
-                // from the selected display name, pull the original page object
+                // From the selected display name, pull the original page object
                 String uniqueID = displayNameToID.get(newPageName);
                 switchPages(uniqueID);
             }
@@ -448,12 +527,19 @@ public class EditorActivity extends AppCompatActivity {
         newPagePrompt.show();
     }
 
+    /**
+     * Helper method to switch between pages
+     * @param pageName the page to switch to
+     */
     private void switchPages(String pageName) {
         currPage = pageName;
         Page newPage = pages.get(currPage);
         //editorView.changeCurrentPage(newPage);
     }
-    // Saves current game state into the database.
+
+    /**
+     * Saves current game state into the database.
+     */
     public void saveGame(String saveName, HashMap<String, Page> pageMap) {
         Database db = Database.getInstance(getApplicationContext());
         db.saveGame(saveName, pageMap);
