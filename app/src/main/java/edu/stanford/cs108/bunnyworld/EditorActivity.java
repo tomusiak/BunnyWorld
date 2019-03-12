@@ -42,7 +42,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Page Options Spinner
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Name Page", "Delete Page", "Open Page"};
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
         pageSpinner.setSelection(0);
@@ -58,7 +58,7 @@ public class EditorActivity extends AppCompatActivity {
                         addPageToast.show();
                         break;
                     case 2:
-                        renamePageDialog();
+                        selectPageToRenameDialog();
                         break;
                     case 3:
                         deletePageDialog();
@@ -78,7 +78,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Shape Options Spinner
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Name Shape", "Edit Shape", "Delete Shape"};
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -328,8 +328,28 @@ public class EditorActivity extends AppCompatActivity {
         deleteShapePrompt.show();
     }
 
+    // prompts the user to select which page (of the created pages) to rename
+    private void selectPageToRenameDialog() {
+        ArrayList<String> names = new ArrayList<>();
+        for (String page: pages.keySet()) {
+            names.add(page);
+        }
+        final String[] pageNames = names.toArray(new String[pages.size()]);
+        AlertDialog.Builder pageToRenamePrompt = new AlertDialog.Builder(this);
+        pageToRenamePrompt.setTitle("Page To Delete: ");
+        pageToRenamePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String pageName = pageNames[selection];
+                String uniqueID = displayNameToID.get(pageName);
+                renamePageDialog(uniqueID);
+            }
+        });
+        pageToRenamePrompt.show();
+    }
+
     // prompts the user to input a new name for the page
-    private void renamePageDialog() {
+    private void renamePageDialog(final String uniqueID) {
 
         AlertDialog.Builder renamePagePrompt = new AlertDialog.Builder(this);
         renamePagePrompt.setTitle("Input New Name For Page: ");
@@ -340,7 +360,7 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newPageName = input.getText().toString();
-                renamePage(newPageName);
+                renamePage(newPageName, uniqueID);
             }
         });
         renamePagePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -352,7 +372,8 @@ public class EditorActivity extends AppCompatActivity {
         renamePagePrompt.show();
     }
 
-    private void renamePage(String newName) {
+    private void renamePage(String newName, String uniqueID) {
+        Page page = pages.remove(uniqueID);
         //ArrayList<Shape> page = pages.remove(currPage);
         //pages.put(newName, page);
     }
