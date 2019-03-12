@@ -69,7 +69,6 @@ public class Page {
             // if shape has a valid bitmap image
             if(currentShape.getImageName() != "") {
 
-                System.out.println("current shape is: " + currentShape);
                 // if the shape to be drawn is selected, render a box around it
                 if(currentShape == selected) {
 
@@ -80,7 +79,6 @@ public class Page {
                             (float)currentShape.getBottom() + 10);
 
                     canvas.drawRect(shapeBorder, borderColor);
-                    System.out.println("rendered border!");
                 }
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                         (float)currentShape.getY(), null);
@@ -123,6 +121,12 @@ public class Page {
     public String getPageID() { return pageID; }
 
     public String getDisplayName() { return displayName; }
+
+    /**
+     * Updates this page's display name.
+     * @param name to change displayName to
+     */
+    public void changeDisplayName(String name) { displayName = name; }
 
     /**
      * Set a specific shape on the page as selected

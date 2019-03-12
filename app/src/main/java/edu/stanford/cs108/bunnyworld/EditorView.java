@@ -32,6 +32,7 @@ public class EditorView extends View {
     float x1, y1;   // x and y coordinate of initial press to the screen
     float x2, y2;   // x and y coordinate of when user lifts finger
     float top, left, bottom, right;
+    float xDelta, yDelta;
 
     BitmapDrawable carrotDrawable, carrot2Drawable, deathDrawable, duckDrawable, fireDrawable, mysticDrawable;
 
@@ -152,7 +153,6 @@ public class EditorView extends View {
     public void drawPage(Canvas canvas) {
 
         //clearCanvas(canvas);
-        System.out.println("CURRENT PAGE IS " + currentPage);
         if(currentPage != null) currentPage.render(canvas);
     }
 
@@ -203,17 +203,12 @@ public class EditorView extends View {
 
         ArrayList<Shape> shapes = currentPage.getList();
 
-        System.out.println("Coord x: " + x + " y: " + y);
-
-        // search from back to get the
+        // search from back to get the images closet to the front
         for(int i = shapes.size() - 1; i >= 0; i--) {
             Shape s = shapes.get(i);
-            System.out.println("shape i: " + shapes.get(i));
-            System.out.println("shape left: " + s.getLeft() + " right: " + s.getRight()
-                + " top: " + s.getTop() + " bottom: " + s.getBottom());
+            // if the click is in bounds of this shape, return it
             if(x <= s.getRight() && x >= s.getLeft() &&
                     y >= s.getTop() && y <= s.getBottom()) {
-                System.out.println("Found this shape: " + s);
                 return s;
             }
         }
@@ -234,8 +229,8 @@ public class EditorView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Shape selected = shapeAtXY(x1, y1);
-        if(currentPage != null && selected != null) currentPage.selectShape(selected);
+//        Shape selected = shapeAtXY(x1, y1);
+//        if(currentPage != null) currentPage.selectShape(selected);
 
         drawPage(canvas);
 
@@ -257,6 +252,10 @@ public class EditorView extends View {
             case MotionEvent.ACTION_DOWN:
                 x1 = event.getX();
                 y1 = event.getY();
+
+                Shape selected = shapeAtXY(x1, y1);
+                if(currentPage != null) currentPage.selectShape(selected);
+
                 break;
             // record coordinate where user lifts finger
             case MotionEvent.ACTION_UP:
@@ -278,6 +277,8 @@ public class EditorView extends View {
                     top = y1;
                     bottom = y2;
                 }
+
+
                 invalidate();   // forces canvas update
         }
         return true;
