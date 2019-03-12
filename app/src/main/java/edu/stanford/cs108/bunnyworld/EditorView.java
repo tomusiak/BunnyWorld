@@ -74,6 +74,8 @@ public class EditorView extends View {
                 (BitmapDrawable) getResources().getDrawable(R.drawable.mystic);
     }
 
+    // TODO: Canvas width/height operations currently don't work. Pretty
+    // TODO: sure that this code is actually to be implemented in the pop-up
     public void drawStarters() {
 
 
@@ -170,16 +172,54 @@ public class EditorView extends View {
         BitmapDrawable drawableBM =
                 (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
 
-        shape.setBitmap(drawableBM.getBitmap());
+        Bitmap bm = drawableBM.getBitmap();
+        shape.setBitmap(bm);
+        shape.setWidth(bm.getWidth());
+        shape.setHeight(bm.getHeight());
 
         invalidate();
     }
 
-    // clears the canvas
+    /**
+     * TODO: Don't think this needs to be used
+     * clears the Canvas object.
+     * @param canvas to be cleared
+     */
     private void clearCanvas(Canvas canvas) {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
     }
 
+    /**
+     * Finds a shape that exists at the specified x, y coordinate and returns
+     * it. null is returned if no shape is found.
+     *
+     * @param x coordinate to search for shape at
+     * @param y coordinate to search for shape at
+     * @return the found shape, or null if no shape is found at x, y
+     */
+    public Shape shapeAtXY(double x, double y){
+
+        if(currentPage == null) return null; // don't do anything if page just loaded
+
+        ArrayList<Shape> shapes = currentPage.getList();
+
+        System.out.println("Coord x: " + x + " y: " + y);
+
+        // search from back to get the
+        for(int i = shapes.size() - 1; i >= 0; i--) {
+            Shape s = shapes.get(i);
+            System.out.println("shape i: " + shapes.get(i));
+            System.out.println("shape left: " + s.getLeft() + " right: " + s.getRight()
+                + " top: " + s.getTop() + " bottom: " + s.getBottom());
+            if(x <= s.getRight() && x >= s.getLeft() &&
+                    y >= s.getTop() && y <= s.getBottom()) {
+                System.out.println("Found this shape: " + s);
+                return s;
+            }
+        }
+
+        return null; // no shape is here
+    }
 
     /**
      * Override onDraw method. This will update the canvas to reflect the
@@ -192,10 +232,12 @@ public class EditorView extends View {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-
         super.onDraw(canvas);
-        drawPage(canvas);
 
+        Shape selected = shapeAtXY(x1, y1);
+        if(currentPage != null && selected != null) currentPage.selectShape(selected);
+
+        drawPage(canvas);
 
     }
 
@@ -221,7 +263,7 @@ public class EditorView extends View {
                 x2 = event.getX();
                 y2 = event.getY();
 
-                if (x1>x2) {
+                if (x1 > x2) {
                     left = x2;
                     right = x1;
                 } else {
@@ -229,7 +271,7 @@ public class EditorView extends View {
                     right = x2;
                 }
 
-                if (y1>y2) {
+                if (y1 > y2) {
                     top = y2;
                     bottom = y1;
                 } else {

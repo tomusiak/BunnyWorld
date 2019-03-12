@@ -1,6 +1,9 @@
 package edu.stanford.cs108.bunnyworld;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 
 import java.util.ArrayList;
 
@@ -9,6 +12,9 @@ public class Page {
     ArrayList<Shape> shapes;
     String displayName;
     String pageID;
+
+    Shape selected;  // holds onto the selected shape
+    Paint borderColor;
 
 
     /**
@@ -19,6 +25,11 @@ public class Page {
         shapes = new ArrayList<Shape>();
         displayName = name;
         pageID = uniquePageID;
+        selected = null;
+
+        // initialize selection color
+        borderColor = new Paint();
+        borderColor.setColor(Color.rgb(190, 21, 21));
 
     }
 
@@ -53,16 +64,30 @@ public class Page {
      */
     public void render(Canvas canvas) {
         // render each shape onto the canvas
-        System.out.println("attempt to render...");
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
             // if shape has a valid bitmap image
             if(currentShape.getImageName() != "") {
+
+                System.out.println("current shape is: " + currentShape);
+                // if the shape to be drawn is selected, render a box around it
+                if(currentShape == selected) {
+
+                    // use rectangle that is larger than the image as a border
+                    RectF shapeBorder = new RectF((float)currentShape.getLeft() - 10,
+                            (float)currentShape.getTop() - 10,
+                            (float)currentShape.getRight() + 10,
+                            (float)currentShape.getBottom() + 10);
+
+                    canvas.drawRect(shapeBorder, borderColor);
+                    System.out.println("rendered border!");
+                }
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                         (float)currentShape.getY(), null);
-                System.out.println("Rendered.");
 
             }
+
+
 
         }
     }
@@ -98,5 +123,13 @@ public class Page {
     public String getPageID() { return pageID; }
 
     public String getDisplayName() { return displayName; }
+
+    /**
+     * Set a specific shape on the page as selected
+     * @param select shape to be marked as selected
+     */
+    public void selectShape(Shape select) {
+        selected = select;
+    }
 
 }
