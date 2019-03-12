@@ -172,7 +172,10 @@ public class EditorView extends View {
         BitmapDrawable drawableBM =
                 (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
 
-        shape.setBitmap(drawableBM.getBitmap());
+        Bitmap bm = drawableBM.getBitmap();
+        shape.setBitmap(bm);
+        shape.setWidth(bm.getWidth());
+        shape.setHeight(bm.getHeight());
 
         invalidate();
     }
@@ -196,12 +199,21 @@ public class EditorView extends View {
      */
     public Shape shapeAtXY(double x, double y){
 
+        if(currentPage == null) return null; // don't do anything if page just loaded
+
         ArrayList<Shape> shapes = currentPage.getList();
 
+        System.out.println("Coord x: " + x + " y: " + y);
+
+        // search from back to get the
         for(int i = shapes.size() - 1; i >= 0; i--) {
             Shape s = shapes.get(i);
+            System.out.println("shape i: " + shapes.get(i));
+            System.out.println("shape left: " + s.getLeft() + " right: " + s.getRight()
+                + " top: " + s.getTop() + " bottom: " + s.getBottom());
             if(x <= s.getRight() && x >= s.getLeft() &&
                     y >= s.getTop() && y <= s.getBottom()) {
+                System.out.println("Found this shape: " + s);
                 return s;
             }
         }
@@ -220,10 +232,12 @@ public class EditorView extends View {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-
         super.onDraw(canvas);
-        drawPage(canvas);
 
+        Shape selected = shapeAtXY(x1, y1);
+        if(currentPage != null && selected != null) currentPage.selectShape(selected);
+
+        drawPage(canvas);
 
     }
 
