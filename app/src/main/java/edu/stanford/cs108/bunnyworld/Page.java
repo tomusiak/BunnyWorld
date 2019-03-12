@@ -134,6 +134,13 @@ public class Page {
      */
     public void selectShape(Shape select) {
         selected = select;
+
+        // move items to the back when they are selected
+        if(selected != null) {
+            shapes.remove(selected);
+            shapes.add(selected);
+        }
+
     }
 
 }
