@@ -158,6 +158,10 @@ public class EditorView extends View {
     }
 
 
+    /**
+     * Deletes the
+     * @return
+     */
     public boolean deleteShape() {
 
         // try to delete to a shape
