@@ -278,6 +278,9 @@ public class EditorActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Adds a new shape to the page.
+     */
     private void addShape() {
         makePopUp();
 
@@ -294,8 +297,7 @@ public class EditorActivity extends AppCompatActivity {
         currentPage.addShape(shape);
         System.out.println("adding shape.");
 
-        editorView.renderShape(shape);
-        //editorView.drawPage();
+        editorView.renderShape(shape);  // renders the bitmaps for the newly added shape
 
     }
 
@@ -305,7 +307,8 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * Deletes the selected shape on the canvas.
+     * Deletes the selected shape on the canvas. Displays helpful toasts based
+     * upon success of deletion.
      */
     private void deleteShape() {
         // if we
