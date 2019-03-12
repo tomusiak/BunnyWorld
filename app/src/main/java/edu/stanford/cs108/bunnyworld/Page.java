@@ -9,12 +9,12 @@ import java.util.ArrayList;
 
 public class Page {
 
-    ArrayList<Shape> shapes;
-    String displayName;
-    String pageID;
+    private ArrayList<Shape> shapes;
+    private String displayName;
+    private String pageID;
 
-    Shape selected;  // holds onto the selected shape
-    Paint borderColor;
+    private Shape selected;  // holds onto the selected shape
+    private Paint borderColor;
 
 
     /**
@@ -135,12 +135,19 @@ public class Page {
     public void selectShape(Shape select) {
         selected = select;
 
-        // move items to the back when they are selected
+        // move items to the back of list when they are selected,
+        // which moves them to the "front" of the screen
         if(selected != null) {
             shapes.remove(selected);
             shapes.add(selected);
         }
 
     }
+
+    /**
+     * Get the shape that is currently selected on this page
+     * @return page that is currently selected, null if none
+     */
+    public Shape getSelected() { return selected; }
 
 }

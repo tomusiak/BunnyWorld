@@ -117,7 +117,7 @@ public class EditorView extends View {
      */
     public void changeCurrentPage(Page page) {
         // set selected to null before changing the page
-        if(currentPage != null) currentPage.selected = null;
+        if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
         invalidate();
@@ -155,6 +155,23 @@ public class EditorView extends View {
 
         //clearCanvas(canvas);
         if(currentPage != null) currentPage.render(canvas);
+    }
+
+
+    /**
+     * Deletes the
+     * @return
+     */
+    public boolean deleteShape() {
+
+        // try to delete to a shape
+        if(currentPage != null && currentPage.getSelected() != null) {
+            currentPage.removeShape(currentPage.getSelected());
+            invalidate();
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -278,12 +295,13 @@ public class EditorView extends View {
                 xDelta = event.getX();
                 yDelta = event.getY();
 
-                if(currentPage != null && currentPage.selected != null) {
-                    currentPage.selected.move(xDelta, yDelta);
+                if(currentPage != null && currentPage.getSelected() != null) {
+                    currentPage.getSelected().move(xDelta, yDelta);
                 }
 
                 invalidate();   // forces canvas update
         }
         return true;
     }
+
 }
