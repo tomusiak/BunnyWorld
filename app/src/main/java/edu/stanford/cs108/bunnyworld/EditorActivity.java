@@ -325,6 +325,7 @@ public class EditorActivity extends AppCompatActivity {
         renamePagePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // make sure that page name does not already exist
                 String newPageName = input.getText().toString();
                 renamePage(newPageName);
             }
@@ -440,7 +441,7 @@ public class EditorActivity extends AppCompatActivity {
         //editorView.changeCurrentPage(newPage);
     }
     // Saves current game state into the database.
-    public void saveGame(String saveName, HashMap<String, ArrayList<Shape>> shapeMap) {
+    public void saveGame(String saveName, HashMap<String, Page> shapeMap) {
         Database db = Database.getInstance(getApplicationContext());
         db.saveGame(saveName, shapeMap);
     }
