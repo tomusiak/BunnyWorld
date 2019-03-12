@@ -1,7 +1,9 @@
 package edu.stanford.cs108.bunnyworld;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
     The edu.stanford.cs108.bunnyworld.Shape class represents an object that has been added
@@ -22,7 +24,8 @@ public class Shape {
     private int fontSize;
     private static final int DEFAULT_FONT_SIZE = 24;
 
-    private String script;
+    // Script stored as a list of Strings; scripts can have multiple command clauses
+    private List<String> script;
 
     Bitmap bitmap;
 
@@ -56,7 +59,7 @@ public class Shape {
         this.fontSize = DEFAULT_FONT_SIZE;
 
         // Script will be set once it's read in from interface
-        this.script = "";
+        this.script = new ArrayList<String>();
     }
 
     /**
@@ -102,13 +105,13 @@ public class Shape {
      * @param script the new script of the shape
      */
     public void setScript(String script) {
-        this.script = script;
+        this.script.add(script);
     }
     /**
      * Accessor method that returns the script of the shape
      * @param //script the current script
      */
-    public String getScript() {
+    public List<String> getScript() {
         return this.script;
     }
 
