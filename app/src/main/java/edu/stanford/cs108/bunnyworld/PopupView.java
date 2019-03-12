@@ -1,10 +1,9 @@
 package edu.stanford.cs108.bunnyworld;
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -64,23 +63,25 @@ public class PopupView extends View {
         Bitmap fireBitmap = fireDrawable.getBitmap();
         Bitmap mysticBitmap = mysticDrawable.getBitmap();
 
+        int size = (int)(0.25*canvasWidth);
+
         carrotBitmap = Bitmap.createScaledBitmap(
-                carrotBitmap, 120, 120, false);
+                carrotBitmap, size, size, false);
 
         carrot2Bitmap = Bitmap.createScaledBitmap(
-                carrot2Bitmap, 120, 120, false);
+                carrot2Bitmap, size, size, false);
 
         deathBitmap = Bitmap.createScaledBitmap(
-                deathBitmap, 120, 120, false);
+                deathBitmap, size, size, false);
 
         duckBitmap = Bitmap.createScaledBitmap(
-                duckBitmap, 120, 120, false);
+                duckBitmap, size, size, false);
 
         fireBitmap = Bitmap.createScaledBitmap(
-                fireBitmap, 120, 120, false);
+                fireBitmap, size, size, false);
 
         mysticBitmap = Bitmap.createScaledBitmap(
-                mysticBitmap, 120, 120, false);
+                mysticBitmap, size, size, false);
 
         float left1 = (float)0.0625*canvasWidth;
         float left2 = (float)0.375*canvasWidth;
@@ -102,4 +103,3 @@ public class PopupView extends View {
     }
 
 }
-

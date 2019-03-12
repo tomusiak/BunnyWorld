@@ -1,7 +1,6 @@
 package edu.stanford.cs108.bunnyworld;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 
 /*
     The edu.stanford.cs108.bunnyworld.Shape class represents an object that has been added
@@ -11,6 +10,7 @@ public class Shape {
     private String shapeName;
     private String image;
     private String text;
+
     private double x;
     private double y;
     private double height;
@@ -18,10 +18,12 @@ public class Shape {
 
     private boolean moveable;
     private boolean hidden;
+    private boolean isSelected;
 
     private int fontSize;
     private static final int DEFAULT_FONT_SIZE = 24;
 
+    // Script stored as a list of Strings; scripts can have multiple command clauses
     private String script;
 
     Bitmap bitmap;
@@ -92,7 +94,7 @@ public class Shape {
 
     /**
      * Modifier method for text being displayed
-     * @param text the user-set name of the shape
+     * @param text the user-set text
      */
     public void setText(String text) { this.text = text; };
 
@@ -164,6 +166,35 @@ public class Shape {
         this.height = newHeight;
     }
 
+
+    /** Shape Coordinate accessor methods **/
+
+    /**
+     * Get the coordinate that represents the right of the shape's bounding box.
+     * @return right coordinate
+     */
+    public double getRight() { return x + width; }
+
+    /**
+     * Get the coordinate that represents the left of the shape's bounding box.
+     * @return left coordinate
+     */
+    public double getLeft() { return x; }
+
+    /**
+     * Get the coordinate that represents the top of the shape's bounding box.
+     * @return top coordinate
+     */
+    public double getTop() { return y; }
+
+    /**
+     * Get the coordinate that represents the bottom of the shape's bounding box.
+     * @return bottom coordinate
+     */
+    public double getBottom() { return y + height; }
+
+
+
     /**
      * Accessor method for font size
      * @return current font size
@@ -228,4 +259,22 @@ public class Shape {
      * @return the stored bitmap image
      */
     public Bitmap getBitmap() { return bitmap; }
+
+    /**
+     * Mark this shape as selected. This will cause it to render with a red box in
+     * the Editor View.
+     */
+    public void setSelected() { isSelected = true; }
+
+    /**
+     * Mark this shape as selected. This will cause it to render as normal in
+     * the Editor View.
+     */
+    public void setUnselected() { isSelected = false;}
+
+    /**
+     * Check to see if this shape is selected or not in the editor
+     * @return boolean as to whether or not the shape is selected
+     */
+    public boolean getSelected() { return isSelected; }
 }

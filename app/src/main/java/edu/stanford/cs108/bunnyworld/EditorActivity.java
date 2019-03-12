@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -28,6 +29,7 @@ public class EditorActivity extends AppCompatActivity {
     private HashMap<String, Page> pages; // map the unique page IDs to Page objects
     private HashMap<String, String> displayNameToID;
     private String currPage;
+    private Page currentPage;
     private String currScript;
     EditorView editorView;
 
@@ -247,6 +249,9 @@ public class EditorActivity extends AppCompatActivity {
 
         Page newPage = new Page(pageName, uniquePageID);
         pages.put(uniquePageID, newPage);
+
+        currentPage = newPage;
+        editorView.changeCurrentPage(currentPage);  // update the current page in the view
     }
 
     private void addMoreDialog() {
@@ -272,6 +277,8 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     private void addShape() {
+        makePopUp();
+
         numShapes++;
         String shapeName = "shape" + numShapes;
         Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
@@ -280,10 +287,17 @@ public class EditorActivity extends AppCompatActivity {
         // example of building a shape from a shape image name
         String shapeImgName = "carrot";
         Shape shape = new Shape(numShapes, shapeImgName, "",
-                0, 0, 50, 50);
+                20, 20, 50, 50);
 
-        //editorView.renderShape(shape);
+        currentPage.addShape(shape);
+        System.out.println("adding shape.");
+
+        editorView.renderShape(shape);
         //editorView.drawPage();
+
+    }
+
+    private void makePopUp() {
 
     }
 
@@ -325,7 +339,6 @@ public class EditorActivity extends AppCompatActivity {
         renamePagePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // make sure that page name does not already exist
                 String newPageName = input.getText().toString();
                 renamePage(newPageName);
             }
@@ -441,8 +454,8 @@ public class EditorActivity extends AppCompatActivity {
         //editorView.changeCurrentPage(newPage);
     }
     // Saves current game state into the database.
-    public void saveGame(String saveName, HashMap<String, Page> shapeMap) {
+    public void saveGame(String saveName, HashMap<String, Page> pageMap) {
         Database db = Database.getInstance(getApplicationContext());
-        db.saveGame(saveName, shapeMap);
+        db.saveGame(saveName, pageMap);
     }
 }
