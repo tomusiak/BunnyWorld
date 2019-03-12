@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class EditorView extends View {
     //canvas
-    private Canvas canvas;
+    //private Canvas canvas; // storing the canvas is broken, use onDraw method instead
 
     //ArrayList<Shape> pageState = new ArrayList<Shape>();
     Page currentPage;
@@ -73,6 +73,12 @@ public class EditorView extends View {
     }
 
     public void drawStarters() {
+
+
+        // this is commented out due to the reason that canvasWidth & canvasHeight
+        // are not able to be assigned in the init() method for the reason that canvas
+        // is only accessible in the onDraw method
+
 //        Bitmap carrotBitmap = carrotDrawable.getBitmap();
 //        Bitmap carrot2Bitmap = carrot2Drawable.getBitmap();
 //        Bitmap deathBitmap = deathDrawable.getBitmap();
@@ -107,7 +113,8 @@ public class EditorView extends View {
     public void changeCurrentPage(Page page) {
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
-        drawPage(); // update canvas to draw this new page
+        //drawPage(canvas); // update canvas to draw this new page
+        invalidate();
     }
 
     /**
@@ -130,16 +137,19 @@ public class EditorView extends View {
             currentShape.setBitmap(drawableBM.getBitmap());
 
         }
+
+        invalidate();
     }
 
     /**
      * Renders the current page in question on the canvas by calling the
      * page's render function.
      */
-    public void drawPage() {
+    public void drawPage(Canvas canvas) {
 
-        clearCanvas();
-        currentPage.render(canvas);
+        //clearCanvas(canvas);
+        System.out.println("CURRENT PAGE IS " + currentPage);
+        if(currentPage != null) currentPage.render(canvas);
     }
 
 
@@ -159,23 +169,26 @@ public class EditorView extends View {
                 (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
 
         shape.setBitmap(drawableBM.getBitmap());
+
+        invalidate();
     }
 
-    // passes a reference to the canvas
-    public Canvas getCanvas() {
-        return canvas;
-    }
+//    // passes a reference to the canvas
+//    public Canvas getCanvas() {
+//        return canvas;
+//    }
 
     // clears the canvas
-    private void clearCanvas() {
+    private void clearCanvas(Canvas canvas) {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        this.canvas = canvas;
+        //this.canvas = canvas;
         super.onDraw(canvas);
-        //drawPage();
+        drawPage(canvas);
+
 
     }
 }

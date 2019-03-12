@@ -28,6 +28,7 @@ public class EditorActivity extends AppCompatActivity {
     private HashMap<String, Page> pages; // map the unique page IDs to Page objects
     private HashMap<String, String> displayNameToID;
     private String currPage;
+    private Page currentPage;
     private String currScript;
     EditorView editorView;
 
@@ -247,6 +248,9 @@ public class EditorActivity extends AppCompatActivity {
 
         Page newPage = new Page(pageName, uniquePageID);
         pages.put(uniquePageID, newPage);
+
+        currentPage = newPage;
+        editorView.changeCurrentPage(currentPage);  // update the current page in the view
     }
 
     private void addMoreDialog() {
@@ -280,9 +284,12 @@ public class EditorActivity extends AppCompatActivity {
         // example of building a shape from a shape image name
         String shapeImgName = "carrot";
         Shape shape = new Shape(numShapes, shapeImgName, "",
-                0, 0, 50, 50);
+                20, 20, 50, 50);
 
-        //editorView.renderShape(shape);
+        currentPage.addShape(shape);
+        System.out.println("adding shape.");
+
+        editorView.renderShape(shape);
         //editorView.drawPage();
 
     }
