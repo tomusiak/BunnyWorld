@@ -44,7 +44,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Name Page", "Delete Page", "Open Page"};
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Name Page", "Delete Page", "Open Page", "Change Background"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
         pageSpinner.setSelection(0);
@@ -67,6 +67,9 @@ public class EditorActivity extends AppCompatActivity {
                         break;
                     case 4:
                         goToNewPageDialog();
+                        break;
+                    case 5:
+                        changePageBackground();
                         break;
                 }
                 pageSpinner.setSelection(0);
@@ -333,8 +336,6 @@ public class EditorActivity extends AppCompatActivity {
                 20, 20, 50, 50);
 
         currentPage.addShape(shape);
-        // System.out.println("Adding shape.");
-
         editorView.renderShape(shape);  // renders the bitmaps for the newly added shape
     }
 
@@ -560,5 +561,13 @@ public class EditorActivity extends AppCompatActivity {
      */
     private HashMap<String, Page> getPages() {
         return pages;
+    }
+
+    /**
+     * Function that will allow the user to select a background image for
+     * the current bunnyworld page
+     */
+    private void changePageBackground() {
+
     }
 }

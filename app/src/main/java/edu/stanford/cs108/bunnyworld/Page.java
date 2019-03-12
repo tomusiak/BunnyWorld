@@ -59,10 +59,12 @@ public class Page {
     }
 
     /**
-     * Renders all shapes in the internal arraylist to the canvas
+     * Renders all shapes in the internal arraylist to the editor view canvas.
      * @param canvas the canvas area that the shapes will be drawn onto
      */
     public void render(Canvas canvas) {
+        Paint paint = null;
+
         // render each shape onto the canvas
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
@@ -80,8 +82,15 @@ public class Page {
 
                     canvas.drawRect(shapeBorder, borderColor);
                 }
+
+                // if this shape is hidden, display it as semi-transparent
+                if(currentShape.getHiddenStatus()) {
+                    paint = new Paint();
+                    paint.setAlpha(70);
+                }
+
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
-                        (float)currentShape.getY(), null);
+                        (float)currentShape.getY(), paint);
 
             }
 
