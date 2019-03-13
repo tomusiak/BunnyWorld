@@ -482,6 +482,47 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
+     * Function that will allow the user to select a background image for
+     * the current bunnyworld page
+     */
+    private void changePageBackground() {
+        ArrayList<String> names = new ArrayList<>();
+        names.addAll(pages.keySet());
+        final String[] pageNames = names.toArray(new String[pages.size()]);
+        AlertDialog.Builder pageToRenamePrompt = new AlertDialog.Builder(this);
+        pageToRenamePrompt.setTitle("Page To Change Background Of: ");
+        pageToRenamePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String pageName = pageNames[selection];
+                String uniqueID = displayNameToID.get(pageName);
+                backgroundDialog(uniqueID);
+            }
+        });
+        pageToRenamePrompt.show();
+    }
+
+    private void backgroundDialog(final String uniqueID) {
+        final String[] backgroundList = new String[]{"Background1", "Background2", "Background3", "Background4", "Background5", "Background6"};
+        AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
+        playPrompt.setTitle("Select Background: ");
+        playPrompt.setItems(backgroundList, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String selectedBackground = backgroundList[selection];
+                changeBackground(uniqueID, selectedBackground);
+            }
+        });
+        playPrompt.show();
+    }
+
+    private void changeBackground(String uniqueID, String background) {
+
+        Toast backgroundToast = Toast.makeText(getApplicationContext(), "Background Changed", Toast.LENGTH_SHORT);
+        backgroundToast.show();
+    }
+
+    /**
      * Prompts user to input a new name for the shape
      */
     private void renameShapeDialog() {
@@ -552,9 +593,9 @@ public class EditorActivity extends AppCompatActivity {
         visibleInput.setEnabled(!shape.getHiddenStatus());
     }
 
-    private void editShapeProperties(Shape shape) {
+   public void editShapeProperties(View view) {
 
-    }
+   }
 
     /**
      * Prompts the user to either load a new game or load an existing game
@@ -872,13 +913,5 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void setPages(HashMap<String,Page> newPages) {
         pages = newPages;
-    }
-
-    /**
-     * Function that will allow the user to select a background image for
-     * the current bunnyworld page
-     */
-    private void changePageBackground() {
-
     }
 }
