@@ -12,10 +12,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Top:"/>
+            android:text="X:"/>
 
         <EditText
-            android:id="@+id/topInput"
+            android:id="@+id/xInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -24,10 +24,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bottom:" />
+            android:text="Y:" />
 
         <EditText
-            android:id="@+id/bottomInput"
+            android:id="@+id/yInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,10 +43,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Left:"/>
+            android:text="Width:"/>
 
         <EditText
-            android:id="@+id/leftInput"
+            android:id="@+id/widthInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -55,10 +55,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Right:"/>
+            android:text="Height:"/>
 
         <EditText
-            android:id="@+id/rightInput"
+            android:id="@+id/heightInput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -621,14 +621,14 @@ public class EditorActivity extends AppCompatActivity {
      * Populates the EditText views in the editShapeDialog with the existing properties of the shape
      */
     private void populateEditShapeDialog(Shape shape, Dialog dialog) {
-        EditText topInput = dialog.findViewById(R.id.topInput);
-        topInput.setText(Double.toString(shape.getTop()));
-        EditText bottomInput = dialog.findViewById(R.id.bottomInput);
-        bottomInput.setText(Double.toString(shape.getBottom()));
-        EditText leftInput = dialog.findViewById(R.id.leftInput);
-        leftInput.setText(Double.toString(shape.getLeft()));
-        EditText rightInput = dialog.findViewById(R.id.rightInput);
-        rightInput.setText(Double.toString(shape.getRight()));
+        EditText xInput = dialog.findViewById(R.id.xInput);
+        xInput.setText(Double.toString(shape.getTop()));
+        EditText yInput = dialog.findViewById(R.id.yInput);
+        yInput.setText(Double.toString(shape.getBottom()));
+        EditText widthInput = dialog.findViewById(R.id.widthInput);
+        widthInput.setText(Double.toString(shape.getLeft()));
+        EditText heightInput = dialog.findViewById(R.id.heightInput);
+        heightInput.setText(Double.toString(shape.getRight()));
         EditText shapeName = dialog.findViewById(R.id.nameInput);
         shapeName.setText(shape.getShapeName());
         CheckBox moveInput = dialog.findViewById(R.id.moveInput);
