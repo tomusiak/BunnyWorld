@@ -740,6 +740,13 @@ public class EditorActivity extends AppCompatActivity {
                 numShapes = db.getShapeCount(product);
                 numPages = db.getPageCount( product );
                 currentPage = pages.get("page1");
+                displayNameToID = new HashMap<String, String>();
+                for (String key : pages.keySet()) {
+                    Page currentPage = pages.get(key);
+                    String pageName = currentPage.getDisplayName();
+                    displayNameToID.put(key,pageName);
+
+                }
                 returnHome();
             }
         });
@@ -984,15 +991,9 @@ public class EditorActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
-        displayNameToID = new HashMap<>();
         editorView = findViewById(R.id.editorView);
         editorView.changeCurrentPage(pages.get("page1"));
-        for (String key : pages.keySet()) {
-            ArrayList<Shape> shapeList = pages.get(key).getList();
-            for (int i = 0; i < shapeList.size(); i++) {
-                editorView.renderShape(shapeList.get( i ));
-            }
-        }
+
     }
 
     /** Helper method to get pages
