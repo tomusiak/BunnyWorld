@@ -50,7 +50,7 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     private void loadGame() {
-        // initializes database
+       /* // initializes database
         final Database db = Database.getInstance(getApplicationContext());
 
         // we can now do stuff with the view
@@ -105,7 +105,7 @@ public class PlayActivity extends AppCompatActivity {
             if (listView != null) {
                 listView.setAdapter( itemsAdapter );
             }
-        }
+        }*/
     }
 
     /**
