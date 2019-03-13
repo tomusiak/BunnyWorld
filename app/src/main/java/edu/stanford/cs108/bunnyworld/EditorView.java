@@ -26,7 +26,6 @@ public class EditorView extends View {
 
     private int TRANSPARENT = Color.WHITE;
     Page currentPage;
-    ArrayList<Shape> starters = new ArrayList<Shape>();
     Shape selected;
 
     // Touch activity float variables
