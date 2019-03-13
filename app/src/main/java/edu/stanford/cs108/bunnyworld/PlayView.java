@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -26,7 +25,6 @@ public class PlayView extends View {
     float x2, y2;   // x and y coordinate of when user lifts finger
     float xDelta, yDelta;
 
-
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -40,14 +38,6 @@ public class PlayView extends View {
     }
 
     /**
-     * Parses and executes script on shape
-     * @param shape
-     */
-    public void executeScript(Shape shape) {
-        // Insert script parsing currently in mainactivity
-    }
-
-    /**
      * Update the current working page displayed in the editor view to
      * be the new one passed in
      * @param page the new page to be passed in
@@ -57,7 +47,6 @@ public class PlayView extends View {
         if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
-
         invalidate();
     }
 
@@ -205,15 +194,6 @@ public class PlayView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawPage(canvas);
-
-        float width = canvas.getWidth();
-        float height = canvas.getHeight();
-
-        Paint linePaint = new Paint();
-        linePaint.setColor(Color.BLACK);
-        linePaint.setStrokeWidth(2);
-
-        canvas.drawLine((float)0, (float)0.75*height, (float)width, (float)0.75*height, linePaint);
     }
 
 
