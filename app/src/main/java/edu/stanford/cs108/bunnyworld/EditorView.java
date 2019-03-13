@@ -233,7 +233,7 @@ public class EditorView extends View {
      * @param y coordinate to search for shape at
      * @return the found shape, or null if no shape is found at x, y
      */
-    public Shape shapeAtXY(double x, double y){
+    public Shape shapeAtXY(double x, double y) {
 
         if(currentPage == null) return null; // don't do anything if page just loaded
 
