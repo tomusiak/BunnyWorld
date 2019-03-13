@@ -25,6 +25,8 @@ public class PlayView extends View {
     float x2, y2;   // x and y coordinate of when user lifts finger
     float xDelta, yDelta;
 
+
+
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();

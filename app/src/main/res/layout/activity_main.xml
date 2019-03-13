@@ -14,7 +14,6 @@
         android:layout_marginTop="42dp"
         tools:ignore="ContentDescription" />
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Make New Gane"
+            android:text="Make New Gamé"
             android:textSize="20sp"
             android:onClick="makeGame"/>
         <Button
@@ -34,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Play"
+            android:text="Pläy"
             android:textSize="20sp"
             android:onClick="playGame"/>
 
