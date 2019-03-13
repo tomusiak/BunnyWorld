@@ -653,7 +653,7 @@ public class EditorActivity extends AppCompatActivity {
 
        Shape shape = currentPage.getSelected();
 
-       EditText xInput = (EditText)editShapeDialog.findViewById(R.id.xInput);
+       EditText xInput = editShapeDialog.findViewById(R.id.xInput);
        double x = Double.parseDouble(xInput.getText().toString());
        shape.setX(x);
 
