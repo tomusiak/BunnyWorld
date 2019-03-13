@@ -8,6 +8,7 @@ import android.nfc.Tag;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,20 +49,21 @@ class Database extends SQLiteOpenHelper {
                 "pageName TEXT," +
                 "PAGEID TEXT," +
                 "SAVE TEXT," +
-                "PRIMARY KEY(PAGEID, SAVE))";
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT"+ ");";
         db.execSQL(createShapeDatabase);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS ShapeDatabase");
+        onCreate(db);
     }
 
     /** Saves the game by taking the HashMap of pages and parsing each page. Once within a page, all of the shapes and their data are
      * dumped into the database with accompanying page information. Before the game is saved, saveGame ensures that it does not create a
      * duplicate by deleting any values with the original save name.
      */
-    private void saveGame(String saveName, HashMap<String, Page> pages) {
+    public void saveGame(String saveName, HashMap<String, Page> pages) {
         SQLiteDatabase db = this.getWritableDatabase();
         String checkQuery = "SELECT * FROM ShapeDatabase WHERE SAVE = " + "'" + saveName + "'";
         Cursor cursor = db.rawQuery(checkQuery,null);
@@ -69,40 +71,42 @@ class Database extends SQLiteOpenHelper {
             deleteSave(saveName);
         }
         cursor.close();
-        for (Map.Entry<String, Page> entry : pages.entrySet()) { // Source: https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap (Only this one line)
-            Page currentPage = entry.getValue();
-            String pageName = currentPage.getDisplayName();
-            String pageID = currentPage.getPageID();
-            ArrayList<Shape> shapeList = currentPage.getShapes();
-            for (int i = 0; i < shapeList.size(); i++) {
-                Shape currentShape = shapeList.get(i);
-                String shapeName = currentShape.getShapeName();
-                String imageName = currentShape.getImageName();
-                String text = currentShape.getText();
-                double x = currentShape.getX();
-                double y = currentShape.getY();
-                double height = currentShape.getHeight();
-                double width = currentShape.getWidth();
-                int moveable = currentShape.getMoveableStatus() ? 1 : 0;
-                int hidden = currentShape.getHiddenStatus() ? 1 : 0;
-                int fontSize = currentShape.getFontSize();
-                String script = currentShape.getScript();
-                String insertStr = "INSERT INTO ShapeDatabase VALUES "
-                    + "('" + shapeName + "', '" +
-                    imageName + "', '" +
-                    text + "'," +
-                    x + "," +
-                    y + "," +
-                    height+ "," +
-                    width + "," +
-                    moveable + "," +
-                    hidden + "," +
-                    fontSize + ", '" +
-                    script + "', '" +
-                    pageName + "', '" +
-                    pageID + "', '" +
-                    saveName + "')";
-                db.execSQL(insertStr);
+        if (pages != null) {
+            for (Map.Entry<String, Page> entry : pages.entrySet()) { // Source: https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap (Only this one line)
+                Page currentPage = entry.getValue();
+                String pageName = currentPage.getDisplayName();
+                String pageID = currentPage.getPageID();
+                ArrayList<Shape> shapeList = currentPage.getShapes();
+                for (int i = 0; i < shapeList.size(); i++) {
+                    Shape currentShape = shapeList.get( i );
+                    String shapeName = currentShape.getShapeName();
+                    String imageName = currentShape.getImageName();
+                    String text = currentShape.getText();
+                    double x = currentShape.getX();
+                    double y = currentShape.getY();
+                    double height = currentShape.getHeight();
+                    double width = currentShape.getWidth();
+                    int moveable = currentShape.getMoveableStatus() ? 1 : 0;
+                    int hidden = currentShape.getHiddenStatus() ? 1 : 0;
+                    int fontSize = currentShape.getFontSize();
+                    String script = currentShape.getScript();
+                    String insertStr = "INSERT INTO ShapeDatabase VALUES "
+                            + "('" + shapeName + "', '" +
+                            imageName + "', '" +
+                            text + "'," +
+                            x + "," +
+                            y + "," +
+                            height + "," +
+                            width + "," +
+                            moveable + "," +
+                            hidden + "," +
+                            fontSize + ", '" +
+                            script + "', '" +
+                            pageName + "', '" +
+                            pageID + "', '" +
+                            saveName + "', NULL)";
+                    db.execSQL( insertStr );
+                }
             }
         }
     }
@@ -123,7 +127,7 @@ class Database extends SQLiteOpenHelper {
             String pageID = cursor.getString(12);
             String thisSave = cursor.getString(13);
             Page newPage = null;
-            if (fullShapeList.get(pageID).equals(null) && thisSave.equals(saveFile)) {
+            if (fullShapeList.get(pageID) == null && thisSave.equals(saveFile)) {
                 newPage = new Page(pageName, pageID);
             } else if (thisSave.equals(saveFile) && fullShapeList.get(pageID) != null) {
                 newPage = fullShapeList.get(pageID);
@@ -167,7 +171,6 @@ class Database extends SQLiteOpenHelper {
     /** Autosaves by deleting the old autoSave and then creating a new autoSave save.
      */
     public void autoSave(HashMap<String, Page> pages) {
-        deleteSave("autoSave");
         saveGame("autoSave", pages);
     }
 
@@ -186,22 +189,21 @@ class Database extends SQLiteOpenHelper {
     public ArrayList<String> returnGameList() {
         ArrayList<String> gameList = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
-        String returnGameList = "SELECT DISTINCT saveName FROM ShapeDatabase";
+        String returnGameList = "SELECT DISTINCT SAVE FROM ShapeDatabase";
         Cursor cursor = db.rawQuery(returnGameList,null);
         while (cursor.moveToNext()) {
             gameList.add(cursor.getString(0));
         }
         cursor.close();
+        Collections.reverse(gameList);
         return gameList;
     }
 
-    /** Used to test various components.
-     * */
-    private void testerMethod() {
+    /** Drops database table.
+     */
+    public void clear() {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery( "SELECT * FROM ShapeDatabase" , null );
-        String[] columnNames = cursor.getColumnNames();
-        Log.v( "horse", columnNames[13] );
-        cursor.close();
+        db.execSQL("DROP TABLE IF EXISTS ShapeDatabase");
+        onCreate(db);
     }
 }

@@ -5,7 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -506,7 +509,16 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void loadExistingGame(){
         Database db = Database.getInstance(getApplicationContext());
-        //db.loadGame()
+        setContentView( R.layout.database_load );
+        String[] gameList = db.returnGameList().toArray(new String[0]);
+        if (gameList != null) {
+            ArrayAdapter<String> itemsAdapter =
+                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+            ListView listView = (ListView) findViewById(R.id.list_view );
+            if (listView != null) {
+                listView.setAdapter( itemsAdapter );
+            }
+        }
     }
 
     /**
@@ -547,12 +559,72 @@ public class EditorActivity extends AppCompatActivity {
         editorView.changeCurrentPage(nextPage);
     }
 
-    /**
-     * Saves current game state into the database.
+    /** Saves current game state into the database. Displays current list of games in a list view.
      */
     public void saveGame(View view) {
         Database db = Database.getInstance(getApplicationContext());
+        String[] gameList = db.returnGameList().toArray(new String[0]);
+        setContentView( R.layout.database_popup );
+        if (gameList != null) {
+            ArrayAdapter<String> itemsAdapter =
+                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+            ListView listView = (ListView) findViewById(R.id.list_view );
+            if (listView != null) {
+                listView.setAdapter( itemsAdapter );
+            }
+        }
+    }
+
+    /** Upon clicking the 'save' button, saves the current game into the database and displays it.
+     */
+    public void confirmSave(View view) {
+        Database db = Database.getInstance(getApplicationContext());
+        TextView textView = findViewById(R.id.edit_text);
+        String text = textView.getText().toString();
+        db.saveGame(text,getPages());
+        String[] gameList = db.returnGameList().toArray(new String[0]);
+        if (gameList != null) {
+            ArrayAdapter<String> itemsAdapter =
+                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+            ListView listView = (ListView) findViewById(R.id.list_view );
+            if (listView != null) {
+                listView.setAdapter( itemsAdapter );
+            }
+        }
+    }
+
+    /** Empties all records in the database.
+     */
+    public void clearDatabase(View view) {
+        Database db = Database.getInstance(getApplicationContext());
+        db.clear();
+        String[] gameList = db.returnGameList().toArray(new String[0]);
+        if (gameList != null) {
+            ArrayAdapter<String> itemsAdapter =
+                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+            ListView listView = (ListView) findViewById(R.id.list_view );
+            if (listView != null) {
+                listView.setAdapter( itemsAdapter );
+            }
+        }
+    }
+
+    /** Loads a chosen save game.
+     */
+    public void load(View view) {
+        Database db = Database.getInstance(getApplicationContext());
+        TextView textView = findViewById(R.id.edit_text_load);
+        String text = textView.getText().toString();
+        HashMap<String, Page> loadedPages = db.loadGame(text);
+        setPages(loadedPages);
+    }
+
+    /** Exits to main menu.
+     */
+    public void exit(View view) {
+        Database db = Database.getInstance(getApplicationContext());
         db.autoSave(getPages());
+        finish();
     }
 
     /**
@@ -561,6 +633,10 @@ public class EditorActivity extends AppCompatActivity {
      */
     private HashMap<String, Page> getPages() {
         return pages;
+    }
+
+    private void setPages(HashMap<String,Page> newPages) {
+        pages = newPages;
     }
 
     /**
