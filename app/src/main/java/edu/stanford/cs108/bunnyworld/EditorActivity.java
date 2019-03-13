@@ -792,7 +792,7 @@ public class EditorActivity extends AppCompatActivity {
             toast.show();
         } else {
             db.saveGame(text,getPages());
-            initializeEditor();
+            gameList = db.returnGameList().toArray(new String[0]);
             if (gameList != null) { // Updates appearance of games in list.
                 ArrayAdapter<String> itemsAdapter =
                         new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
@@ -996,6 +996,20 @@ public class EditorActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
+        editorView = findViewById(R.id.editorView);
+        if (pages != null) {
+            String startPage = null;
+            for (String key : getPages().keySet()) {
+                Page currentPage = getPages().get(key);
+                String pageName = currentPage.getDisplayName();
+                displayNameToID.put(key,pageName);
+                if (currentPage.getStarterPageStatus() == true) {
+                    startPage = key;
+                    starterPage = currentPage;
+                }
+            }
+            editorView.changeCurrentPage(pages.get(startPage));
+        }
     }
 
     /** Helper method to get pages
