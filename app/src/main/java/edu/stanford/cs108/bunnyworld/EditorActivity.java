@@ -683,6 +683,8 @@ public class EditorActivity extends AppCompatActivity {
 
        editorView.renderShape(shape);
 
+       editShapeDialog.dismiss();
+
    }
 
     /**
