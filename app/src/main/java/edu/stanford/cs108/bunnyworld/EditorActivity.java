@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import android.util.Log;
@@ -31,14 +32,15 @@ public class EditorActivity extends AppCompatActivity {
     private int numPages;  // Tracks cumulative number of pages created so far
     private HashMap<String, Page> pages; // Maps unique Page IDs to Page objects
     private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
-    private String currPage;
-    private Page currentPage;
+    private String currPage; // Tracks user-selected name of current page
+    private Page currentPage; // Tracks current page being displayed
+    private Page starterPage; // Tracks user-selected starter page
     private String currScript;
     private EditorView editorView;
+    private Shape copiedShape;
+
 
     private ArrayList<String> resources;    // stores list of addable objects
-
-    /* TODO: Add copy and paste functionality */
 
     /**
      * Sets up spinners and their respective functions upon creation of page
@@ -48,12 +50,11 @@ public class EditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
-
         initializeResources();
 
         // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background"};
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background", "Change Starter Page"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
         pageSpinner.setSelection(0);
@@ -65,8 +66,6 @@ public class EditorActivity extends AppCompatActivity {
                         break;
                     case 1:
                         addPage();
-                        Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
-                        addPageToast.show();
                         break;
                     case 2:
                         selectPageToRenameDialog();
@@ -80,6 +79,8 @@ public class EditorActivity extends AppCompatActivity {
                     case 5:
                         changePageBackground();
                         break;
+                    case 6:
+                        selectStarterPage();
                 }
                 pageSpinner.setSelection(0);
             }
@@ -92,7 +93,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape"};
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape", "Copy Shape", "Paste Shape"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -112,6 +113,12 @@ public class EditorActivity extends AppCompatActivity {
                         break;
                     case 4:
                         deleteShape();
+                        break;
+                    case 5:
+                        copyShape();
+                        break;
+                    case 6:
+                        pasteShape();
                         break;
                 }
                 shapeSpinner.setSelection(0);
@@ -138,6 +145,7 @@ public class EditorActivity extends AppCompatActivity {
                         handleScript();
                         break;
                     case 2:
+                        showScript();
                         break;
                 }
                 scriptSpinner.setSelection(0);
@@ -296,6 +304,21 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
+     * Displays script for selected shape
+     */
+    private void showScript() {
+        Shape selectedShape = currentPage.getSelected();
+        if (selectedShape != null) {
+            Dialog shapeScriptDialog = new Dialog(this);
+            shapeScriptDialog.setTitle(selectedShape.getScript());
+        } else {
+            // not able to show script because no shape selected
+            Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
+            addToast.show();
+        }
+    }
+
+    /**
      * Creates new Page and initializes relevant internal variables
      */
     private void addPage() {
@@ -312,8 +335,15 @@ public class EditorActivity extends AppCompatActivity {
         pages.put(uniquePageID, newPage);
 
         currentPage = newPage;
+        if (numPages == 1) {
+            newPage.setStarterPageStatus(true);
+            starterPage = newPage;
+        }
         // Updates the current page in the view
         editorView.changeCurrentPage(currentPage);
+
+        Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
+        addPageToast.show();
     }
 
     /**
@@ -379,18 +409,46 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO: Deletes shape from screen
      * Deletes the selected shape on the canvas. Displays helpful toasts based
      * upon success of deletion.
     */
     private void deleteShape() {
-        if(editorView.deleteShape()) {
-            Toast addToast = Toast.makeText(getApplicationContext(),"Shape successfully deleted.",Toast.LENGTH_SHORT);
+        if (editorView.deleteShape()) {
+            Toast addToast = Toast.makeText(getApplicationContext(),"Shape Successfully Deleted.",Toast.LENGTH_SHORT);
             addToast.show();
         } else {
             // show toast message if deletion did not work
             Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
             addToast.show();
+        }
+    }
+
+    private void copyShape() {
+        Shape selectedShape = currentPage.getSelected();
+        if (selectedShape == null) {
+            Toast shapeSelectedError = Toast.makeText(getApplicationContext(), "No Shape Selected", Toast.LENGTH_SHORT);
+            shapeSelectedError.show();
+        } else {
+            copiedShape = selectedShape;
+        }
+    }
+
+    private void pasteShape() {
+        if (copiedShape == null) {
+            Toast shapeCopyError = Toast.makeText(getApplicationContext(), "No Shape Copied", Toast.LENGTH_SHORT);
+            shapeCopyError.show();
+        } else {
+            numShapes++;
+            String shapeName = "shape" + numShapes;
+            Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
+            addToast.show();
+
+            String selection = "carrot";
+            Shape newShape = new Shape(numShapes, selection, "",
+                    20, 20, 50, 50);
+
+            currentPage.addShape(newShape);
+            editorView.renderShape(newShape);
         }
     }
 
@@ -411,6 +469,7 @@ public class EditorActivity extends AppCompatActivity {
                 String pageName = pageNames[selection];
                 String uniqueID = displayNameToID.get(pageName);
                 pages.remove(uniqueID);
+                displayNameToID.remove(pageName);
                 // TODO: update custom view to reflect this
                 // TODO: figure out starter page
                 Toast pageNameToast = Toast.makeText(getApplicationContext(), pageName + " Deleted",Toast.LENGTH_SHORT);
@@ -473,7 +532,7 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO: Helper method to rename page internally
+     * Helper method to rename page internally
      * @param newName the new name of the page
      */
     private void renamePage(String newName, String uniqueID) {
@@ -483,9 +542,84 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
+     * Prompts the user to select which page to change the background of -- hands off to
+     * backgroundDialog() once a page is selected
+     */
+    private void changePageBackground() {
+        ArrayList<String> names = new ArrayList<>();
+        names.addAll(pages.keySet());
+        final String[] pageNames = names.toArray(new String[pages.size()]);
+        AlertDialog.Builder pageToRenamePrompt = new AlertDialog.Builder(this);
+        pageToRenamePrompt.setTitle("Page To Change Background Of: ");
+        pageToRenamePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String pageName = pageNames[selection];
+                String uniqueID = displayNameToID.get(pageName);
+                backgroundDialog(uniqueID);
+            }
+        });
+        pageToRenamePrompt.show();
+    }
+
+    /**
+     * Prompts the user to select which background to set for page -- hands off to changeBackground()
+     */
+    private void backgroundDialog(final String uniqueID) {
+        final String[] backgroundList = new String[]{"Background1", "Background2", "Background3", "Background4", "Background5", "Background6"};
+        AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
+        playPrompt.setTitle("Select Background: ");
+        playPrompt.setItems(backgroundList, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String selectedBackground = backgroundList[selection];
+                changeBackground(uniqueID, selectedBackground);
+            }
+        });
+        playPrompt.show();
+    }
+
+    /**
+     * Changes the background of the parameterized page associated with the uniqueID
+     */
+    private void changeBackground(String uniqueID, String background) {
+
+        Toast backgroundToast = Toast.makeText(getApplicationContext(), "Background Changed", Toast.LENGTH_SHORT);
+        backgroundToast.show();
+    }
+
+    private void selectStarterPage() {
+        ArrayList<String> names = new ArrayList<>();
+        names.addAll(pages.keySet());
+        final String[] pageNames = names.toArray(new String[pages.size()]);
+        AlertDialog.Builder starterPagePrompt = new AlertDialog.Builder(this);
+        starterPagePrompt.setTitle(starterPage.getDisplayName() + " Is Current Starter Page. Select New Starter Page: ");
+        starterPagePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String pageName = pageNames[selection];
+                String uniqueID = displayNameToID.get(pageName);
+                Page selectedPage = pages.get(uniqueID);
+                for (Page page : pages.values()) {
+                    if (page.getStarterPageStatus()) page.setStarterPageStatus(false);
+                }
+                starterPage = selectedPage;
+                selectedPage.setStarterPageStatus(true);
+            }
+        });
+        starterPagePrompt.show();
+    }
+
+    /**
      * Prompts user to input a new name for the shape
      */
     private void renameShapeDialog() {
+        Shape selectedShape = currentPage.getSelected();
+        if (selectedShape == null) {
+            Toast shapeSelectedError = Toast.makeText(getApplicationContext(), "No Shape Selected", Toast.LENGTH_SHORT);
+            shapeSelectedError.show();
+            return;
+        }
         AlertDialog.Builder renameShapePrompt = new AlertDialog.Builder(this);
         renameShapePrompt.setTitle("Input New Name For Shape: ");
         final EditText input = new EditText(this);
@@ -495,8 +629,18 @@ public class EditorActivity extends AppCompatActivity {
         renameShapePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newPageName = input.getText().toString();
-                renameShape(newPageName);
+                String newShapeName = input.getText().toString();
+                ArrayList<Shape> shapes = currentPage.getShapes();
+                // checks to make sure shape name not already used; if used, prompts user to re-enter name
+                for (int i = 0; i < shapes.size(); i++) {
+                    if (shapes.get(i).getShapeName().equals(newShapeName)) {
+                        Toast shapeRenameError = Toast.makeText(getApplicationContext(), "Shape Name Already Used On This Page", Toast.LENGTH_SHORT);
+                        shapeRenameError.show();
+                        renameShapeDialog();
+                        return;
+                    }
+                }
+                renameShape(newShapeName);
             }
         });
         // Cancels save
@@ -510,7 +654,7 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO: Helper method to rename shape internally
+     * Helper method to rename shape internally
      * @param newName the new name of the shape
      */
     private void renameShape(String newName) {
@@ -518,11 +662,14 @@ public class EditorActivity extends AppCompatActivity {
         selectedShape.setShapeName(newName);
     }
 
+    /**
+     * Dialog that pops up that allows user to change the properties of the selected shape
+     */
     private void editShapeDialog() {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.shape_properties);
         final Shape selectedShape = currentPage.getSelected();
-
+        // if a shape is selected, dialog with properties pops up; if not, user is alerted of problem
         if(selectedShape != null) {
             populateEditShapeDialog(selectedShape, dialog);
             EditText shapeName = dialog.findViewById(R.id.nameInput);
@@ -536,6 +683,9 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Populates the EditText views in the editShapeDialog with the existing properties of the shape
+     */
     private void populateEditShapeDialog(Shape shape, Dialog dialog) {
         EditText topInput = dialog.findViewById(R.id.topInput);
         topInput.setText(Double.toString(shape.getTop()));
@@ -553,9 +703,13 @@ public class EditorActivity extends AppCompatActivity {
         visibleInput.setEnabled(!shape.getHiddenStatus());
     }
 
-    private void editShapeProperties(Shape shape) {
+    /**
+     * TODO: Helper method that, on click, updates shape properties
+     * @param view
+     */
+   public void editShapeProperties(View view) {
 
-    }
+   }
 
     /**
      * Prompts the user to either load a new game or load an existing game
@@ -583,6 +737,7 @@ public class EditorActivity extends AppCompatActivity {
         editorView = findViewById(R.id.editorView);
         numShapes = 0;
         numPages = 0;
+        copiedShape = null;
         pages = new HashMap<>();
         displayNameToID = new HashMap<>();
         addPage();
@@ -595,6 +750,7 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void loadExistingGame(){
         final Database db = Database.getInstance(getApplicationContext());
+        editorView = findViewById(R.id.editorView);
         setContentView( R.layout.database_load );
         ListView listView = findViewById( R.id.list_view );
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -603,7 +759,23 @@ public class EditorActivity extends AppCompatActivity {
                 String product = ((TextView) view).getText().toString();
                 Toast pageNameToast = Toast.makeText(getApplicationContext(),product,Toast.LENGTH_SHORT);
                 pageNameToast.show();
-                db.loadGame( product);
+                setPages(db.loadGame(product));
+                String firstPage = db.returnFirstPage( product );
+                Page page = getPages().get(firstPage);
+                if (editorView != null && page != null) {
+                    editorView.changeCurrentPage( page );
+                }
+                numShapes = db.getShapeCount(product);
+                numPages = db.getPageCount( product );
+                currentPage = pages.get("page1");
+                displayNameToID = new HashMap<String, String>();
+                for (String key : pages.keySet()) {
+                    Page currentPage = pages.get(key);
+                    String pageName = currentPage.getDisplayName();
+                    displayNameToID.put(key,pageName);
+
+                }
+                returnHome();
             }
         });
         String[] gameList = db.returnGameList().toArray( new String[0] );
@@ -618,7 +790,6 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO: Change this to list the pages so the user can see options
      * Goes to new page based on user input
      */
     private void goToNewPageDialog() {
@@ -636,7 +807,6 @@ public class EditorActivity extends AppCompatActivity {
                 String newPageName = pageNames[selection];
                 Toast pageNameToast = Toast.makeText(getApplicationContext(),newPageName,Toast.LENGTH_SHORT);
                 pageNameToast.show();
-
                 // From the selected display name, pull the original page object
                 String uniqueID = displayNameToID.get(newPageName);
                 switchPages(uniqueID);
@@ -686,6 +856,15 @@ public class EditorActivity extends AppCompatActivity {
             toast.show();
         } else {
             db.saveGame(text,getPages());
+            returnHome();
+            if (gameList != null) { // Updates appearance of games in list.
+                ArrayAdapter<String> itemsAdapter =
+                        new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+                ListView listView = (ListView) findViewById(R.id.list_view );
+                if (listView != null) {
+                    listView.setAdapter( itemsAdapter );
+                }
+            }
         }
         if (gameList != null) { // Updates appearance of games in list.
             ArrayAdapter<String> itemsAdapter =
@@ -730,15 +909,119 @@ public class EditorActivity extends AppCompatActivity {
             }
         }
     }
-    /** Loads a chosen save game.
-     */
 
-    /** Exits to main menu.
+    /** Exits back to editor activity.
      */
     public void exit(View view) {
         Database db = Database.getInstance(getApplicationContext());
-        db.autoSave(getPages()); // Autosaves in case someone did not mean to lose all of their data.
-        finish(); // Returns to previous activity.
+        db.autoSave(getPages()); // Autosaves in case someone did not mean to lose all of their data.\
+        returnHome();
+    }
+
+    /** Resets editor activity.
+     */
+    public void returnHome() {
+        setContentView(R.layout.activity_editor);
+        initializeResources();
+        // Initializes Spinner for page options
+        final Spinner pageSpinner = findViewById(R.id.pageSpinner);
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background"};
+        ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
+        pageSpinner.setAdapter(pageAdapter);
+        pageSpinner.setSelection(0);
+        pageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch(position){
+                    case 0:
+                        break;
+                    case 1:
+                        addPage();
+                        Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
+                        addPageToast.show();
+                        break;
+                    case 2:
+                        selectPageToRenameDialog();
+                        break;
+                    case 3:
+                        deletePageDialog();
+                        break;
+                    case 4:
+                        goToNewPageDialog();
+                        break;
+                    case 5:
+                        changePageBackground();
+                        break;
+                }
+                pageSpinner.setSelection(0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+        // Initializes spinner for shape options
+        final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape"};
+        ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
+        shapeSpinner.setAdapter(shapeAdapter);
+        shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch(position){
+                    case 0:
+                        break;
+                    case 1:
+                        addShape();
+                        break;
+                    case 2:
+                        renameShapeDialog();
+                        break;
+                    case 3:
+                        editShapeDialog();
+                        break;
+                    case 4:
+                        deleteShape();
+                        break;
+                }
+                shapeSpinner.setSelection(0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+        // Initialize spinner for script options
+        final Spinner scriptSpinner = findViewById(R.id.scriptSpinner);
+        String[] scriptOptions = new String[]{"Script Options:", "Create Script", "Show Script"};
+        ArrayAdapter<String> scriptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, scriptOptions);
+        scriptSpinner.setAdapter(scriptAdapter);
+        scriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch(position){
+                    case 0:
+                        break;
+                    case 1:
+                        handleScript();
+                        break;
+                    case 2:
+                        break;
+                }
+                scriptSpinner.setSelection(0);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+        editorView = findViewById(R.id.editorView);
+        editorView.changeCurrentPage(pages.get("page1"));
+
     }
 
     /** Helper method to get pages
@@ -752,13 +1035,5 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void setPages(HashMap<String,Page> newPages) {
         pages = newPages;
-    }
-
-    /**
-     * Function that will allow the user to select a background image for
-     * the current bunnyworld page
-     */
-    private void changePageBackground() {
-
     }
 }
