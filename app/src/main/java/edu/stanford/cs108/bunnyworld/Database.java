@@ -187,7 +187,7 @@ class Database extends SQLiteOpenHelper {
      */
     public void updateGameName(String oldName, String newName) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String updateSave = "UPDATE ShapeDatabase SET SAVE = " + newName + " WHERE SAVE = " + oldName;
+        String updateSave = "UPDATE ShapeDatabase SET SAVE = " + "'" + newName + "'" + " WHERE SAVE = " + "'" + oldName + "'";
         db.execSQL(updateSave);
     }
 

@@ -793,6 +793,38 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    /** Renames a chosen save to a new value.
+     */
+    public void renameSave(View view) {
+        final Database db = Database.getInstance(getApplicationContext());
+        final String[] gameList = db.returnGameList().toArray(new String[0]);
+        TextView textView = findViewById(R.id.edit_text);
+        final String text = textView.getText().toString();
+        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
+        newPagePrompt.setTitle("Which save would you like to rename? ");
+        newPagePrompt.setItems(gameList, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                if (Arrays.asList(gameList).contains(text)) {
+                    Toast addPageToast = Toast.makeText(getApplicationContext(),"Choose a different name.",Toast.LENGTH_SHORT);
+                    addPageToast.show();
+                } else {
+                    db.updateGameName( gameList[selection], text );
+                }
+                String[] newGameList = db.returnGameList().toArray(new String[0]);
+                if (newGameList != null) {
+                    ArrayAdapter<String> itemsAdapter =
+                            new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, newGameList );
+                    ListView listView = (ListView) findViewById(R.id.list_view );
+                    if (listView != null) {
+                        listView.setAdapter( itemsAdapter );
+                    }
+                }
+            }
+        });
+        newPagePrompt.show();
+    }
+
     /** Deletes a save from the database.
      */
     public void deleteSave(View view) {
