@@ -130,6 +130,7 @@ class Database extends SQLiteOpenHelper {
             Page newPage = null;
             if (fullShapeList.get(pageID) == null && thisSave.equals(saveFile)) {
                 newPage = new Page(pageName, pageID);
+                fullShapeList.put(pageID,newPage);
             } else if (thisSave.equals(saveFile) && fullShapeList.get(pageID) != null) {
                 newPage = fullShapeList.get(pageID);
             }
@@ -155,6 +156,7 @@ class Database extends SQLiteOpenHelper {
                     newPage.addShape(newShape);
                 }
                 shapeCounter = shapeCounter + 1;
+
             }
         }
         cursor.close();
@@ -206,5 +208,18 @@ class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS ShapeDatabase");
         onCreate(db);
+    }
+
+    public String returnFirstPage(String save) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String firstPage = null;
+        String returnGameList = "SELECT DISTINCT PAGEID FROM ShapeDatabase WHERE SAVE = " + "'" + save + "'";
+        Cursor cursor = db.rawQuery(returnGameList,null);
+        cursor.moveToNext();
+        if (cursor.getString(0) != null) {
+           firstPage = cursor.getString( 0 );
+        }
+        cursor.close();
+        return firstPage;
     }
 }
