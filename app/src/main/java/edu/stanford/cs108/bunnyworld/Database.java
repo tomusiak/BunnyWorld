@@ -68,7 +68,7 @@ class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String checkQuery = "SELECT * FROM ShapeDatabase WHERE SAVE = " + "'" + saveName + "'";
         Cursor cursor = db.rawQuery(checkQuery,null);
-        if (cursor.getCount() != 0) {
+        if (cursor.getCount() != 0) { // Deletes save in case it already exists.
             deleteSave(saveName);
         }
         cursor.close();

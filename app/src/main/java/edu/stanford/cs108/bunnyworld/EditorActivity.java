@@ -634,13 +634,16 @@ public class EditorActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.edit_text);
         String text = textView.getText().toString();
         String[] gameList = db.returnGameList().toArray(new String[0]);
-        if (gameList.length > 7) {
+        if (gameList.length > 11) { // Ensures list of saves does not run off screen.
             Toast toast = Toast.makeText(this,"Please delete a save before adding more.",Toast.LENGTH_SHORT);
+            toast.show();
+        } else if (getPages() == null) {
+            Toast toast = Toast.makeText(this,"Please add at least one shape before saving.",Toast.LENGTH_SHORT);
             toast.show();
         } else {
             db.saveGame(text,getPages());
         }
-        if (gameList != null) {
+        if (gameList != null) { // Updates appearance of games in list.
             ArrayAdapter<String> itemsAdapter =
                     new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
             ListView listView = (ListView) findViewById(R.id.list_view );
@@ -654,9 +657,9 @@ public class EditorActivity extends AppCompatActivity {
      */
     public void clearDatabase(View view) {
         Database db = Database.getInstance(getApplicationContext());
-        db.clear();
+        db.clear(); // Clears database by dropping the main table and re-creating it.
         String[] gameList = db.returnGameList().toArray(new String[0]);
-        if (gameList != null) {
+        if (gameList != null) { // If gameList isn't empty, refreshes games list.
             ArrayAdapter<String> itemsAdapter =
                     new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
             ListView listView = (ListView) findViewById(R.id.list_view );
@@ -698,18 +701,19 @@ public class EditorActivity extends AppCompatActivity {
      */
     public void exit(View view) {
         Database db = Database.getInstance(getApplicationContext());
-        db.autoSave(getPages());
-        finish();
+        db.autoSave(getPages()); // Autosaves in case someone did not mean to lose all of their data.
+        finish(); // Returns to previous activity.
     }
 
-    /**
-     * Helper method to get pages
+    /** Helper method to get pages
      * @return pages
      */
     private HashMap<String, Page> getPages() {
         return pages;
     }
 
+    /** Helper setter method for pages.
+     */
     private void setPages(HashMap<String,Page> newPages) {
         pages = newPages;
     }
