@@ -25,8 +25,6 @@ public class PlayView extends View {
     float x2, y2;   // x and y coordinate of when user lifts finger
     float xDelta, yDelta;
 
-
-
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -37,14 +35,6 @@ public class PlayView extends View {
      */
     private void init() {
         selected = null;
-    }
-
-    /**
-     * Parses and executes script on shape
-     * @param shape
-     */
-    public void executeScript(Shape shape) {
-        // Insert script parsing currently in mainactivity
     }
 
     /**
