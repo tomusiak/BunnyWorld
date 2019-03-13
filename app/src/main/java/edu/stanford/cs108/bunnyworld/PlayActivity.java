@@ -138,9 +138,9 @@ public class PlayActivity extends AppCompatActivity {
         //pageMap = thisDatabase.loadGame(saveName);
     }
 
-    public void executeScript(String script) {
+    public void executeScript(Shape thisShape) {
         // not case-sensitive
-        script = script.toLowerCase();
+        String script = thisShape.getScript().toLowerCase();
 
         // splits block of script into clauses
         String[] clauses = script.split(";");
