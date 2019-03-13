@@ -44,6 +44,8 @@ public class PlayView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
+        return true;
+
     }
 
     @Override
