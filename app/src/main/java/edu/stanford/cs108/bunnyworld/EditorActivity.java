@@ -93,7 +93,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape"};
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape", "Copy Shape", "Paste Shape"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -113,6 +113,12 @@ public class EditorActivity extends AppCompatActivity {
                         break;
                     case 4:
                         deleteShape();
+                        break;
+                    case 5:
+                        copyShape();
+                        break;
+                    case 6:
+                        pasteShape();
                         break;
                 }
                 shapeSpinner.setSelection(0);
@@ -410,6 +416,35 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    private void copyShape() {
+        Shape selectedShape = currentPage.getSelected();
+        if (selectedShape == null) {
+            Toast shapeSelectedError = Toast.makeText(getApplicationContext(), "No Shape Selected", Toast.LENGTH_SHORT);
+            shapeSelectedError.show();
+        } else {
+            copiedShape = selectedShape;
+        }
+    }
+
+    private void pasteShape() {
+        if (copiedShape == null) {
+            Toast shapeCopyError = Toast.makeText(getApplicationContext(), "No Shape Copied", Toast.LENGTH_SHORT);
+            shapeCopyError.show();
+        } else {
+            numShapes++;
+            String shapeName = "shape" + numShapes;
+            Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
+            addToast.show();
+
+            String selection = "carrot";
+            Shape newShape = new Shape(numShapes, selection, "",
+                    20, 20, 50, 50);
+
+            currentPage.addShape(newShape);
+            editorView.renderShape(newShape);
+        }
+    }
+
     /**
      * Deletes selected page from internal data structures and external view
      */
@@ -673,6 +708,7 @@ public class EditorActivity extends AppCompatActivity {
         editorView = findViewById(R.id.editorView);
         numShapes = 0;
         numPages = 0;
+        copiedShape = null;
         pages = new HashMap<>();
         displayNameToID = new HashMap<>();
         addPage();
