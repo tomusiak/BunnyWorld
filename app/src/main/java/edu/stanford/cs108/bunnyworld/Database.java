@@ -222,4 +222,26 @@ class Database extends SQLiteOpenHelper {
         cursor.close();
         return firstPage;
     }
+
+    public int getShapeCount(String save) {
+        int count = 0;
+        SQLiteDatabase db = this.getWritableDatabase();
+        String returnGameList = "SELECT DISTINCT ShapeName FROM ShapeDatabase WHERE SAVE = " + "'" + save + "'";
+        Cursor cursor = db.rawQuery(returnGameList,null);
+        while (cursor.moveToNext()) {
+            count++;
+        }
+        return count;
+    }
+
+    public int getPageCount(String save) {
+        int count = 0;
+        SQLiteDatabase db = this.getWritableDatabase();
+        String returnGameList = "SELECT DISTINCT PAGEID FROM ShapeDatabase WHERE SAVE = " + "'" + save + "'";
+        Cursor cursor = db.rawQuery(returnGameList,null);
+        while (cursor.moveToNext()) {
+            count++;
+        }
+        return count;
+    }
 }

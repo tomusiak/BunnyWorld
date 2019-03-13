@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import android.util.Log;
@@ -764,6 +765,9 @@ public class EditorActivity extends AppCompatActivity {
                 if (editorView != null && page != null) {
                     editorView.changeCurrentPage( page );
                 }
+                numShapes = db.getShapeCount(product);
+                numPages = db.getPageCount( product );
+                currentPage = pages.get("page1");
                 returnHome();
             }
         });
@@ -898,10 +902,8 @@ public class EditorActivity extends AppCompatActivity {
             }
         }
     }
-    /** Loads a chosen save game.
-     */
 
-    /** Exits to main menu.
+    /** Exits back to editor activity.
      */
     public void exit(View view) {
         Database db = Database.getInstance(getApplicationContext());
@@ -909,6 +911,8 @@ public class EditorActivity extends AppCompatActivity {
         returnHome();
     }
 
+    /** Resets editor activity.
+     */
     public void returnHome() {
         setContentView(R.layout.activity_editor);
         initializeResources();
@@ -1008,10 +1012,15 @@ public class EditorActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
+        displayNameToID = new HashMap<>();
         editorView = findViewById(R.id.editorView);
-        numShapes = 0;
-        numPages = 0;
         editorView.changeCurrentPage(pages.get("page1"));
+        for (String key : pages.keySet()) {
+            ArrayList<Shape> shapeList = pages.get(key).getList();
+            for (int i = 0; i < shapeList.size(); i++) {
+                editorView.renderShape(shapeList.get( i ));
+            }
+        }
     }
 
     /** Helper method to get pages
