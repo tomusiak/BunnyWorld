@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -18,12 +19,15 @@ public class PlayView extends View {
 
     Shape selected;
     Page currentPage;
+    Page inventory;
 
     private int TRANSPARENT = Color.WHITE;
 
     float x1, y1;   // x and y coordinate of initial press to the screen
     float x2, y2;   // x and y coordinate of when user lifts finger
     float xDelta, yDelta;
+
+    float inventoryY;
 
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -47,6 +51,7 @@ public class PlayView extends View {
         if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
+
         invalidate();
     }
 
@@ -174,6 +179,10 @@ public class PlayView extends View {
                 if(currentPage != null && currentPage.getSelected() != null
                         && currentPage.getSelected().getMoveableStatus()) {
                     currentPage.getSelected().move(xDelta, yDelta);
+
+                    if (yDelta >= inventoryY + currentPage.getSelected().getHeight()/2) {
+                        // add this to the inventory page
+                    }
                 }
 
                 invalidate();   // forces canvas update
@@ -194,6 +203,17 @@ public class PlayView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawPage(canvas);
+
+        float width = canvas.getWidth();
+        float height = canvas.getHeight();
+
+        inventoryY = (float)0.75*height;
+
+        Paint linePaint = new Paint();
+        linePaint.setColor(Color.BLACK);
+        linePaint.setStrokeWidth(2);
+
+        canvas.drawLine((float)0, (float)0.75*height, (float)width, (float)0.75*height, linePaint);
     }
 
 
