@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -48,7 +52,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Name Page", "Delete Page", "Open Page", "Change Background"};
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
         pageSpinner.setSelection(0);
@@ -64,7 +68,7 @@ public class EditorActivity extends AppCompatActivity {
                         addPageToast.show();
                         break;
                     case 2:
-                        renamePageDialog();
+                        selectPageToRenameDialog();
                         break;
                     case 3:
                         deletePageDialog();
@@ -87,7 +91,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Name Shape", "Edit Shape", "Delete Shape"};
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -103,6 +107,7 @@ public class EditorActivity extends AppCompatActivity {
                         renameShapeDialog();
                         break;
                     case 3:
+                        editShapeDialog();
                         break;
                     case 4:
                         deleteShape();
@@ -394,9 +399,7 @@ public class EditorActivity extends AppCompatActivity {
     private void deletePageDialog() {
         // Gets names of all pages
         ArrayList<String> names = new ArrayList<>();
-        for (String page: pages.keySet()) {
-            names.add(page);
-        }
+        names.addAll(pages.keySet());
         final String[] pageNames = names.toArray(new String[pages.size()]);
         AlertDialog.Builder deleteShapePrompt = new AlertDialog.Builder(this);
         deleteShapePrompt.setTitle("Page To Delete: ");
@@ -416,10 +419,29 @@ public class EditorActivity extends AppCompatActivity {
         deleteShapePrompt.show();
     }
 
+    // prompts the user to select which page (of the created pages) to rename
+    private void selectPageToRenameDialog() {
+        ArrayList<String> names = new ArrayList<>();
+        names.addAll(pages.keySet());
+        final String[] pageNames = names.toArray(new String[pages.size()]);
+        AlertDialog.Builder pageToRenamePrompt = new AlertDialog.Builder(this);
+        pageToRenamePrompt.setTitle("Page To Rename: ");
+        pageToRenamePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String pageName = pageNames[selection];
+                String uniqueID = displayNameToID.get(pageName);
+                renamePageDialog(uniqueID, pageNames);
+            }
+        });
+        pageToRenamePrompt.show();
+    }
+
     /**
      * Takes in user input to rename page in internal structures and external view
      */
-    private void renamePageDialog() {
+    private void renamePageDialog(final String uniqueID, final String[] pageNames) {
+        final ArrayList<String> pageList = new ArrayList<>(Arrays.asList(pageNames));
         AlertDialog.Builder renamePagePrompt = new AlertDialog.Builder(this);
         renamePagePrompt.setTitle("Input New Name For Page: ");
         final EditText input = new EditText(this);
@@ -430,7 +452,13 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newPageName = input.getText().toString();
-                renamePage(newPageName);
+                if (pageList.contains(newPageName)) {
+                    Toast pageRenameError = Toast.makeText(getApplicationContext(), "Page Name Already Used", Toast.LENGTH_SHORT);
+                    pageRenameError.show();
+                    renamePageDialog(uniqueID, pageNames);
+                } else {
+                    renamePage(newPageName, uniqueID);
+                }
             }
         });
         // Enables cancel option
@@ -447,9 +475,10 @@ public class EditorActivity extends AppCompatActivity {
      * TODO: Helper method to rename page internally
      * @param newName the new name of the page
      */
-    private void renamePage(String newName) {
-        //ArrayList<Shape> page = pages.remove(currPage);
-        //pages.put(newName, page);
+    private void renamePage(String newName, String uniqueID) {
+        Page page = pages.remove(uniqueID);
+        page.changeDisplayName(newName);
+        pages.put(newName, page);
     }
 
     /**
@@ -484,6 +513,38 @@ public class EditorActivity extends AppCompatActivity {
      * @param newName the new name of the shape
      */
     private void renameShape(String newName) {
+        Shape selectedShape = currentPage.getSelected();
+        selectedShape.setShapeName(newName);
+    }
+
+    private void editShapeDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.shape_properties);
+        final Shape selectedShape = currentPage.getSelected();
+        populateEditShapeDialog(selectedShape, dialog);
+        EditText shapeName = dialog.findViewById(R.id.nameInput);
+        shapeName.setText(selectedShape.getShapeName());
+        dialog.show();
+    }
+
+    private void populateEditShapeDialog(Shape shape, Dialog dialog) {
+        EditText topInput = dialog.findViewById(R.id.topInput);
+        topInput.setText(Double.toString(shape.getTop()));
+        EditText bottomInput = dialog.findViewById(R.id.bottomInput);
+        bottomInput.setText(Double.toString(shape.getBottom()));
+        EditText leftInput = dialog.findViewById(R.id.leftInput);
+        leftInput.setText(Double.toString(shape.getLeft()));
+        EditText rightInput = dialog.findViewById(R.id.rightInput);
+        rightInput.setText(Double.toString(shape.getRight()));
+        EditText shapeName = dialog.findViewById(R.id.nameInput);
+        shapeName.setText(shape.getShapeName());
+        CheckBox moveInput = dialog.findViewById(R.id.moveInput);
+        moveInput.setEnabled(shape.getMoveableStatus());
+        CheckBox visibleInput = dialog.findViewById(R.id.visibleInput);
+        visibleInput.setEnabled(!shape.getHiddenStatus());
+    }
+
+    private void editShapeProperties(Shape shape) {
 
     }
 
@@ -493,22 +554,16 @@ public class EditorActivity extends AppCompatActivity {
     private void showCustomDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage("Create a new game or open an existing game?");
-        // Creates new game
-        dialog.setPositiveButton(
-                "Create New Game",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        loadNewGame();
-                    }
-                });
-        // Opens existing game
-        dialog.setNegativeButton(
-                "Open Existing Game",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        loadExistingGame();
-                    }
-                });
+        dialog.setPositiveButton("Create New Game", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                loadNewGame();
+            }
+        });
+        dialog.setNegativeButton("Open Existing Game", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                loadExistingGame();
+            }
+        });
         dialog.show();
     }
 
@@ -531,7 +586,16 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void loadExistingGame(){
         Database db = Database.getInstance(getApplicationContext());
-        //db.loadGame()
+        setContentView( R.layout.database_load );
+        String[] gameList = db.returnGameList().toArray(new String[0]);
+        if (gameList != null) {
+            ArrayAdapter<String> itemsAdapter =
+                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+            ListView listView = (ListView) findViewById(R.id.list_view );
+            if (listView != null) {
+                listView.setAdapter( itemsAdapter );
+            }
+        }
     }
 
     /**
@@ -572,20 +636,111 @@ public class EditorActivity extends AppCompatActivity {
         editorView.changeCurrentPage(nextPage);
     }
 
-    /**
-     * Saves current game state into the database.
+    /** Saves current game state into the database. Displays current list of games in a list view.
      */
     public void saveGame(View view) {
         Database db = Database.getInstance(getApplicationContext());
-        db.autoSave(getPages());
+        String[] gameList = db.returnGameList().toArray(new String[0]);
+        setContentView( R.layout.database_popup );
+        if (gameList != null) {
+            ArrayAdapter<String> itemsAdapter =
+                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+            ListView listView = (ListView) findViewById(R.id.list_view );
+            if (listView != null) {
+                listView.setAdapter( itemsAdapter );
+            }
+        }
     }
 
-    /**
-     * Helper method to get pages
+    /** Upon clicking the 'save' button, saves the current game into the database and displays it.
+     */
+    public void confirmSave(View view) {
+        Database db = Database.getInstance(getApplicationContext());
+        TextView textView = findViewById(R.id.edit_text);
+        String text = textView.getText().toString();
+        String[] gameList = db.returnGameList().toArray(new String[0]);
+        if (gameList.length > 11) { // Ensures list of saves does not run off screen.
+            Toast toast = Toast.makeText(this,"Please delete a save before adding more.",Toast.LENGTH_SHORT);
+            toast.show();
+        } else if (getPages() == null) {
+            Toast toast = Toast.makeText(this,"Please add at least one shape before saving.",Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            db.saveGame(text,getPages());
+        }
+        if (gameList != null) { // Updates appearance of games in list.
+            ArrayAdapter<String> itemsAdapter =
+                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+            ListView listView = (ListView) findViewById(R.id.list_view );
+            if (listView != null) {
+                listView.setAdapter( itemsAdapter );
+            }
+        }
+    }
+
+    /** Empties all records in the database.
+     */
+    public void clearDatabase(View view) {
+        Database db = Database.getInstance(getApplicationContext());
+        db.clear(); // Clears database by dropping the main table and re-creating it.
+        String[] gameList = db.returnGameList().toArray(new String[0]);
+        if (gameList != null) { // If gameList isn't empty, refreshes games list.
+            ArrayAdapter<String> itemsAdapter =
+                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+            ListView listView = (ListView) findViewById(R.id.list_view );
+            if (listView != null) {
+                listView.setAdapter( itemsAdapter );
+            }
+        }
+    }
+
+    /** Deletes a save from the database.
+     */
+    public void deleteSave(View view) {
+        Database db = Database.getInstance(getApplicationContext());
+        TextView textView = findViewById(R.id.edit_text);
+        String text = textView.getText().toString();
+        db.deleteSave(text);
+        String[] gameList = db.returnGameList().toArray(new String[0]);
+        if (gameList != null) {
+            ArrayAdapter<String> itemsAdapter =
+                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+            ListView listView = (ListView) findViewById(R.id.list_view );
+            if (listView != null) {
+                listView.setAdapter( itemsAdapter );
+            }
+        }
+    }
+
+    /** Loads a chosen save game.
+     */
+    public void load(View view) {
+        Database db = Database.getInstance(getApplicationContext());
+        TextView textView = findViewById(R.id.edit_text_load);
+        String text = textView.getText().toString();
+        HashMap<String, Page> loadedPages = db.loadGame(text);
+        setPages(loadedPages);
+    }
+
+    /** Exits to main menu.
+     */
+    public void exit(View view) {
+        Database db = Database.getInstance(getApplicationContext());
+        db.autoSave(getPages()); // Autosaves in case someone did not mean to lose all of their data.
+        finish(); // Returns to previous activity.
+    }
+
+    /** Helper method to get pages
      * @return pages
      */
     private HashMap<String, Page> getPages() {
         return pages;
+    }
+
+    /** Helper setter method for pages.
+     */
+    private void setPages(HashMap<String,Page> newPages) {
+        pages = newPages;
     }
 
     /**
