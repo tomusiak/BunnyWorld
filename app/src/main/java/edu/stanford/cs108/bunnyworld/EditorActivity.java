@@ -521,10 +521,18 @@ public class EditorActivity extends AppCompatActivity {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.shape_properties);
         final Shape selectedShape = currentPage.getSelected();
-        populateEditShapeDialog(selectedShape, dialog);
-        EditText shapeName = dialog.findViewById(R.id.nameInput);
-        shapeName.setText(selectedShape.getShapeName());
-        dialog.show();
+
+        if(selectedShape != null) {
+            populateEditShapeDialog(selectedShape, dialog);
+            EditText shapeName = dialog.findViewById(R.id.nameInput);
+            shapeName.setText(selectedShape.getShapeName());
+            dialog.show();
+        } else {
+            // show toast message if there is no shape selected
+            Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
+            addToast.show();
+
+        }
     }
 
     private void populateEditShapeDialog(Shape shape, Dialog dialog) {

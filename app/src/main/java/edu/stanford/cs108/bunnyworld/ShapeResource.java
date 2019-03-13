@@ -11,13 +11,18 @@ public class ShapeResource {
     private int x;
     private int y;
 
+    private float left;
+    private float right;
+    private float top;
+    private float bottom;
+
     public ShapeResource(Bitmap bm, int index, String name) {
         bitmap = bm;
         shapeName = name;
 
         // index mod operations used to determine which row and col this resource belongs on
         x = index % 3;
-        y = index % 2;
+        y = index % 4;
 
     }
 
