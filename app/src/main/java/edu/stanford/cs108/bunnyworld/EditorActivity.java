@@ -38,8 +38,6 @@ public class EditorActivity extends AppCompatActivity {
     private String currScript;
     private EditorView editorView;
     private Shape copiedShape;
-
-
     private ArrayList<String> resources;    // stores list of addable objects
 
     /**
@@ -51,111 +49,7 @@ public class EditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         initializeResources();
-
-        // Initializes Spinner for page options
-        final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background", "Change Starter Page"};
-        ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
-        pageSpinner.setAdapter(pageAdapter);
-        pageSpinner.setSelection(0);
-        pageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch(position){
-                    case 0:
-                        break;
-                    case 1:
-                        addPage();
-                        break;
-                    case 2:
-                        selectPageToRenameDialog();
-                        break;
-                    case 3:
-                        deletePageDialog();
-                        break;
-                    case 4:
-                        goToNewPageDialog();
-                        break;
-                    case 5:
-                        changePageBackground();
-                        break;
-                    case 6:
-                        selectStarterPage();
-                }
-                pageSpinner.setSelection(0);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
-
-        // Initializes spinner for shape options
-        final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape", "Copy Shape", "Paste Shape"};
-        ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
-        shapeSpinner.setAdapter(shapeAdapter);
-        shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch(position){
-                    case 0:
-                        break;
-                    case 1:
-                        addShape();
-                        break;
-                    case 2:
-                        renameShapeDialog();
-                        break;
-                    case 3:
-                        editShapeDialog();
-                        break;
-                    case 4:
-                        deleteShape();
-                        break;
-                    case 5:
-                        copyShape();
-                        break;
-                    case 6:
-                        pasteShape();
-                        break;
-                }
-                shapeSpinner.setSelection(0);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
-
-        // Initialize spinner for script options
-        final Spinner scriptSpinner = findViewById(R.id.scriptSpinner);
-        String[] scriptOptions = new String[]{"Script Options:", "Create Script", "Show Script"};
-        ArrayAdapter<String> scriptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, scriptOptions);
-        scriptSpinner.setAdapter(scriptAdapter);
-        scriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch(position){
-                    case 0:
-                        break;
-                    case 1:
-                        handleScript();
-                        break;
-                    case 2:
-                        showScript();
-                        break;
-                }
-                scriptSpinner.setSelection(0);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-            }
-        });
+        initializeEditor();
         showCustomDialog();
     }
 
@@ -458,8 +352,8 @@ public class EditorActivity extends AppCompatActivity {
     private void deletePageDialog() {
         // Gets names of all pages
         ArrayList<String> names = new ArrayList<>();
-        names.addAll(pages.keySet());
-        final String[] pageNames = names.toArray(new String[pages.size()]);
+        names.addAll(getPages().keySet());
+        final String[] pageNames = names.toArray(new String[getPages().size()]);
         AlertDialog.Builder deleteShapePrompt = new AlertDialog.Builder(this);
         deleteShapePrompt.setTitle("Page To Delete: ");
         deleteShapePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
@@ -468,7 +362,7 @@ public class EditorActivity extends AppCompatActivity {
                 // Removes correct page from pages
                 String pageName = pageNames[selection];
                 String uniqueID = displayNameToID.get(pageName);
-                pages.remove(uniqueID);
+                getPages().remove(uniqueID);
                 displayNameToID.remove(pageName);
                 // TODO: update custom view to reflect this
                 // TODO: figure out starter page
@@ -482,8 +376,8 @@ public class EditorActivity extends AppCompatActivity {
     // prompts the user to select which page (of the created pages) to rename
     private void selectPageToRenameDialog() {
         ArrayList<String> names = new ArrayList<>();
-        names.addAll(pages.keySet());
-        final String[] pageNames = names.toArray(new String[pages.size()]);
+        names.addAll(getPages().keySet());
+        final String[] pageNames = names.toArray(new String[getPages().size()]);
         AlertDialog.Builder pageToRenamePrompt = new AlertDialog.Builder(this);
         pageToRenamePrompt.setTitle("Page To Rename: ");
         pageToRenamePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
@@ -536,9 +430,9 @@ public class EditorActivity extends AppCompatActivity {
      * @param newName the new name of the page
      */
     private void renamePage(String newName, String uniqueID) {
-        Page page = pages.remove(uniqueID);
+        Page page = getPages().remove(uniqueID);
         page.changeDisplayName(newName);
-        pages.put(newName, page);
+        getPages().put(newName, page);
     }
 
     /**
@@ -745,8 +639,7 @@ public class EditorActivity extends AppCompatActivity {
         addToast.show();
     }
 
-    /**
-     * TODO: complete once database method that returns names of games is complete
+    /** Loads an existing game.
      */
     private void loadExistingGame(){
         final Database db = Database.getInstance(getApplicationContext());
@@ -767,15 +660,17 @@ public class EditorActivity extends AppCompatActivity {
                 }
                 numShapes = db.getShapeCount(product);
                 numPages = db.getPageCount( product );
-                currentPage = pages.get("page1");
+                currentPage = getPages().get("page1");
                 displayNameToID = new HashMap<String, String>();
-                for (String key : pages.keySet()) {
-                    Page currentPage = pages.get(key);
+                for (String key : getPages().keySet()) {
+                    Page currentPage = getPages().get(key);
                     String pageName = currentPage.getDisplayName();
                     displayNameToID.put(key,pageName);
 
                 }
-                returnHome();
+                initializeEditor();
+                editorView = findViewById(R.id.editorView);
+                editorView.changeCurrentPage(pages.get("page1"));
             }
         });
         String[] gameList = db.returnGameList().toArray( new String[0] );
@@ -825,7 +720,7 @@ public class EditorActivity extends AppCompatActivity {
         editorView.changeCurrentPage(nextPage);
     }
 
-    /** Saves current game state into the database. Displays current list of games in a list view.
+    /** Displays current list of games in a list view.
      */
     public void saveGame(View view) {
         Database db = Database.getInstance(getApplicationContext());
@@ -841,7 +736,7 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
-    /** Upon clicking the 'save' button, saves the current game into the database and displays it.
+    /** Upon clicking the 'save' button, saves the current game into the database and returns.
      */
     public void confirmSave(View view) {
         Database db = Database.getInstance(getApplicationContext());
@@ -856,7 +751,7 @@ public class EditorActivity extends AppCompatActivity {
             toast.show();
         } else {
             db.saveGame(text,getPages());
-            returnHome();
+            initializeEditor();
             if (gameList != null) { // Updates appearance of games in list.
                 ArrayAdapter<String> itemsAdapter =
                         new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
@@ -915,12 +810,12 @@ public class EditorActivity extends AppCompatActivity {
     public void exit(View view) {
         Database db = Database.getInstance(getApplicationContext());
         db.autoSave(getPages()); // Autosaves in case someone did not mean to lose all of their data.\
-        returnHome();
+        initializeEditor();
     }
 
     /** Resets editor activity.
      */
-    public void returnHome() {
+    public void initializeEditor() {
         setContentView(R.layout.activity_editor);
         initializeResources();
         // Initializes Spinner for page options
@@ -1019,9 +914,6 @@ public class EditorActivity extends AppCompatActivity {
                 // Do nothing
             }
         });
-        editorView = findViewById(R.id.editorView);
-        editorView.changeCurrentPage(pages.get("page1"));
-
     }
 
     /** Helper method to get pages
