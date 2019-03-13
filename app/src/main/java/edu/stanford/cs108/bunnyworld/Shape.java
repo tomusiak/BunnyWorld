@@ -240,10 +240,7 @@ public class Shape {
      * Returns whether the shape is hidden or not
      * @return true and false for hidden and not hidden
      */
-    public boolean getHiddenStatus() {
-        return this.hidden;
-    }
-
+    public boolean getHiddenStatus() { return hidden; }
 
     /**
      * Updates the internal shape to store its current bitmap representation
@@ -261,21 +258,5 @@ public class Shape {
      */
     public Bitmap getBitmap() { return bitmap; }
 
-    /**
-     * Mark this shape as selected. This will cause it to render with a red box in
-     * the Editor View.
-     */
-    public void setSelected() { isSelected = true; }
 
-    /**
-     * Mark this shape as selected. This will cause it to render as normal in
-     * the Editor View.
-     */
-    public void setUnselected() { isSelected = false;}
-
-    /**
-     * Check to see if this shape is selected or not in the editor
-     * @return boolean as to whether or not the shape is selected
-     */
-    public boolean getSelected() { return isSelected; }
 }
