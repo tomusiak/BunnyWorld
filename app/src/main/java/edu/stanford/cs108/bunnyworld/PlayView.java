@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -24,7 +25,6 @@ public class PlayView extends View {
     float x1, y1;   // x and y coordinate of initial press to the screen
     float x2, y2;   // x and y coordinate of when user lifts finger
     float xDelta, yDelta;
-
 
 
     public PlayView(Context context, AttributeSet attrs) {
@@ -57,6 +57,7 @@ public class PlayView extends View {
         if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
+
         invalidate();
     }
 
@@ -204,6 +205,15 @@ public class PlayView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawPage(canvas);
+
+        float width = canvas.getWidth();
+        float height = canvas.getHeight();
+
+        Paint linePaint = new Paint();
+        linePaint.setColor(Color.BLACK);
+        linePaint.setStrokeWidth(2);
+
+        canvas.drawLine((float)0, (float)0.75*height, (float)width, (float)0.75*height, linePaint);
     }
 
 
