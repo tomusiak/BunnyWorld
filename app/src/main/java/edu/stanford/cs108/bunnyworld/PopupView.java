@@ -56,7 +56,6 @@ public class PopupView extends View {
      * This populates the shapeResources arraylist of this class with all the necessary
      * ShapeResource objects.
      *
-     * @param resources arraylist of image names
      */
     public void populateResources() {
 
@@ -78,7 +77,7 @@ public class PopupView extends View {
 
             Bitmap bm = drawableBM.getBitmap();
 
-            ShapeResource resource = new ShapeResource(bm, i);
+            ShapeResource resource = new ShapeResource(bm, i, resources.get(i));
             shapeResources.add(resource);
         }
     }
@@ -107,9 +106,10 @@ public class PopupView extends View {
 
         // draw all the resources onto the pop-up window
         for(ShapeResource s : shapeResources) {
+            System.out.println(s.getName());
             Bitmap scaledBitmap = Bitmap.createScaledBitmap(
                     s.getBitmap(), size, size, false);
-            float x = s.getX() * canvasWidth;
+            float x = xpos[s.getX()] * canvasWidth;
             float y = ((float)heightSpacer + ((float)heightSpacer * s.getY())) + ((float)shapeHeight * s.getY());
             canvas.drawBitmap(scaledBitmap, x, y, null);
 
