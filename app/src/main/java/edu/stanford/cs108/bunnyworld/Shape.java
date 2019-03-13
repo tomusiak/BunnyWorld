@@ -7,7 +7,8 @@ import android.graphics.Bitmap;
     to an editor page view.
  */
 public class Shape {
-    private String shapeName;
+    private String shapeName; // Name of Shape
+    private String shapeID; // Internal ID for Shape
     private String image;
     private String text;
 
@@ -21,9 +22,9 @@ public class Shape {
     private boolean isSelected;
 
     private int fontSize;
-    private static final int DEFAULT_FONT_SIZE = 24;
+    private static final int DEFAULT_FONT_SIZE = 24; // Sets default font size to 24
 
-    // Script stored as a list of Strings; scripts can have multiple command clauses
+    // Script, which may contain multiple executable clauses, is stored as a String
     private String script;
 
     Bitmap bitmap;
@@ -43,6 +44,7 @@ public class Shape {
 
         // Default format is "shape1", "shape2", etc.
         this.shapeName = "shape" + shapeNumber;
+        this.shapeID = this.shapeName; // internal ID and shape name are the same, but user can set shape name to be something else
 
         this.image = imageName;
         this.text = textName;
@@ -59,6 +61,14 @@ public class Shape {
 
         // Script will be set once it's read in from interface
         this.script = "";
+    }
+
+    /**
+     * Accessor method for shape's internal ID
+     * @return String the Shape's internal ID
+     */
+    public String getShapeID() {
+        return this.shapeID;
     }
 
     /**
@@ -167,7 +177,6 @@ public class Shape {
         this.height = newHeight;
     }
 
-
     /** Shape Coordinate accessor methods **/
 
     /**
@@ -193,8 +202,6 @@ public class Shape {
      * @return bottom coordinate
      */
     public double getBottom() { return y + height; }
-
-
 
     /**
      * Accessor method for font size
@@ -248,7 +255,7 @@ public class Shape {
      * Note: does not need to be saved in the database. This just holds on
      * to the bitmap rendering for when it actually needs to be loaded.
      *
-     * @param bm
+     * @param bm the bitmap
      */
     public void setBitmap(Bitmap bm) { bitmap = bm; }
 
@@ -257,6 +264,4 @@ public class Shape {
      * @return the stored bitmap image
      */
     public Bitmap getBitmap() { return bitmap; }
-
-
 }
