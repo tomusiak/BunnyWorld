@@ -82,14 +82,7 @@ public class EditorView extends View {
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
-            String imageID = currentShape.getImageName();
-
-            int bitmapID = getResources().getIdentifier(imageID, "drawable", getContext().getPackageName());
-            BitmapDrawable drawableBM =
-                    (BitmapDrawable) getResources().getDrawable(bitmapID);
-            currentShape.setBitmap(drawableBM.getBitmap());
-            renderShape( currentShape );
-
+            renderShape(currentShape);
         }
 
         invalidate();
