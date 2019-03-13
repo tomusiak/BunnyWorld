@@ -43,15 +43,6 @@
             android:layout_weight="1">
         </Spinner>
 
-        <TextView
-            android:id="@+id/Save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:onClick="saveGame"/>
-
     </LinearLayout>
 
     <View
@@ -63,12 +54,26 @@
         android:id="@+id/editorView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="3"/>
+        android:layout_weight="3" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@android:color/black"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/Save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:onClick="saveGame"/>
+    </LinearLayout>
 
 </LinearLayout>
 

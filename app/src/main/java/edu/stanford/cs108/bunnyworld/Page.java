@@ -12,6 +12,7 @@ public class Page {
     private ArrayList<Shape> shapes;
     private String displayName;
     private String pageID;
+    private Boolean starterPage;
 
     private Shape selected;     // holds onto the selected shape
     private Paint borderColor;  // color for selection box
@@ -26,6 +27,7 @@ public class Page {
         shapes = new ArrayList<Shape>();
         displayName = name;
         pageID = uniquePageID;
+        starterPage = false;
         selected = null;
 
         // initialize selection color
@@ -163,6 +165,10 @@ public class Page {
         }
 
     }
+
+    public Boolean getStarterPageStatus() { return starterPage; }
+
+    public void setStarterPageStatus(Boolean status) { starterPage = status; }
 
     /**
      * Get the shape that is currently selected on this page
