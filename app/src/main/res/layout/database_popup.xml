@@ -41,6 +41,13 @@
         android:onClick="confirmSave"
         android:layout_weight="1"/>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DELETE"
+            android:onClick="deleteSave"
+            android:layout_weight="1"
+            />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,6 +55,7 @@
         android:onClick="clearDatabase"
         android:layout_weight="1"
         />
+
 
     <Button
         android:layout_width="match_parent"
