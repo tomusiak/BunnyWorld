@@ -7,10 +7,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+/**
+ * Main Activity for BunnyWorld
+ */
 public class MainActivity extends AppCompatActivity {
 
     AnimationDrawable rocketAnimation;
 
+    /**
+     * Loads initial animations upon opening game
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,11 +29,19 @@ public class MainActivity extends AppCompatActivity {
         rocketAnimation.start();
     }
 
+    /**
+     * Launches editor mode
+     * @param view the EditorActivity view
+     */
     public void makeGame(View view) {
         Intent intent = new Intent(this,EditorActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Launches play mode
+     * @param view the PlayActivity view
+     */
     public void playGame(View view) {
         Intent intent = new Intent(this,PlayActivity.class);
         startActivity(intent);
