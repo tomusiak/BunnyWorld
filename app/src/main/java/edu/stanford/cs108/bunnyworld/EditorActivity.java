@@ -369,9 +369,11 @@ public class EditorActivity extends AppCompatActivity {
     private String makePopUp() {
         String selection = "carrot";
         AddShapeDialog makeShape = new AddShapeDialog();
+
         makeShape.show(getSupportFragmentManager(), "make shape");
 
         PopupView shapesPanel = findViewById(R.id.shapeSelect);
+        if(shapesPanel == null) System.out.println("NULL FOUND");
         //if(shapesPanel != null) shapesPanel.populateResources(resources);
 
         return selection;

@@ -25,6 +25,8 @@ public class PopupView extends View {
     float canvasWidth;
     float canvasHeight;
 
+    float x1, y1, x2, y2;
+
 
     public PopupView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -115,59 +117,33 @@ public class PopupView extends View {
 
     }
 
-//    /**
-//     * Override onTouch Event. This is responsible for reading the touch
-//     * activity to tell where the user clicks and update the x and y coords
-//     * accordingly.
-//     *
-//     * @param event motion event
-//     * @return success
-//     */
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//
-//        switch (event.getAction()) {
-//            // record coordinate where user presses down
-//            case MotionEvent.ACTION_DOWN:
-//                x1 = event.getX();
-//                y1 = event.getY();
-//
-//                Shape selected = shapeAtXY(x1, y1);
-//                if(currentPage != null) currentPage.selectShape(selected);
-//
-//                break;
-//            // record coordinate where user lifts finger
-//            case MotionEvent.ACTION_UP:
-//                x2 = event.getX();
-//                y2 = event.getY();
-//
-//                if (x1 > x2) {
-//                    left = x2;
-//                    right = x1;
-//                } else {
-//                    left = x1;
-//                    right = x2;
-//                }
-//
-//                if (y1 > y2) {
-//                    top = y2;
-//                    bottom = y1;
-//                } else {
-//                    top = y1;
-//                    bottom = y2;
-//                }
-//
-//            case MotionEvent.ACTION_MOVE:
-//                xDelta = event.getX();
-//                yDelta = event.getY();
-//
-//                if(currentPage != null && currentPage.getSelected() != null) {
-//                    currentPage.getSelected().move(xDelta, yDelta);
-//                }
-//
-//                invalidate();   // forces canvas update
-//        }
-//        return true;
-//    }
+    /**
+     * Override onTouch Event. This is responsible for reading the touch
+     * activity to tell where the user clicks and update the x and y coords
+     * accordingly.
+     *
+     * @param event motion event
+     * @return success
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            // record coordinate where user presses down
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                y1 = event.getY();
+
+
+                break;
+            // record coordinate where user lifts finger
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                y2 = event.getY();
+
+                //invalidate();   // forces canvas update
+        }
+        return true;
+    }
 
 }

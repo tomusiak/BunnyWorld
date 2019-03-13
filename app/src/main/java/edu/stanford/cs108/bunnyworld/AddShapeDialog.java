@@ -25,6 +25,7 @@ public class AddShapeDialog extends DialogFragment {
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(inflater.inflate(R.layout.shapeadder_popup, null));
 
+
         return builder.create();
               /*
         // make the dialog

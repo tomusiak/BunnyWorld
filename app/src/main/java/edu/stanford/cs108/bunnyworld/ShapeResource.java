@@ -22,7 +22,7 @@ public class ShapeResource {
 
         // index mod operations used to determine which row and col this resource belongs on
         x = index % 3;
-        y = index % 4;
+        y = index % 2;
 
     }
 
