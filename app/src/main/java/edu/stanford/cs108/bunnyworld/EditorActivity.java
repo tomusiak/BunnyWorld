@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -560,16 +561,26 @@ public class EditorActivity extends AppCompatActivity {
      * TODO: complete once database method that returns names of games is complete
      */
     private void loadExistingGame(){
-        Database db = Database.getInstance(getApplicationContext());
+        final Database db = Database.getInstance(getApplicationContext());
         setContentView( R.layout.database_load );
-        String[] gameList = db.returnGameList().toArray(new String[0]);
-        if (gameList != null) {
-            ArrayAdapter<String> itemsAdapter =
-                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
-            ListView listView = (ListView) findViewById(R.id.list_view );
-            if (listView != null) {
-                listView.setAdapter( itemsAdapter );
+        ListView listView = findViewById( R.id.list_view );
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                String product = ((TextView) view).getText().toString();
+                Toast pageNameToast = Toast.makeText(getApplicationContext(),product,Toast.LENGTH_SHORT);
+                pageNameToast.show();
+                db.loadGame( product);
             }
+        });
+        String[] gameList = db.returnGameList().toArray( new String[0] );
+        if (gameList != null) {
+             ArrayAdapter<String> itemsAdapter =
+                     new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+             listView = (ListView) findViewById( R.id.list_view );
+             if (listView != null) {
+                 listView.setAdapter( itemsAdapter );
+             }
         }
     }
 
@@ -686,16 +697,8 @@ public class EditorActivity extends AppCompatActivity {
             }
         }
     }
-
     /** Loads a chosen save game.
      */
-    public void load(View view) {
-        Database db = Database.getInstance(getApplicationContext());
-        TextView textView = findViewById(R.id.edit_text_load);
-        String text = textView.getText().toString();
-        HashMap<String, Page> loadedPages = db.loadGame(text);
-        setPages(loadedPages);
-    }
 
     /** Exits to main menu.
      */
