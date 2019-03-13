@@ -18,7 +18,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
- * TODO: document your custom view class.
+ * Creates custom view for EditorActivity
  */
 public class EditorView extends View {
 
@@ -29,24 +29,22 @@ public class EditorView extends View {
     ArrayList<Shape> starters = new ArrayList<Shape>();
     Shape selected;
 
-
     // Touch activity float variables
     float x1, y1;   // x and y coordinate of initial press to the screen
     float x2, y2;   // x and y coordinate of when user lifts finger
     float top, left, bottom, right;
     float xDelta, yDelta;
 
-    BitmapDrawable carrotDrawable, carrot2Drawable, deathDrawable, duckDrawable, fireDrawable, mysticDrawable;
-
     // myPaint is a placeHolder
     Paint myPaint = new Paint();
     Paint selectPaint = new Paint();
 
-
+    /**
+     * Sets up EditorView
+     */
     public EditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
-        drawStarters();
 
         // myPaint is a placeholder
         myPaint.setColor(Color.rgb(255,0,0));
@@ -56,10 +54,11 @@ public class EditorView extends View {
         selectPaint.setStyle(Paint.Style.STROKE);
     }
 
+    /**
+     * Initializes starter images from resources
+     */
     private void init() {
         selected = null;
-
-
         //canvasWidth = canvas.getWidth();
         //canvasHeight = canvas.getHeight();
 
@@ -81,7 +80,6 @@ public class EditorView extends View {
     // TODO: Canvas width/height operations currently don't work. Pretty
     // TODO: sure that this code is actually to be implemented in the pop-up
     public void drawStarters() {
-
 
         // this is commented out due to the reason that canvasWidth & canvasHeight
         // are not able to be assigned in the init() method for the reason that canvas
@@ -116,7 +114,7 @@ public class EditorView extends View {
     /**
      * Update the current working page displayed in the editor view to
      * be the new one passed in
-     * @param page
+     * @param page the new page to be passed in
      */
     public void changeCurrentPage(Page page) {
         // set selected to null before changing the page
@@ -138,16 +136,9 @@ public class EditorView extends View {
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
-            String imageID = currentShape.getImageName();
-
-            int bitmapID = getResources().getIdentifier(imageID, "drawable", getContext().getPackageName());
-            BitmapDrawable drawableBM =
-                    (BitmapDrawable) getResources().getDrawable(bitmapID);
-            currentShape.setBitmap(drawableBM.getBitmap());
-            renderShape( currentShape );
+            renderShape(currentShape);
 
         }
-
         invalidate();
     }
 
@@ -156,11 +147,8 @@ public class EditorView extends View {
      * page's render function.
      */
     public void drawPage(Canvas canvas) {
-
-        //clearCanvas(canvas);
         if(currentPage != null) currentPage.render(canvas);
     }
-
 
     /**
      * Deletes the currently selected shape if one exists & returns true
@@ -177,7 +165,6 @@ public class EditorView extends View {
         }
         return false;   // no shape to delete
     }
-
 
     /**
      * Renders a single shape's bitmap.
@@ -217,15 +204,6 @@ public class EditorView extends View {
     }
 
     /**
-     * TODO: Don't think this needs to be used
-     * clears the Canvas object.
-     * @param canvas to be cleared
-     */
-    private void clearCanvas(Canvas canvas) {
-        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-    }
-
-    /**
      * Finds a shape that exists at the specified x, y coordinate and returns
      * it. null is returned if no shape is found.
      *
@@ -233,7 +211,7 @@ public class EditorView extends View {
      * @param y coordinate to search for shape at
      * @return the found shape, or null if no shape is found at x, y
      */
-    public Shape shapeAtXY(double x, double y){
+    public Shape shapeAtXY(double x, double y) {
 
         if(currentPage == null) return null; // don't do anything if page just loaded
 
@@ -308,7 +286,6 @@ public class EditorView extends View {
                     top = y1;
                     bottom = y2;
                 }
-
             case MotionEvent.ACTION_MOVE:
                 xDelta = event.getX();
                 yDelta = event.getY();
@@ -321,5 +298,4 @@ public class EditorView extends View {
         }
         return true;
     }
-
 }

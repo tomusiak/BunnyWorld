@@ -21,7 +21,7 @@ public class Page {
 
     /**
      * Constructor for the Page Class. This is the empty
-     * constructor used for buiding a brand new page in the editor.
+     * constructor used for building a brand new page in the editor.
      */
     public Page(String name, String uniquePageID) {
         shapes = new ArrayList<Shape>();
