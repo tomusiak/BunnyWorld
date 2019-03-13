@@ -36,6 +36,8 @@ public class EditorActivity extends AppCompatActivity {
     private String currScript;
     private EditorView editorView;
 
+    private ArrayList<String> resources;    // stores list of addable objects
+
     /* TODO: Add copy and paste functionality */
 
     /**
@@ -46,6 +48,8 @@ public class EditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+
+        initializeResources();
 
         // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
@@ -145,6 +149,21 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
         showCustomDialog();
+    }
+
+    /**
+     * Initializes the arraylist of resource file names. This arraylist is then used
+     * for the addShape popup view.
+     */
+    private void initializeResources() {
+        resources = new ArrayList<>();
+        resources.add("carrot");
+        resources.add("carrot2");
+        resources.add("death");
+        resources.add("duck");
+        resources.add("fire");
+        resources.add("mystic");
+
     }
 
     /**
@@ -329,7 +348,7 @@ public class EditorActivity extends AppCompatActivity {
      * Adds shape to the page and tracks it internally
      */
     private void addShape() {
-        makePopUp();
+        String selection = makePopUp();
 
         numShapes++;
         String shapeName = "shape" + numShapes;
@@ -337,7 +356,7 @@ public class EditorActivity extends AppCompatActivity {
         addToast.show();
 
         // Sample: Building a shape from a shape image name
-        String shapeImgName = "carrot";
+        String shapeImgName = selection;
         Shape shape = new Shape(numShapes, shapeImgName, "",
                 20, 20, 50, 50);
 
@@ -348,9 +367,15 @@ public class EditorActivity extends AppCompatActivity {
     /**
      * TODO: Makes shape appear on screen
      */
-    private void makePopUp() {
+    private String makePopUp() {
+        String selection = "carrot";
         AddShapeDialog makeShape = new AddShapeDialog();
         makeShape.show(getSupportFragmentManager(), "make shape");
+
+        PopupView shapesPanel = findViewById(R.id.shapeSelect);
+        //if(shapesPanel != null) shapesPanel.populateResources(resources);
+
+        return selection;
     }
 
     /**
@@ -497,10 +522,18 @@ public class EditorActivity extends AppCompatActivity {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.shape_properties);
         final Shape selectedShape = currentPage.getSelected();
-        populateEditShapeDialog(selectedShape, dialog);
-        EditText shapeName = dialog.findViewById(R.id.nameInput);
-        shapeName.setText(selectedShape.getShapeName());
-        dialog.show();
+
+        if(selectedShape != null) {
+            populateEditShapeDialog(selectedShape, dialog);
+            EditText shapeName = dialog.findViewById(R.id.nameInput);
+            shapeName.setText(selectedShape.getShapeName());
+            dialog.show();
+        } else {
+            // show toast message if there is no shape selected
+            Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
+            addToast.show();
+
+        }
     }
 
     private void populateEditShapeDialog(Shape shape, Dialog dialog) {
