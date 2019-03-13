@@ -662,15 +662,21 @@ public class EditorActivity extends AppCompatActivity {
                 numPages = db.getPageCount( product );
                 currentPage = getPages().get("page1");
                 displayNameToID = new HashMap<String, String>();
+                String startPage = null;
                 for (String key : getPages().keySet()) {
                     Page currentPage = getPages().get(key);
                     String pageName = currentPage.getDisplayName();
                     displayNameToID.put(key,pageName);
-
+                    if (currentPage.getStarterPageStatus() == true) {
+                        startPage = key;
+                        starterPage = currentPage;
+                    }
                 }
                 initializeEditor();
                 editorView = findViewById(R.id.editorView);
-                editorView.changeCurrentPage(pages.get("page1"));
+                if (pages != null) {
+                    editorView.changeCurrentPage(pages.get(startPage));
+                }
             }
         });
         String[] gameList = db.returnGameList().toArray( new String[0] );
@@ -809,8 +815,8 @@ public class EditorActivity extends AppCompatActivity {
      */
     public void exit(View view) {
         Database db = Database.getInstance(getApplicationContext());
-        db.autoSave(getPages()); // Autosaves in case someone did not mean to lose all of their data.\
         initializeEditor();
+        db.autoSave(getPages()); // Autosaves in case someone did not mean to lose all of their data.\
     }
 
     /** Resets editor activity.
@@ -820,7 +826,7 @@ public class EditorActivity extends AppCompatActivity {
         initializeResources();
         // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background"};
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background",  "Change Starter Page"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
         pageSpinner.setSelection(0);
@@ -847,6 +853,8 @@ public class EditorActivity extends AppCompatActivity {
                     case 5:
                         changePageBackground();
                         break;
+                    case 6:
+                        selectStarterPage();
                 }
                 pageSpinner.setSelection(0);
             }
@@ -927,5 +935,14 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void setPages(HashMap<String,Page> newPages) {
         pages = newPages;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Database db = Database.getInstance(getApplicationContext());
+        if (pages != null) {
+            db.autoSave( pages );
+        }
     }
 }

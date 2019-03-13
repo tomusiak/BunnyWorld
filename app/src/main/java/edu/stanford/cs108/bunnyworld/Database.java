@@ -46,6 +46,7 @@ class Database extends SQLiteOpenHelper {
                 "moveable INTEGER," +
                 "hidden INTEGER," +
                 "fontSize INTEGER," +
+                "starterPage INTEGER," +
                 "script TEXT," +
                 "pageName TEXT," +
                 "PAGEID TEXT," +
@@ -77,6 +78,7 @@ class Database extends SQLiteOpenHelper {
                 Page currentPage = entry.getValue();
                 String pageName = currentPage.getDisplayName();
                 String pageID = currentPage.getPageID();
+                int starterPage = currentPage.getStarterPageStatus() ? 1 : 0;
                 ArrayList<Shape> shapeList = currentPage.getShapes();
                 for (int i = 0; i < shapeList.size(); i++) {
                     Shape currentShape = shapeList.get( i );
@@ -101,7 +103,8 @@ class Database extends SQLiteOpenHelper {
                             width + "," +
                             moveable + "," +
                             hidden + "," +
-                            fontSize + ", '" +
+                            fontSize + "," +
+                            starterPage + ", '" +
                             script + "', '" +
                             pageName + "', '" +
                             pageID + "', '" +
@@ -124,12 +127,15 @@ class Database extends SQLiteOpenHelper {
         String saveQuery = "SELECT * FROM ShapeDatabase";
         Cursor cursor = db.rawQuery(saveQuery,null);
         while (cursor.moveToNext()) {
-            String pageName = cursor.getString(11);
-            String pageID = cursor.getString(12);
-            String thisSave = cursor.getString(13);
+            boolean starterPage = cursor.getInt(10) != 0;
+            String pageName = cursor.getString(12);
+            String pageID = cursor.getString(13);
+            String thisSave = cursor.getString(14);
             Page newPage = null;
             if (fullShapeList.get(pageID) == null && thisSave.equals(saveFile)) {
                 newPage = new Page(pageName, pageID);
+                newPage.setStarterPageStatus( starterPage );
+                newPage.changeDisplayName( pageName );
                 fullShapeList.put(pageID,newPage);
             } else if (thisSave.equals(saveFile) && fullShapeList.get(pageID) != null) {
                 newPage = fullShapeList.get(pageID);
@@ -145,7 +151,7 @@ class Database extends SQLiteOpenHelper {
                 boolean moveable = cursor.getInt(7) != 0;
                 boolean hidden = cursor.getInt(8) != 0;
                 int fontSize = cursor.getInt(9);
-                String script = cursor.getString(10);
+                String script = cursor.getString(11);
                 Shape newShape = new Shape(shapeCounter, imageName, text, x, y, width, height);
                 newShape.setMoveable(moveable);
                 newShape.setHidden(hidden);
