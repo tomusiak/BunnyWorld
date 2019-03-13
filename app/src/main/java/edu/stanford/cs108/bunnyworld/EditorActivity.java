@@ -34,14 +34,13 @@ public class EditorActivity extends AppCompatActivity {
     private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
     private String currPage; // Tracks user-selected name of current page
     private Page currentPage; // Tracks current page being displayed
+    private Page starterPage; // Tracks user-selected starter page
     private String currScript;
     private EditorView editorView;
     private Shape copiedShape;
 
 
     private ArrayList<String> resources;    // stores list of addable objects
-
-    /* TODO: Add copy and paste functionality */
 
     /**
      * Sets up spinners and their respective functions upon creation of page
@@ -55,7 +54,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background"};
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background", "Change Starter Page"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
         pageSpinner.setSelection(0);
@@ -67,8 +66,6 @@ public class EditorActivity extends AppCompatActivity {
                         break;
                     case 1:
                         addPage();
-                        Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
-                        addPageToast.show();
                         break;
                     case 2:
                         selectPageToRenameDialog();
@@ -82,6 +79,8 @@ public class EditorActivity extends AppCompatActivity {
                     case 5:
                         changePageBackground();
                         break;
+                    case 6:
+                        selectStarterPage();
                 }
                 pageSpinner.setSelection(0);
             }
@@ -336,8 +335,15 @@ public class EditorActivity extends AppCompatActivity {
         pages.put(uniquePageID, newPage);
 
         currentPage = newPage;
+        if (numPages == 1) {
+            newPage.setStarterPageStatus(true);
+            starterPage = newPage;
+        }
         // Updates the current page in the view
         editorView.changeCurrentPage(currentPage);
+
+        Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
+        addPageToast.show();
     }
 
     /**
@@ -580,6 +586,28 @@ public class EditorActivity extends AppCompatActivity {
 
         Toast backgroundToast = Toast.makeText(getApplicationContext(), "Background Changed", Toast.LENGTH_SHORT);
         backgroundToast.show();
+    }
+
+    private void selectStarterPage() {
+        ArrayList<String> names = new ArrayList<>();
+        names.addAll(pages.keySet());
+        final String[] pageNames = names.toArray(new String[pages.size()]);
+        AlertDialog.Builder starterPagePrompt = new AlertDialog.Builder(this);
+        starterPagePrompt.setTitle(starterPage.getDisplayName() + " Is Current Starter Page. Select New Starter Page: ");
+        starterPagePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String pageName = pageNames[selection];
+                String uniqueID = displayNameToID.get(pageName);
+                Page selectedPage = pages.get(uniqueID);
+                for (Page page : pages.values()) {
+                    if (page.getStarterPageStatus()) page.setStarterPageStatus(false);
+                }
+                starterPage = selectedPage;
+                selectedPage.setStarterPageStatus(true);
+            }
+        });
+        starterPagePrompt.show();
     }
 
     /**
