@@ -296,7 +296,8 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO: Makes shape appear on screen
+     * Responsible for building the pop-up menu that presents all the possible shapes
+     * to add to the editor view.
      */
     private void makePopUp() {
         String selection = "carrot";
@@ -312,8 +313,6 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                    Toast.makeText(EditorActivity.this,
-                        "Hi " + position, Toast.LENGTH_SHORT).show();
                     ShapeResource resource = (ShapeResource) adapter.getItem(position);
                     addShapeToEditor(resource.getShapeName());
                 }
@@ -322,6 +321,12 @@ public class EditorActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Called from makePopUp(), which presents the user with a pop-up view showing
+     * their options for shapes to add to the screen. This adds the shape to the
+     * Page and renders it on screen.
+     * @param selection string of the shape to be rendered
+     */
     public void addShapeToEditor(String selection) {
         numShapes++;
         String shapeName = "shape" + numShapes;
@@ -627,9 +632,10 @@ public class EditorActivity extends AppCompatActivity {
         EditText shapeName = dialog.findViewById(R.id.nameInput);
         shapeName.setText(shape.getShapeName());
         CheckBox moveInput = dialog.findViewById(R.id.moveInput);
-        moveInput.setEnabled(shape.getMoveableStatus());
+        moveInput.setChecked(shape.getMoveableStatus());
         CheckBox visibleInput = dialog.findViewById(R.id.visibleInput);
-        visibleInput.setEnabled(!shape.getHiddenStatus());
+        //visibleInput.setEnabled();
+        visibleInput.setChecked(!shape.getHiddenStatus());
     }
 
     /**
@@ -637,6 +643,24 @@ public class EditorActivity extends AppCompatActivity {
      * @param view
      */
    public void editShapeProperties(View view) {
+
+       Shape shape = currentPage.getSelected();
+
+       EditText topInput = view.findViewById(R.id.topInput);
+       String topText = topInput.getText().toString();
+
+       EditText bottomInput = view.findViewById(R.id.bottomInput);
+       bottomInput.setText(Double.toString(shape.getBottom()));
+       EditText leftInput = view.findViewById(R.id.leftInput);
+       leftInput.setText(Double.toString(shape.getLeft()));
+       EditText rightInput = view.findViewById(R.id.rightInput);
+       rightInput.setText(Double.toString(shape.getRight()));
+       EditText shapeName = view.findViewById(R.id.nameInput);
+       shapeName.setText(shape.getShapeName());
+       CheckBox moveInput = view.findViewById(R.id.moveInput);
+       moveInput.setEnabled(shape.getMoveableStatus());
+       CheckBox visibleInput = view.findViewById(R.id.visibleInput);
+       visibleInput.setEnabled(!shape.getHiddenStatus());
 
    }
 
