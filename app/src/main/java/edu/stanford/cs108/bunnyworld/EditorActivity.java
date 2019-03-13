@@ -38,6 +38,18 @@ public class EditorActivity extends AppCompatActivity {
 
     private ArrayList<String> resources;    // stores list of addable objects
 
+    GridView grid;
+    String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
+            "fire", "mystic"};
+    int[] imageIds = {R.drawable.carrot,
+            R.drawable.carrot2,
+            R.drawable.death,
+            R.drawable.duck,
+            R.drawable.fire,
+            R.drawable.mystic,};
+
+    private ArrayList<ShapeResource> shapeResources;
+
     /* TODO: Add copy and paste functionality */
 
     /**
@@ -156,6 +168,11 @@ public class EditorActivity extends AppCompatActivity {
      * for the addShape popup view.
      */
     private void initializeResources() {
+        shapeResources = new ArrayList<>();
+        for(int i = 0; i < imageIds.length; i++) {
+            ShapeResource s = new ShapeResource(resourceFiles[i], imageIds[i]);
+            shapeResources.add(s);
+        }
         resources = new ArrayList<>();
         resources.add("carrot");
         resources.add("carrot2");
@@ -163,6 +180,8 @@ public class EditorActivity extends AppCompatActivity {
         resources.add("duck");
         resources.add("fire");
         resources.add("mystic");
+
+
 
     }
 
@@ -348,8 +367,37 @@ public class EditorActivity extends AppCompatActivity {
      * Adds shape to the page and tracks it internally
      */
     private void addShape() {
-        String selection = makePopUp();
+        makePopUp();
+    }
 
+    /**
+     * TODO: Makes shape appear on screen
+     */
+    private void makePopUp() {
+        String selection = "carrot";
+
+        Dialog dialog = new Dialog(EditorActivity.this);
+        dialog.setContentView(R.layout.shapeadder_popup);
+
+        GridView grid = (GridView) dialog.findViewById(R.id.resource_gridview);
+        final GridViewAdapter adapter = new GridViewAdapter(EditorActivity.this, shapeResources);
+        grid.setAdapter(adapter);
+
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                    Toast.makeText(EditorActivity.this,
+                        "Hi " + position, Toast.LENGTH_SHORT).show();
+                    ShapeResource resource = (ShapeResource) adapter.getItem(position);
+                    addShapeToEditor(resource.getShapeName());
+                }
+            });
+
+        dialog.show();
+    }
+
+    public void addShapeToEditor(String selection) {
         numShapes++;
         String shapeName = "shape" + numShapes;
         Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
@@ -362,22 +410,6 @@ public class EditorActivity extends AppCompatActivity {
 
         currentPage.addShape(shape);
         editorView.renderShape(shape);  // renders the bitmaps for the newly added shape
-    }
-
-    /**
-     * TODO: Makes shape appear on screen
-     */
-    private String makePopUp() {
-        String selection = "carrot";
-        AddShapeDialog makeShape = new AddShapeDialog();
-
-        makeShape.show(getSupportFragmentManager(), "make shape");
-
-        PopupView shapesPanel = findViewById(R.id.shapeSelect);
-        if(shapesPanel == null) System.out.println("NULL FOUND");
-        //if(shapesPanel != null) shapesPanel.populateResources(resources);
-
-        return selection;
     }
 
     /**

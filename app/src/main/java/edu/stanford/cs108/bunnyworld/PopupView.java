@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.GridView;
 
 import java.util.ArrayList;
 
@@ -22,10 +23,16 @@ public class PopupView extends View {
     ArrayList<ShapeResource> shapeResources; // stores rendered options
     ArrayList<String> resources;
 
+    ShapeResource selected;
+
     float canvasWidth;
     float canvasHeight;
 
     float x1, y1, x2, y2;
+
+    GridView grid;
+    String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
+            "fire", "mystic"};
 
 
     public PopupView(Context context, AttributeSet attrs) {
@@ -35,7 +42,7 @@ public class PopupView extends View {
 
 
     private void init() {
-
+        selected = null;
         shapeResources = new ArrayList<>();
         populateResources();
 
@@ -67,9 +74,33 @@ public class PopupView extends View {
 
             Bitmap bm = drawableBM.getBitmap();
 
-            ShapeResource resource = new ShapeResource(bm, i, resources.get(i));
-            shapeResources.add(resource);
+            //ShapeResource resource = new ShapeResource(bm, i, resources.get(i));
+            //shapeResources.add(resource);
         }
+    }
+
+    /**
+     * Finds a shape resource that exists at the specified x, y
+     * coordinate and returns it. null is returned if no shape is found.
+     *
+     * @param x coordinate to search for shape at
+     * @param y coordinate to search for shape at
+     * @return the found shape, or null if no shape is found at x, y
+     */
+    public ShapeResource shapeAtXY(float x, float y) {
+
+        // search from back to get the images closet to the front
+        for(int i = 0; i < shapeResources.size(); i++) {
+            ShapeResource s = shapeResources.get(i);
+            // if the click is in bounds of this shape, return it
+//            if(x <= s.getRight() && x >= s.getLeft() &&
+//                    y >= s.getTop() && y <= s.getBottom()) {
+//                //System.out.println("Found shape resource: " + s);
+//                return s;
+//            }
+        }
+
+        return null; // no shape is here
     }
 
     @Override
@@ -95,15 +126,16 @@ public class PopupView extends View {
         double heightSpacer = 0.0625 * canvasWidth;
 
         // draw all the resources onto the pop-up window
-        for(ShapeResource s : shapeResources) {
-            System.out.println(s.getName());
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(
-                    s.getBitmap(), size, size, false);
-            float x = xpos[s.getX()] * canvasWidth;
-            float y = ((float)heightSpacer + ((float)heightSpacer * s.getY())) + ((float)shapeHeight * s.getY());
-            canvas.drawBitmap(scaledBitmap, x, y, null);
-
-        }
+//        for(ShapeResource s : shapeResources) {
+//            s.setSize(size);
+//            System.out.println(s.getName());
+//            Bitmap scaledBitmap = Bitmap.createScaledBitmap(
+//                    s.getBitmap(), size, size, false);
+//            float x = xpos[s.getX()] * canvasWidth;
+//            float y = ((float)heightSpacer + ((float)heightSpacer * s.getY())) + ((float)shapeHeight * s.getY());
+//            canvas.drawBitmap(scaledBitmap, x, y, null);
+//            s.setXYCoords(x, y);
+//        }
 
 //        float left1 = (float)0.0625*canvasWidth;
 //        float left2 = (float)0.375*canvasWidth;
@@ -133,6 +165,9 @@ public class PopupView extends View {
             case MotionEvent.ACTION_DOWN:
                 x1 = event.getX();
                 y1 = event.getY();
+
+                selected = shapeAtXY(x1, y2);
+
 
 
                 break;
