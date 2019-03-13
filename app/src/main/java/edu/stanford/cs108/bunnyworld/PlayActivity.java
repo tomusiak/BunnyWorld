@@ -9,7 +9,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,8 +22,13 @@ public class PlayActivity extends AppCompatActivity {
     // Commented out this first line and replaced with a Hashmap<String, Page> to match agreed upon structures
     //static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
     static HashMap<String, Page> pageMap; // Maps string keys to page objects
+    Page currentPage;
     String currPage;
     PlayView playView;
+    private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
+    private Page starterPage; // Tracks user-selected starter page
+
+    ArrayList<Shape> inventory = new ArrayList<Shape>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,26 +39,62 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     private void loadGame() {
-        String saveGame = ""; // User input save name goes here.
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        dialog.setMessage("Play a game you made or the standard experience?");
-        dialog.setPositiveButton(
-                "Standard Experience",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        dialog.setNegativeButton(
-                "Load Game",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-                grabDatabase(saveGame); // Dumps save information into the HashMap containing pages and shapes.
-        dialog.show();
+        // initializes database
+        final Database db = Database.getInstance(getApplicationContext());
 
+        // we can now do stuff with the view
+        playView = findViewById(R.id.play_view);
+
+        setContentView( R.layout.database_load );
+        ListView listView = findViewById( R.id.list_view );
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                // gets the name of the gamestate we're loading
+                String product = ((TextView) view).getText().toString();
+                Toast pageNameToast = Toast.makeText(getApplicationContext(),product,Toast.LENGTH_SHORT);
+                pageNameToast.show();
+
+                // loads the hashmap from the database into the hashmap stored in this file
+                setPages(db.loadGame(product));
+
+                // sets the firstpage & ID to the firstpage & ID listed in the databse
+                String firstPage = db.returnFirstPage( product );
+                Page page = getPages().get(firstPage);
+
+                if (playView != null && page != null) {
+                    playView.changeCurrentPage( page );
+                }
+                currentPage = getPages().get("page1");
+                displayNameToID = new HashMap<String, String>();
+                String startPage = null;
+                starterPage = currentPage;
+                for (String key : getPages().keySet()) {
+                    Page cPage = getPages().get(key);
+                    String pageName = cPage.getDisplayName();
+                    displayNameToID.put(key,pageName);
+                    if (cPage.getStarterPageStatus() == true) {
+                        startPage = key;
+                        starterPage = cPage;
+                    }
+                }
+                playView = findViewById(R.id.play_view);
+                if (pageMap != null) {
+                    playView.changeCurrentPage(starterPage);
+                }
+            }
+        });
+
+        String[] gameList = db.returnGameList().toArray( new String[0] );
+        if (gameList != null) {
+            ArrayAdapter<String> itemsAdapter =
+                    new ArrayAdapter<String>( PlayActivity.this, android.R.layout.test_list_item, gameList );
+            listView = (ListView) findViewById( R.id.list_view );
+            if (listView != null) {
+                listView.setAdapter( itemsAdapter );
+            }
+        }
     }
 
     /**
@@ -64,9 +107,25 @@ public class PlayActivity extends AppCompatActivity {
         playView.changeCurrentPage(nextPage);
     }
 
+
+    /** Helper method to get pages
+     * @return pages
+     */
+    private HashMap<String, Page> getPages() {
+        return pageMap;
+    }
+
+    /** Helper setter method for pages.
+     */
+    private void setPages(HashMap<String,Page> newPages) {
+        pageMap = newPages;
+        System.out.println("pages");
+    }
+
     // Imports save data once user decides to play.
     public void grabDatabase(String saveName) {
         Database thisDatabase = Database.getInstance(getApplicationContext()); // Gets context.
         //pageMap = thisDatabase.loadGame(saveName);
     }
+
 }
