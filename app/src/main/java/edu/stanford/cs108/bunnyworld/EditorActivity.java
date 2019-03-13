@@ -863,19 +863,26 @@ public class EditorActivity extends AppCompatActivity {
     /** Deletes a save from the database.
      */
     public void deleteSave(View view) {
-        Database db = Database.getInstance(getApplicationContext());
-        TextView textView = findViewById(R.id.edit_text);
-        String text = textView.getText().toString();
-        db.deleteSave(text);
-        String[] gameList = db.returnGameList().toArray(new String[0]);
-        if (gameList != null) {
-            ArrayAdapter<String> itemsAdapter =
-                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
-            ListView listView = (ListView) findViewById(R.id.list_view );
-            if (listView != null) {
-                listView.setAdapter( itemsAdapter );
+        final Database db = Database.getInstance(getApplicationContext());
+        final String[] gameList = db.returnGameList().toArray(new String[0]);
+        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
+        newPagePrompt.setTitle("Which save would you like to delete? ");
+        newPagePrompt.setItems(gameList, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                db.deleteSave(gameList[selection]);
+                String[] newGameList = db.returnGameList().toArray(new String[0]);
+                if (newGameList != null) {
+                    ArrayAdapter<String> itemsAdapter =
+                            new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, newGameList );
+                    ListView listView = (ListView) findViewById(R.id.list_view );
+                    if (listView != null) {
+                        listView.setAdapter( itemsAdapter );
+                    }
+                }
             }
-        }
+        });
+        newPagePrompt.show();
     }
 
     /** Exits back to editor activity.

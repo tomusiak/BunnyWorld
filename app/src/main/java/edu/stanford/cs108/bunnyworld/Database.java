@@ -180,7 +180,7 @@ class Database extends SQLiteOpenHelper {
     /** Autosaves by deleting the old autoSave and then creating a new autoSave save.
      */
     public void autoSave(HashMap<String, Page> pages) {
-        saveGame("autoSave", pages);
+        saveGame("Auto Save", pages);
     }
 
     /** Updates the game name through a SQL command.
