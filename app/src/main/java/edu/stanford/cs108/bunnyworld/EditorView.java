@@ -144,6 +144,7 @@ public class EditorView extends View {
             BitmapDrawable drawableBM =
                     (BitmapDrawable) getResources().getDrawable(bitmapID);
             currentShape.setBitmap(drawableBM.getBitmap());
+            renderShape( currentShape );
 
         }
 
