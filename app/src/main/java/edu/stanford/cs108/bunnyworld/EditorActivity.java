@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Name Page", "Delete Page", "Open Page", "Change Background"};
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
         pageSpinner.setSelection(0);
@@ -63,7 +64,7 @@ public class EditorActivity extends AppCompatActivity {
                         addPageToast.show();
                         break;
                     case 2:
-                        renamePageDialog();
+                        selectPageToRenameDialog();
                         break;
                     case 3:
                         deletePageDialog();
@@ -86,7 +87,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Name Shape", "Edit Shape", "Delete Shape"};
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -102,6 +103,7 @@ public class EditorActivity extends AppCompatActivity {
                         renameShapeDialog();
                         break;
                     case 3:
+                        editShapeDialog();
                         break;
                     case 4:
                         deleteShape();
@@ -372,9 +374,7 @@ public class EditorActivity extends AppCompatActivity {
     private void deletePageDialog() {
         // Gets names of all pages
         ArrayList<String> names = new ArrayList<>();
-        for (String page: pages.keySet()) {
-            names.add(page);
-        }
+        names.addAll(pages.keySet());
         final String[] pageNames = names.toArray(new String[pages.size()]);
         AlertDialog.Builder deleteShapePrompt = new AlertDialog.Builder(this);
         deleteShapePrompt.setTitle("Page To Delete: ");
@@ -394,10 +394,29 @@ public class EditorActivity extends AppCompatActivity {
         deleteShapePrompt.show();
     }
 
+    // prompts the user to select which page (of the created pages) to rename
+    private void selectPageToRenameDialog() {
+        ArrayList<String> names = new ArrayList<>();
+        names.addAll(pages.keySet());
+        final String[] pageNames = names.toArray(new String[pages.size()]);
+        AlertDialog.Builder pageToRenamePrompt = new AlertDialog.Builder(this);
+        pageToRenamePrompt.setTitle("Page To Rename: ");
+        pageToRenamePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String pageName = pageNames[selection];
+                String uniqueID = displayNameToID.get(pageName);
+                renamePageDialog(uniqueID, pageNames);
+            }
+        });
+        pageToRenamePrompt.show();
+    }
+
     /**
      * Takes in user input to rename page in internal structures and external view
      */
-    private void renamePageDialog() {
+    private void renamePageDialog(final String uniqueID, final String[] pageNames) {
+        final ArrayList<String> pageList = new ArrayList<>(Arrays.asList(pageNames));
         AlertDialog.Builder renamePagePrompt = new AlertDialog.Builder(this);
         renamePagePrompt.setTitle("Input New Name For Page: ");
         final EditText input = new EditText(this);
@@ -408,7 +427,13 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newPageName = input.getText().toString();
-                renamePage(newPageName);
+                if (pageList.contains(newPageName)) {
+                    Toast pageRenameError = Toast.makeText(getApplicationContext(), "Page Name Already Used", Toast.LENGTH_SHORT);
+                    pageRenameError.show();
+                    renamePageDialog(uniqueID, pageNames);
+                } else {
+                    renamePage(newPageName, uniqueID);
+                }
             }
         });
         // Enables cancel option
@@ -425,9 +450,10 @@ public class EditorActivity extends AppCompatActivity {
      * TODO: Helper method to rename page internally
      * @param newName the new name of the page
      */
-    private void renamePage(String newName) {
-        //ArrayList<Shape> page = pages.remove(currPage);
-        //pages.put(newName, page);
+    private void renamePage(String newName, String uniqueID) {
+        Page page = pages.remove(uniqueID);
+        page.changeDisplayName(newName);
+        pages.put(newName, page);
     }
 
     /**
@@ -462,6 +488,38 @@ public class EditorActivity extends AppCompatActivity {
      * @param newName the new name of the shape
      */
     private void renameShape(String newName) {
+        Shape selectedShape = currentPage.getSelected();
+        selectedShape.setShapeName(newName);
+    }
+
+    private void editShapeDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.shape_properties);
+        final Shape selectedShape = currentPage.getSelected();
+        populateEditShapeDialog(selectedShape, dialog);
+        EditText shapeName = dialog.findViewById(R.id.nameInput);
+        shapeName.setText(selectedShape.getShapeName());
+        dialog.show();
+    }
+
+    private void populateEditShapeDialog(Shape shape, Dialog dialog) {
+        EditText topInput = dialog.findViewById(R.id.topInput);
+        topInput.setText(Double.toString(shape.getTop()));
+        EditText bottomInput = dialog.findViewById(R.id.bottomInput);
+        bottomInput.setText(Double.toString(shape.getBottom()));
+        EditText leftInput = dialog.findViewById(R.id.leftInput);
+        leftInput.setText(Double.toString(shape.getLeft()));
+        EditText rightInput = dialog.findViewById(R.id.rightInput);
+        rightInput.setText(Double.toString(shape.getRight()));
+        EditText shapeName = dialog.findViewById(R.id.nameInput);
+        shapeName.setText(shape.getShapeName());
+        CheckBox moveInput = dialog.findViewById(R.id.moveInput);
+        moveInput.setEnabled(shape.getMoveableStatus());
+        CheckBox visibleInput = dialog.findViewById(R.id.visibleInput);
+        visibleInput.setEnabled(!shape.getHiddenStatus());
+    }
+
+    private void editShapeProperties(Shape shape) {
 
     }
 
@@ -471,22 +529,16 @@ public class EditorActivity extends AppCompatActivity {
     private void showCustomDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setMessage("Create a new game or open an existing game?");
-        // Creates new game
-        dialog.setPositiveButton(
-                "Create New Game",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        loadNewGame();
-                    }
-                });
-        // Opens existing game
-        dialog.setNegativeButton(
-                "Open Existing Game",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        loadExistingGame();
-                    }
-                });
+        dialog.setPositiveButton("Create New Game", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                loadNewGame();
+            }
+        });
+        dialog.setNegativeButton("Open Existing Game", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                loadExistingGame();
+            }
+        });
         dialog.show();
     }
 
