@@ -13,8 +13,9 @@ public class Page {
     private String displayName;
     private String pageID;
 
-    private Shape selected;  // holds onto the selected shape
-    private Paint borderColor;
+    private Shape selected;     // holds onto the selected shape
+    private Paint borderColor;  // color for selection box
+    private Paint transBoxFill;
 
 
     /**
@@ -29,7 +30,14 @@ public class Page {
 
         // initialize selection color
         borderColor = new Paint();
+        borderColor.setStyle(Paint.Style.STROKE);
+        borderColor.setStrokeWidth(10);
         borderColor.setColor(Color.rgb(190, 21, 21));
+
+        // initialize transparent box color
+        transBoxFill = new Paint();
+        transBoxFill.setStyle(Paint.Style.FILL);
+        transBoxFill.setColor(Color.TRANSPARENT);
 
     }
 
@@ -59,10 +67,12 @@ public class Page {
     }
 
     /**
-     * Renders all shapes in the internal arraylist to the canvas
+     * Renders all shapes in the internal arraylist to the editor view canvas.
      * @param canvas the canvas area that the shapes will be drawn onto
      */
     public void render(Canvas canvas) {
+        Paint paint = null;
+
         // render each shape onto the canvas
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
@@ -78,10 +88,20 @@ public class Page {
                             (float)currentShape.getRight() + 10,
                             (float)currentShape.getBottom() + 10);
 
+                    // draw transparent box and colored selection border
+                    canvas.drawRect(shapeBorder, transBoxFill);
                     canvas.drawRect(shapeBorder, borderColor);
+
                 }
+
+                // if this shape is hidden, display it as semi-transparent
+                if(currentShape.getHiddenStatus()) {
+                    paint = new Paint();
+                    paint.setAlpha(70);
+                }
+
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
-                        (float)currentShape.getY(), null);
+                        (float)currentShape.getY(), paint);
 
             }
 
