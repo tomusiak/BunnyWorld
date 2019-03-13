@@ -41,6 +41,7 @@ public class EditorActivity extends AppCompatActivity {
     private ArrayList<String> resources;    // stores list of addable objects
 
     private Dialog editShapeDialog;
+    private Dialog addShapeDialog;
 
     String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
             "fire", "mystic"};
@@ -301,9 +302,8 @@ public class EditorActivity extends AppCompatActivity {
      * to add to the editor view.
      */
     private void makePopUp() {
-        String selection = "carrot";
-
         Dialog dialog = new Dialog(EditorActivity.this);
+        addShapeDialog = dialog;
         dialog.setContentView(R.layout.shapeadder_popup);
 
         GridView grid = (GridView) dialog.findViewById(R.id.resource_gridview);
@@ -315,7 +315,12 @@ public class EditorActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                     ShapeResource resource = (ShapeResource) adapter.getItem(position);
-                    addShapeToEditor(resource.getShapeName());
+                    if(resource != null) {
+                        addShapeToEditor(resource.getShapeName());
+                        addShapeDialog.dismiss();
+                    }
+
+
                 }
             });
 
