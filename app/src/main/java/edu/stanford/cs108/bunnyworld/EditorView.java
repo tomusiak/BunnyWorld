@@ -35,8 +35,6 @@ public class EditorView extends View {
     float top, left, bottom, right;
     float xDelta, yDelta;
 
-    BitmapDrawable carrotDrawable, carrot2Drawable, deathDrawable, duckDrawable, fireDrawable, mysticDrawable;
-
     // myPaint is a placeHolder
     Paint myPaint = new Paint();
     Paint selectPaint = new Paint();
@@ -47,7 +45,6 @@ public class EditorView extends View {
     public EditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
-        drawStarters();
 
         // myPaint is a placeholder
         myPaint.setColor(Color.rgb(255,0,0));
@@ -139,14 +136,7 @@ public class EditorView extends View {
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
-            String imageID = currentShape.getImageName();
-
-            int bitmapID = getResources().getIdentifier(imageID, "drawable", getContext().getPackageName());
-            BitmapDrawable drawableBM =
-                    (BitmapDrawable) getResources().getDrawable(bitmapID);
-            currentShape.setBitmap(drawableBM.getBitmap());
-            renderShape( currentShape );
-
+            renderShape(currentShape);
         }
         invalidate();
     }
@@ -213,15 +203,6 @@ public class EditorView extends View {
     }
 
     /**
-     * TODO: Don't think this needs to be used
-     * clears the Canvas object.
-     * @param canvas to be cleared
-     */
-    private void clearCanvas(Canvas canvas) {
-        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-    }
-
-    /**
      * Finds a shape that exists at the specified x, y coordinate and returns
      * it. null is returned if no shape is found.
      *
@@ -229,7 +210,7 @@ public class EditorView extends View {
      * @param y coordinate to search for shape at
      * @return the found shape, or null if no shape is found at x, y
      */
-    public Shape shapeAtXY(double x, double y){
+    public Shape shapeAtXY(double x, double y) {
 
         if(currentPage == null) return null; // don't do anything if page just loaded
 

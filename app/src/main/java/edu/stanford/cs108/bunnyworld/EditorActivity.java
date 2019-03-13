@@ -40,6 +40,19 @@ public class EditorActivity extends AppCompatActivity {
     private Shape copiedShape;
     private ArrayList<String> resources;    // stores list of addable objects
 
+    GridView grid;
+    String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
+            "fire", "mystic"};
+    int[] imageIds = {R.drawable.carrot,
+            R.drawable.carrot2,
+            R.drawable.death,
+            R.drawable.duck,
+            R.drawable.fire,
+            R.drawable.mystic,};
+
+    private ArrayList<ShapeResource> shapeResources;
+
+    /* TODO: Add copy and paste functionality */
     /**
      * Sets up spinners and their respective functions upon creation of page
      * @param savedInstanceState current saved state to be initialized
@@ -58,6 +71,11 @@ public class EditorActivity extends AppCompatActivity {
      * for the addShape popup view.
      */
     private void initializeResources() {
+        shapeResources = new ArrayList<>();
+        for(int i = 0; i < imageIds.length; i++) {
+            ShapeResource s = new ShapeResource(resourceFiles[i], imageIds[i]);
+            shapeResources.add(s);
+        }
         resources = new ArrayList<>();
         resources.add("carrot");
         resources.add("carrot2");
@@ -65,6 +83,8 @@ public class EditorActivity extends AppCompatActivity {
         resources.add("duck");
         resources.add("fire");
         resources.add("mystic");
+
+
 
     }
 
@@ -272,8 +292,37 @@ public class EditorActivity extends AppCompatActivity {
      * Adds shape to the page and tracks it internally
      */
     private void addShape() {
-        String selection = makePopUp();
+        makePopUp();
+    }
 
+    /**
+     * TODO: Makes shape appear on screen
+     */
+    private void makePopUp() {
+        String selection = "carrot";
+
+        Dialog dialog = new Dialog(EditorActivity.this);
+        dialog.setContentView(R.layout.shapeadder_popup);
+
+        GridView grid = (GridView) dialog.findViewById(R.id.resource_gridview);
+        final GridViewAdapter adapter = new GridViewAdapter(EditorActivity.this, shapeResources);
+        grid.setAdapter(adapter);
+
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                    Toast.makeText(EditorActivity.this,
+                        "Hi " + position, Toast.LENGTH_SHORT).show();
+                    ShapeResource resource = (ShapeResource) adapter.getItem(position);
+                    addShapeToEditor(resource.getShapeName());
+                }
+            });
+
+        dialog.show();
+    }
+
+    public void addShapeToEditor(String selection) {
         numShapes++;
         String shapeName = "shape" + numShapes;
         Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
@@ -286,20 +335,6 @@ public class EditorActivity extends AppCompatActivity {
 
         currentPage.addShape(shape);
         editorView.renderShape(shape);  // renders the bitmaps for the newly added shape
-    }
-
-    /**
-     * TODO: Makes shape appear on screen
-     */
-    private String makePopUp() {
-        String selection = "carrot";
-        AddShapeDialog makeShape = new AddShapeDialog();
-        makeShape.show(getSupportFragmentManager(), "make shape");
-
-        PopupView shapesPanel = findViewById(R.id.shapeSelect);
-        //if(shapesPanel != null) shapesPanel.populateResources(resources);
-
-        return selection;
     }
 
     /**
@@ -793,22 +828,61 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    /** Renames a chosen save to a new value.
+     */
+    public void renameSave(View view) {
+        final Database db = Database.getInstance(getApplicationContext());
+        final String[] gameList = db.returnGameList().toArray(new String[0]);
+        TextView textView = findViewById(R.id.edit_text);
+        final String text = textView.getText().toString();
+        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
+        newPagePrompt.setTitle("Which save would you like to rename? ");
+        newPagePrompt.setItems(gameList, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                if (Arrays.asList(gameList).contains(text)) {
+                    Toast addPageToast = Toast.makeText(getApplicationContext(),"Choose a different name.",Toast.LENGTH_SHORT);
+                    addPageToast.show();
+                } else {
+                    db.updateGameName( gameList[selection], text );
+                }
+                String[] newGameList = db.returnGameList().toArray(new String[0]);
+                if (newGameList != null) {
+                    ArrayAdapter<String> itemsAdapter =
+                            new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, newGameList );
+                    ListView listView = (ListView) findViewById(R.id.list_view );
+                    if (listView != null) {
+                        listView.setAdapter( itemsAdapter );
+                    }
+                }
+            }
+        });
+        newPagePrompt.show();
+    }
+
     /** Deletes a save from the database.
      */
     public void deleteSave(View view) {
-        Database db = Database.getInstance(getApplicationContext());
-        TextView textView = findViewById(R.id.edit_text);
-        String text = textView.getText().toString();
-        db.deleteSave(text);
-        String[] gameList = db.returnGameList().toArray(new String[0]);
-        if (gameList != null) {
-            ArrayAdapter<String> itemsAdapter =
-                    new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
-            ListView listView = (ListView) findViewById(R.id.list_view );
-            if (listView != null) {
-                listView.setAdapter( itemsAdapter );
+        final Database db = Database.getInstance(getApplicationContext());
+        final String[] gameList = db.returnGameList().toArray(new String[0]);
+        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
+        newPagePrompt.setTitle("Which save would you like to delete? ");
+        newPagePrompt.setItems(gameList, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                db.deleteSave(gameList[selection]);
+                String[] newGameList = db.returnGameList().toArray(new String[0]);
+                if (newGameList != null) {
+                    ArrayAdapter<String> itemsAdapter =
+                            new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, newGameList );
+                    ListView listView = (ListView) findViewById(R.id.list_view );
+                    if (listView != null) {
+                        listView.setAdapter( itemsAdapter );
+                    }
+                }
             }
-        }
+        });
+        newPagePrompt.show();
     }
 
     /** Exits back to editor activity.
