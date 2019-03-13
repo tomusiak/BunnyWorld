@@ -50,7 +50,6 @@ public class EditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
-
         initializeResources();
 
         // Initializes Spinner for page options
@@ -686,6 +685,7 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void loadExistingGame(){
         final Database db = Database.getInstance(getApplicationContext());
+        editorView = findViewById(R.id.editorView);
         setContentView( R.layout.database_load );
         ListView listView = findViewById( R.id.list_view );
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -694,7 +694,13 @@ public class EditorActivity extends AppCompatActivity {
                 String product = ((TextView) view).getText().toString();
                 Toast pageNameToast = Toast.makeText(getApplicationContext(),product,Toast.LENGTH_SHORT);
                 pageNameToast.show();
-                db.loadGame( product);
+                setPages(db.loadGame(product));
+                String firstPage = db.returnFirstPage( product );
+                Page page = getPages().get(firstPage);
+                if (editorView != null && page != null) {
+                    editorView.changeCurrentPage( page );
+                }
+                returnHome();
             }
         });
         String[] gameList = db.returnGameList().toArray( new String[0] );
@@ -775,6 +781,15 @@ public class EditorActivity extends AppCompatActivity {
             toast.show();
         } else {
             db.saveGame(text,getPages());
+            returnHome();
+            if (gameList != null) { // Updates appearance of games in list.
+                ArrayAdapter<String> itemsAdapter =
+                        new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
+                ListView listView = (ListView) findViewById(R.id.list_view );
+                if (listView != null) {
+                    listView.setAdapter( itemsAdapter );
+                }
+            }
         }
         if (gameList != null) { // Updates appearance of games in list.
             ArrayAdapter<String> itemsAdapter =
@@ -826,8 +841,113 @@ public class EditorActivity extends AppCompatActivity {
      */
     public void exit(View view) {
         Database db = Database.getInstance(getApplicationContext());
-        db.autoSave(getPages()); // Autosaves in case someone did not mean to lose all of their data.
-        finish(); // Returns to previous activity.
+        db.autoSave(getPages()); // Autosaves in case someone did not mean to lose all of their data.\
+        returnHome();
+    }
+
+    public void returnHome() {
+        setContentView(R.layout.activity_editor);
+        initializeResources();
+        // Initializes Spinner for page options
+        final Spinner pageSpinner = findViewById(R.id.pageSpinner);
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background"};
+        ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
+        pageSpinner.setAdapter(pageAdapter);
+        pageSpinner.setSelection(0);
+        pageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch(position){
+                    case 0:
+                        break;
+                    case 1:
+                        addPage();
+                        Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
+                        addPageToast.show();
+                        break;
+                    case 2:
+                        selectPageToRenameDialog();
+                        break;
+                    case 3:
+                        deletePageDialog();
+                        break;
+                    case 4:
+                        goToNewPageDialog();
+                        break;
+                    case 5:
+                        changePageBackground();
+                        break;
+                }
+                pageSpinner.setSelection(0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+        // Initializes spinner for shape options
+        final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape"};
+        ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
+        shapeSpinner.setAdapter(shapeAdapter);
+        shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch(position){
+                    case 0:
+                        break;
+                    case 1:
+                        addShape();
+                        break;
+                    case 2:
+                        renameShapeDialog();
+                        break;
+                    case 3:
+                        editShapeDialog();
+                        break;
+                    case 4:
+                        deleteShape();
+                        break;
+                }
+                shapeSpinner.setSelection(0);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
+        // Initialize spinner for script options
+        final Spinner scriptSpinner = findViewById(R.id.scriptSpinner);
+        String[] scriptOptions = new String[]{"Script Options:", "Create Script", "Show Script"};
+        ArrayAdapter<String> scriptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, scriptOptions);
+        scriptSpinner.setAdapter(scriptAdapter);
+        scriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch(position){
+                    case 0:
+                        break;
+                    case 1:
+                        handleScript();
+                        break;
+                    case 2:
+                        break;
+                }
+                scriptSpinner.setSelection(0);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+        editorView = findViewById(R.id.editorView);
+        numShapes = 0;
+        numPages = 0;
+        editorView.changeCurrentPage(pages.get("page1"));
     }
 
     /** Helper method to get pages
