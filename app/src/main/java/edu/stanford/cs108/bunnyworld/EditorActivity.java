@@ -633,8 +633,13 @@ public class EditorActivity extends AppCompatActivity {
         Database db = Database.getInstance(getApplicationContext());
         TextView textView = findViewById(R.id.edit_text);
         String text = textView.getText().toString();
-        db.saveGame(text,getPages());
         String[] gameList = db.returnGameList().toArray(new String[0]);
+        if (gameList.length > 7) {
+            Toast toast = Toast.makeText(this,"Please delete a save before adding more.",Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            db.saveGame(text,getPages());
+        }
         if (gameList != null) {
             ArrayAdapter<String> itemsAdapter =
                     new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
