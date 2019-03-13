@@ -32,10 +32,12 @@ public class EditorActivity extends AppCompatActivity {
     private int numPages;  // Tracks cumulative number of pages created so far
     private HashMap<String, Page> pages; // Maps unique Page IDs to Page objects
     private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
-    private String currPage;
-    private Page currentPage;
+    private String currPage; // Tracks user-selected name of current page
+    private Page currentPage; // Tracks current page being displayed
     private String currScript;
     private EditorView editorView;
+    private Shape copiedShape;
+
 
     private ArrayList<String> resources;    // stores list of addable objects
 
@@ -92,7 +94,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape"};
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape", "Copy Shape", "Paste Shape"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -112,6 +114,12 @@ public class EditorActivity extends AppCompatActivity {
                         break;
                     case 4:
                         deleteShape();
+                        break;
+                    case 5:
+                        copyShape();
+                        break;
+                    case 6:
+                        pasteShape();
                         break;
                 }
                 shapeSpinner.setSelection(0);
@@ -138,6 +146,7 @@ public class EditorActivity extends AppCompatActivity {
                         handleScript();
                         break;
                     case 2:
+                        showScript();
                         break;
                 }
                 scriptSpinner.setSelection(0);
@@ -296,6 +305,21 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
+     * Displays script for selected shape
+     */
+    private void showScript() {
+        Shape selectedShape = currentPage.getSelected();
+        if (selectedShape != null) {
+            Dialog shapeScriptDialog = new Dialog(this);
+            shapeScriptDialog.setTitle(selectedShape.getScript());
+        } else {
+            // not able to show script because no shape selected
+            Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
+            addToast.show();
+        }
+    }
+
+    /**
      * Creates new Page and initializes relevant internal variables
      */
     private void addPage() {
@@ -379,18 +403,46 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO: Deletes shape from screen
      * Deletes the selected shape on the canvas. Displays helpful toasts based
      * upon success of deletion.
     */
     private void deleteShape() {
-        if(editorView.deleteShape()) {
-            Toast addToast = Toast.makeText(getApplicationContext(),"Shape successfully deleted.",Toast.LENGTH_SHORT);
+        if (editorView.deleteShape()) {
+            Toast addToast = Toast.makeText(getApplicationContext(),"Shape Successfully Deleted.",Toast.LENGTH_SHORT);
             addToast.show();
         } else {
             // show toast message if deletion did not work
             Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
             addToast.show();
+        }
+    }
+
+    private void copyShape() {
+        Shape selectedShape = currentPage.getSelected();
+        if (selectedShape == null) {
+            Toast shapeSelectedError = Toast.makeText(getApplicationContext(), "No Shape Selected", Toast.LENGTH_SHORT);
+            shapeSelectedError.show();
+        } else {
+            copiedShape = selectedShape;
+        }
+    }
+
+    private void pasteShape() {
+        if (copiedShape == null) {
+            Toast shapeCopyError = Toast.makeText(getApplicationContext(), "No Shape Copied", Toast.LENGTH_SHORT);
+            shapeCopyError.show();
+        } else {
+            numShapes++;
+            String shapeName = "shape" + numShapes;
+            Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
+            addToast.show();
+
+            String selection = "carrot";
+            Shape newShape = new Shape(numShapes, selection, "",
+                    20, 20, 50, 50);
+
+            currentPage.addShape(newShape);
+            editorView.renderShape(newShape);
         }
     }
 
@@ -411,6 +463,7 @@ public class EditorActivity extends AppCompatActivity {
                 String pageName = pageNames[selection];
                 String uniqueID = displayNameToID.get(pageName);
                 pages.remove(uniqueID);
+                displayNameToID.remove(pageName);
                 // TODO: update custom view to reflect this
                 // TODO: figure out starter page
                 Toast pageNameToast = Toast.makeText(getApplicationContext(), pageName + " Deleted",Toast.LENGTH_SHORT);
@@ -473,7 +526,7 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO: Helper method to rename page internally
+     * Helper method to rename page internally
      * @param newName the new name of the page
      */
     private void renamePage(String newName, String uniqueID) {
@@ -483,8 +536,8 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * Function that will allow the user to select a background image for
-     * the current bunnyworld page
+     * Prompts the user to select which page to change the background of -- hands off to
+     * backgroundDialog() once a page is selected
      */
     private void changePageBackground() {
         ArrayList<String> names = new ArrayList<>();
@@ -503,6 +556,9 @@ public class EditorActivity extends AppCompatActivity {
         pageToRenamePrompt.show();
     }
 
+    /**
+     * Prompts the user to select which background to set for page -- hands off to changeBackground()
+     */
     private void backgroundDialog(final String uniqueID) {
         final String[] backgroundList = new String[]{"Background1", "Background2", "Background3", "Background4", "Background5", "Background6"};
         AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
@@ -517,6 +573,9 @@ public class EditorActivity extends AppCompatActivity {
         playPrompt.show();
     }
 
+    /**
+     * Changes the background of the parameterized page associated with the uniqueID
+     */
     private void changeBackground(String uniqueID, String background) {
 
         Toast backgroundToast = Toast.makeText(getApplicationContext(), "Background Changed", Toast.LENGTH_SHORT);
@@ -527,6 +586,12 @@ public class EditorActivity extends AppCompatActivity {
      * Prompts user to input a new name for the shape
      */
     private void renameShapeDialog() {
+        Shape selectedShape = currentPage.getSelected();
+        if (selectedShape == null) {
+            Toast shapeSelectedError = Toast.makeText(getApplicationContext(), "No Shape Selected", Toast.LENGTH_SHORT);
+            shapeSelectedError.show();
+            return;
+        }
         AlertDialog.Builder renameShapePrompt = new AlertDialog.Builder(this);
         renameShapePrompt.setTitle("Input New Name For Shape: ");
         final EditText input = new EditText(this);
@@ -536,8 +601,18 @@ public class EditorActivity extends AppCompatActivity {
         renameShapePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newPageName = input.getText().toString();
-                renameShape(newPageName);
+                String newShapeName = input.getText().toString();
+                ArrayList<Shape> shapes = currentPage.getShapes();
+                // checks to make sure shape name not already used; if used, prompts user to re-enter name
+                for (int i = 0; i < shapes.size(); i++) {
+                    if (shapes.get(i).getShapeName().equals(newShapeName)) {
+                        Toast shapeRenameError = Toast.makeText(getApplicationContext(), "Shape Name Already Used On This Page", Toast.LENGTH_SHORT);
+                        shapeRenameError.show();
+                        renameShapeDialog();
+                        return;
+                    }
+                }
+                renameShape(newShapeName);
             }
         });
         // Cancels save
@@ -551,7 +626,7 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO: Helper method to rename shape internally
+     * Helper method to rename shape internally
      * @param newName the new name of the shape
      */
     private void renameShape(String newName) {
@@ -559,11 +634,14 @@ public class EditorActivity extends AppCompatActivity {
         selectedShape.setShapeName(newName);
     }
 
+    /**
+     * Dialog that pops up that allows user to change the properties of the selected shape
+     */
     private void editShapeDialog() {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.shape_properties);
         final Shape selectedShape = currentPage.getSelected();
-
+        // if a shape is selected, dialog with properties pops up; if not, user is alerted of problem
         if(selectedShape != null) {
             populateEditShapeDialog(selectedShape, dialog);
             EditText shapeName = dialog.findViewById(R.id.nameInput);
@@ -577,6 +655,9 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Populates the EditText views in the editShapeDialog with the existing properties of the shape
+     */
     private void populateEditShapeDialog(Shape shape, Dialog dialog) {
         EditText topInput = dialog.findViewById(R.id.topInput);
         topInput.setText(Double.toString(shape.getTop()));
@@ -594,6 +675,10 @@ public class EditorActivity extends AppCompatActivity {
         visibleInput.setEnabled(!shape.getHiddenStatus());
     }
 
+    /**
+     * TODO: Helper method that, on click, updates shape properties
+     * @param view
+     */
    public void editShapeProperties(View view) {
 
    }
@@ -624,6 +709,7 @@ public class EditorActivity extends AppCompatActivity {
         editorView = findViewById(R.id.editorView);
         numShapes = 0;
         numPages = 0;
+        copiedShape = null;
         pages = new HashMap<>();
         displayNameToID = new HashMap<>();
         addPage();
@@ -669,7 +755,6 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * TODO: Change this to list the pages so the user can see options
      * Goes to new page based on user input
      */
     private void goToNewPageDialog() {
@@ -687,7 +772,6 @@ public class EditorActivity extends AppCompatActivity {
                 String newPageName = pageNames[selection];
                 Toast pageNameToast = Toast.makeText(getApplicationContext(),newPageName,Toast.LENGTH_SHORT);
                 pageNameToast.show();
-
                 // From the selected display name, pull the original page object
                 String uniqueID = displayNameToID.get(newPageName);
                 switchPages(uniqueID);
