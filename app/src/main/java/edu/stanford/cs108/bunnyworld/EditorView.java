@@ -146,10 +146,14 @@ public class EditorView extends View {
         Bitmap myBitmap = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
         myBitmap.setPixels(pixels, 0, bm.getWidth(), 0, 0, bm.getWidth(), bm.getHeight());
 
+        myBitmap = Bitmap.createScaledBitmap(myBitmap, (int)shape.getWidth(),
+                (int)shape.getHeight(), false);
+
         // update the shape's internal bitmap and set its attributes
         shape.setBitmap(myBitmap);
-        shape.setWidth(bm.getWidth());
-        shape.setHeight(bm.getHeight());
+        shape.setWidth(myBitmap.getWidth());
+        shape.setHeight(myBitmap.getHeight());
+
 
         invalidate();
     }

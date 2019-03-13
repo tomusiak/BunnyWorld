@@ -40,7 +40,8 @@ public class EditorActivity extends AppCompatActivity {
     private Shape copiedShape;
     private ArrayList<String> resources;    // stores list of addable objects
 
-    GridView grid;
+    private Dialog editShapeDialog;
+
     String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
             "fire", "mystic"};
     int[] imageIds = {R.drawable.carrot,
@@ -336,7 +337,7 @@ public class EditorActivity extends AppCompatActivity {
         // Sample: Building a shape from a shape image name
         String shapeImgName = selection;
         Shape shape = new Shape(numShapes, shapeImgName, "",
-                20, 20, 50, 50);
+                20, 20, 250, 250);
 
         currentPage.addShape(shape);
         editorView.renderShape(shape);  // renders the bitmaps for the newly added shape
@@ -601,6 +602,7 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void editShapeDialog() {
         Dialog dialog = new Dialog(this);
+        editShapeDialog = dialog;
         dialog.setContentView(R.layout.shape_properties);
         final Shape selectedShape = currentPage.getSelected();
         // if a shape is selected, dialog with properties pops up; if not, user is alerted of problem
@@ -621,20 +623,25 @@ public class EditorActivity extends AppCompatActivity {
      * Populates the EditText views in the editShapeDialog with the existing properties of the shape
      */
     private void populateEditShapeDialog(Shape shape, Dialog dialog) {
-        EditText topInput = dialog.findViewById(R.id.topInput);
-        topInput.setText(Double.toString(shape.getTop()));
-        EditText bottomInput = dialog.findViewById(R.id.bottomInput);
-        bottomInput.setText(Double.toString(shape.getBottom()));
-        EditText leftInput = dialog.findViewById(R.id.leftInput);
-        leftInput.setText(Double.toString(shape.getLeft()));
-        EditText rightInput = dialog.findViewById(R.id.rightInput);
-        rightInput.setText(Double.toString(shape.getRight()));
+        EditText xInput = dialog.findViewById(R.id.xInput);
+        xInput.setText(Double.toString(shape.getX()));
+
+        EditText yInput = dialog.findViewById(R.id.yInput);
+        yInput.setText(Double.toString(shape.getY()));
+
+        EditText widthInput = dialog.findViewById(R.id.widthInput);
+        widthInput.setText(Double.toString(shape.getWidth()));
+
+        EditText heightInput = dialog.findViewById(R.id.heightInput);
+        heightInput.setText(Double.toString(shape.getHeight()));
+
         EditText shapeName = dialog.findViewById(R.id.nameInput);
         shapeName.setText(shape.getShapeName());
+
         CheckBox moveInput = dialog.findViewById(R.id.moveInput);
         moveInput.setChecked(shape.getMoveableStatus());
+
         CheckBox visibleInput = dialog.findViewById(R.id.visibleInput);
-        //visibleInput.setEnabled();
         visibleInput.setChecked(!shape.getHiddenStatus());
     }
 
@@ -646,21 +653,35 @@ public class EditorActivity extends AppCompatActivity {
 
        Shape shape = currentPage.getSelected();
 
-       EditText topInput = view.findViewById(R.id.topInput);
-       String topText = topInput.getText().toString();
+       EditText xInput = (EditText)editShapeDialog.findViewById(R.id.xInput);
+       double x = Double.parseDouble(xInput.getText().toString());
+       shape.setX(x);
 
-       EditText bottomInput = view.findViewById(R.id.bottomInput);
-       bottomInput.setText(Double.toString(shape.getBottom()));
-       EditText leftInput = view.findViewById(R.id.leftInput);
-       leftInput.setText(Double.toString(shape.getLeft()));
-       EditText rightInput = view.findViewById(R.id.rightInput);
-       rightInput.setText(Double.toString(shape.getRight()));
-       EditText shapeName = view.findViewById(R.id.nameInput);
-       shapeName.setText(shape.getShapeName());
-       CheckBox moveInput = view.findViewById(R.id.moveInput);
-       moveInput.setEnabled(shape.getMoveableStatus());
-       CheckBox visibleInput = view.findViewById(R.id.visibleInput);
-       visibleInput.setEnabled(!shape.getHiddenStatus());
+       EditText yInput = editShapeDialog.findViewById(R.id.yInput);
+       String yText = yInput.getText().toString();
+       shape.setY(Double.parseDouble(yText));
+
+       EditText widthInput = editShapeDialog.findViewById(R.id.widthInput);
+       int width = (int)Double.parseDouble(widthInput.getText().toString());
+       shape.setWidth(width);
+
+       EditText heightInput = editShapeDialog.findViewById(R.id.heightInput);
+       int height = (int)Double.parseDouble(heightInput.getText().toString());
+       shape.setHeight(height);
+
+       EditText shapeName = editShapeDialog.findViewById(R.id.nameInput);
+       String name = shapeName.getText().toString();
+       shape.setShapeName(name);
+
+       CheckBox moveInput = editShapeDialog.findViewById(R.id.moveInput);
+       boolean isMovable = moveInput.isChecked();
+       shape.setMoveable(isMovable);
+
+       CheckBox visibleInput = editShapeDialog.findViewById(R.id.visibleInput);
+       boolean isVisible = visibleInput.isChecked();
+       shape.setHidden(!isVisible);
+
+       editorView.renderShape(shape);
 
    }
 
