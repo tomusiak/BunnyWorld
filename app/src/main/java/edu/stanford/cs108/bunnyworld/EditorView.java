@@ -18,7 +18,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
- * TODO: document your custom view class.
+ * Creates custom view for EditorActivity
  */
 public class EditorView extends View {
 
@@ -28,7 +28,6 @@ public class EditorView extends View {
     Page currentPage;
     ArrayList<Shape> starters = new ArrayList<Shape>();
     Shape selected;
-
 
     // Touch activity float variables
     float x1, y1;   // x and y coordinate of initial press to the screen
@@ -42,7 +41,9 @@ public class EditorView extends View {
     Paint myPaint = new Paint();
     Paint selectPaint = new Paint();
 
-
+    /**
+     * Sets up EditorView
+     */
     public EditorView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -56,10 +57,11 @@ public class EditorView extends View {
         selectPaint.setStyle(Paint.Style.STROKE);
     }
 
+    /**
+     * Initializes starter images from resources
+     */
     private void init() {
         selected = null;
-
-
         //canvasWidth = canvas.getWidth();
         //canvasHeight = canvas.getHeight();
 
@@ -81,7 +83,6 @@ public class EditorView extends View {
     // TODO: Canvas width/height operations currently don't work. Pretty
     // TODO: sure that this code is actually to be implemented in the pop-up
     public void drawStarters() {
-
 
         // this is commented out due to the reason that canvasWidth & canvasHeight
         // are not able to be assigned in the init() method for the reason that canvas
@@ -116,7 +117,7 @@ public class EditorView extends View {
     /**
      * Update the current working page displayed in the editor view to
      * be the new one passed in
-     * @param page
+     * @param page the new page to be passed in
      */
     public void changeCurrentPage(Page page) {
         // set selected to null before changing the page
@@ -147,7 +148,6 @@ public class EditorView extends View {
             renderShape( currentShape );
 
         }
-
         invalidate();
     }
 
@@ -156,11 +156,8 @@ public class EditorView extends View {
      * page's render function.
      */
     public void drawPage(Canvas canvas) {
-
-        //clearCanvas(canvas);
         if(currentPage != null) currentPage.render(canvas);
     }
-
 
     /**
      * Deletes the currently selected shape if one exists & returns true
@@ -177,7 +174,6 @@ public class EditorView extends View {
         }
         return false;   // no shape to delete
     }
-
 
     /**
      * Renders a single shape's bitmap.
@@ -308,7 +304,6 @@ public class EditorView extends View {
                     top = y1;
                     bottom = y2;
                 }
-
             case MotionEvent.ACTION_MOVE:
                 xDelta = event.getX();
                 yDelta = event.getY();
@@ -321,5 +316,4 @@ public class EditorView extends View {
         }
         return true;
     }
-
 }
