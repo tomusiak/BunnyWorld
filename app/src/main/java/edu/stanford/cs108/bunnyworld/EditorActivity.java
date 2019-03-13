@@ -305,7 +305,7 @@ public class EditorActivity extends AppCompatActivity {
         Dialog dialog = new Dialog(EditorActivity.this);
         dialog.setContentView(R.layout.shapeadder_popup);
 
-        GridView grid = (GridView) dialog.findViewById(R.id.resource_gridview);
+       // GridView grid = (GridView) dialog.findViewById(R.id.resource_gridview);
         final GridViewAdapter adapter = new GridViewAdapter(EditorActivity.this, shapeResources);
         grid.setAdapter(adapter);
 
@@ -646,15 +646,19 @@ public class EditorActivity extends AppCompatActivity {
 
        Shape shape = currentPage.getSelected();
 
-       EditText topInput = view.findViewById(R.id.topInput);
-       String topText = topInput.getText().toString();
+       EditText xInput = view.findViewById(R.id.xInput);
+       String xText = xInput.getText().toString();
+       shape.setX(Double.parseDouble(xText));
 
-       EditText bottomInput = view.findViewById(R.id.bottomInput);
-       bottomInput.setText(Double.toString(shape.getBottom()));
-       EditText leftInput = view.findViewById(R.id.leftInput);
-       leftInput.setText(Double.toString(shape.getLeft()));
-       EditText rightInput = view.findViewById(R.id.rightInput);
-       rightInput.setText(Double.toString(shape.getRight()));
+       EditText yInput = view.findViewById(R.id.yInput);
+       //yInput.setText(Double.toString(shape.getBottom()));
+       String yText = yInput.getText().toString();
+       shape.setY(Double.parseDouble(yText));
+
+       EditText widthInput = view.findViewById(R.id.widthInput);
+       widthInput.setText(Double.toString(shape.getWidth()));
+       EditText heightInput = view.findViewById(R.id.heightInput);
+       heightInput.setText(Double.toString(shape.getHeight()));
        EditText shapeName = view.findViewById(R.id.nameInput);
        shapeName.setText(shape.getShapeName());
        CheckBox moveInput = view.findViewById(R.id.moveInput);
