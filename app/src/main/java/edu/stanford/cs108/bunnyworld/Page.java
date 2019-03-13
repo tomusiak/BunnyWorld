@@ -113,6 +113,29 @@ public class Page {
     }
 
     /**
+     * Renders all shapes in the internal arraylist to the play view canvas
+     * @param canvas the canvas area that the shapes will be drawn onto
+     */
+    public void playRender(Canvas canvas) {
+        Paint paint = null;
+
+        // render each shape onto the canvas
+        for(int i = 0; i < shapes.size(); i++) {
+            Shape currentShape = shapes.get(i);
+            // if shape has a valid bitmap image AND is visible
+            if(currentShape.getHiddenStatus() && currentShape.getImageName() != "") {
+
+                canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
+                        (float)currentShape.getY(), paint);
+
+            }
+
+
+
+        }
+    }
+
+    /**
      * Adds a new shape to the shapes arraylist. Used to add shapes to
      * pages.
      * @param shape to be added
