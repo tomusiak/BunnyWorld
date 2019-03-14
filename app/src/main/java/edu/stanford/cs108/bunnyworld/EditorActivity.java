@@ -39,6 +39,8 @@ public class EditorActivity extends AppCompatActivity {
     private EditorView editorView;
     private Shape copiedShape;
     private ArrayList<String> resources;    // stores list of addable objects
+    private Page undoPageDelete;
+    private Shape undoShapeDelete;
 
     private Dialog editShapeDialog;
     private Dialog addShapeDialog;
@@ -388,7 +390,10 @@ public class EditorActivity extends AppCompatActivity {
      * upon success of deletion.
     */
     private void deleteShape() {
-        if (editorView.deleteShape()) {
+        Shape selectedShape = currentPage.getSelected();
+        if (selectedShape != null) {
+            undoShapeDelete = selectedShape;
+            editorView.deleteShape();
             Toast addToast = Toast.makeText(getApplicationContext(),"Shape Successfully Deleted.",Toast.LENGTH_SHORT);
             addToast.show();
             numShapes--;
@@ -419,6 +424,14 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    private void undoShapeDelete() {
+        currentPage.addShape(undoShapeDelete);
+        editorView.renderShape(undoShapeDelete);  // renders the bitmaps for the newly added shape
+        undoShapeDelete = null;
+        Toast undoShapeToast = Toast.makeText(getApplicationContext(), "Deleted Shape Added Back to Game", Toast.LENGTH_SHORT);
+        undoShapeToast.show();
+    }
+
     /**
      * Deletes selected page from internal data structures and external view
      */
@@ -427,9 +440,9 @@ public class EditorActivity extends AppCompatActivity {
         ArrayList<String> names = new ArrayList<>();
         names.addAll(getPages().keySet());
         final String[] pageNames = names.toArray(new String[getPages().size()]);
-        AlertDialog.Builder deleteShapePrompt = new AlertDialog.Builder(this);
-        deleteShapePrompt.setTitle("Page To Delete: ");
-        deleteShapePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder deletePagePrompt = new AlertDialog.Builder(this);
+        deletePagePrompt.setTitle("Page To Delete: ");
+        deletePagePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 // Removes correct page from pages
@@ -440,6 +453,7 @@ public class EditorActivity extends AppCompatActivity {
                     Toast deleteErrorToast = Toast.makeText(getApplicationContext(), "Unable to Delete Starter Page",Toast.LENGTH_SHORT);
                     deleteErrorToast.show();
                 } else {
+                    undoPageDelete = deletedPage;
                     getPages().remove(uniqueID);
                     displayNameToID.remove(pageName);
                     if (deletedPage.equals(currentPage)) editorView.changeCurrentPage(starterPage);
@@ -448,7 +462,7 @@ public class EditorActivity extends AppCompatActivity {
                 }
             }
         });
-        deleteShapePrompt.show();
+        deletePagePrompt.show();
     }
 
     // prompts the user to select which page (of the created pages) to rename
@@ -588,6 +602,15 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
         starterPagePrompt.show();
+    }
+
+    private void undoPageDelete() {
+        displayNameToID.put(undoPageDelete.getDisplayName(), undoPageDelete.getPageID());
+
+        pages.put(undoPageDelete.getPageID(), undoPageDelete);
+
+        Toast undoPageToast = Toast.makeText(getApplicationContext(),"Deleted Page Added Back To Game",Toast.LENGTH_SHORT);
+        undoPageToast.show();
     }
 
     /**
@@ -1006,7 +1029,7 @@ public class EditorActivity extends AppCompatActivity {
         initializeResources();
         // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background",  "Change Starter Page"};
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background",  "Change Starter Page", "Undo Delete"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
         pageSpinner.setSelection(0);
@@ -1035,6 +1058,8 @@ public class EditorActivity extends AppCompatActivity {
                         break;
                     case 6:
                         selectStarterPage();
+                    case 7:
+                        undoPageDelete();
                 }
                 pageSpinner.setSelection(0);
             }
@@ -1047,7 +1072,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape", "Copy Shape", "Paste Shape"};
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape", "Copy Shape", "Paste Shape", "Undo Delete"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1074,6 +1099,8 @@ public class EditorActivity extends AppCompatActivity {
                     case 6:
                         pasteShape();
                         break;
+                    case 7:
+                        undoShapeDelete();
                 }
                 shapeSpinner.setSelection(0);
             }
