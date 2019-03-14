@@ -394,6 +394,36 @@ public class EditorActivity extends AppCompatActivity {
         if (selectedShape != null) {
             undoShapeDelete = selectedShape;
             editorView.deleteShape();
+
+            // EXTENSION: Delete references to that deleted shape in scripts of all other shapes
+
+            // Iterate through all pages and Shapes in those pages
+            Iterator it = pages.entrySet().iterator();
+            while (it.hasNext()) {
+                Page page = (Page) it.next();
+                ArrayList<Shape> shapes = page.getList();
+                for (int i = 0; i < shapes.size(); i++) {
+                    // Breaks script into clauses
+                    String script = shapes.get(i).getScript();
+                    String[] clauses = script.split(";");
+                    // If clause contains that Shape name, delete clause
+                    for (int j = 0; j < clauses.length; j++) {
+                        if (clauses[i].contains(selectedShape.getShapeName())) {
+                            clauses[i] = "";
+                        }
+                    }
+                    // Reassemble script, not including deleted clauses
+                    String newScript = "";
+                    for (int k = 0; k < clauses.length; k++) {
+                        if (!clauses[k].equals("")) {
+                            newScript += clauses[k];
+                        }
+                    }
+                    // Set script of that Shape to that newly re-assembled script
+                    shapes.get(i).setScript(newScript);
+                }
+            }
+
             Toast addToast = Toast.makeText(getApplicationContext(),"Shape Successfully Deleted.",Toast.LENGTH_SHORT);
             addToast.show();
             numShapes--;
