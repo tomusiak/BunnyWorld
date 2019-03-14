@@ -51,7 +51,7 @@ public class PlayActivity extends AppCompatActivity {
             for (String key : getPages().keySet()) {
                 Page currentPage = getPages().get(key);
                 String pageName = currentPage.getDisplayName();
-                displayNameToID.put(key,pageName);
+                //displayNameToID.put(key,pageName);
                 if (currentPage.getStarterPageStatus() == true) {
                     startingPage = key;
                     starterPage = currentPage;
@@ -122,11 +122,11 @@ public class PlayActivity extends AppCompatActivity {
      * Helper method to switch between pages
      * @param pageName the page to switch to
      */
-//    private void switchPages(String pageName) {
-//        currPage = pageName;
-//        Page nextPage = pageMap.get(pageName);
-//        playView.changeCurrentPage(nextPage);
-//    }
+    private void switchPages(String pageName) {
+        currPage = pageName;
+        Page nextPage = pageMap.get(pageName);
+        playView.changeCurrentPage(nextPage);
+    }
 
     /** Helper method to get pages
      * @return pages
@@ -148,52 +148,52 @@ public class PlayActivity extends AppCompatActivity {
         //pageMap = thisDatabase.loadGame(saveName);
     }
 
-//    /**
-//     * Executes script of given Shape
-//     * @param thisShape the shape to be executed
-//     */
-//    public void executeScript(Shape thisShape) {
-//        // not case-sensitive
-//        String script = thisShape.getScript().toLowerCase();
-//
-//        // splits block of script into clauses
-//        String[] clauses = script.split(";");
-//
-//        // uses loop to execute each clause
-//        for (int i = 0; i < clauses.length; i++) {
-//
-//            // splits each clause into tokens based on whitespace delimiter
-//            String[] tokens = clauses[i].split("\\s+");
-//
-//            // index of first start action
-//            int actionStart = 2;
-//
-//            if (tokens[1].equals(CLICK)) {
-//
-//            } else if (tokens[1].equals(ENTER)) {
-//
-//            } else if (tokens[1].equals(DROP)) {
-//                String shape = tokens[2];
-//                actionStart = 3;
-//            }
-//
-//            // parse triggers
-//            for (int j = actionStart; j < tokens.length; j+=2) {
-//                String command = tokens[j];
-//                if (command.equals(GOTO)) {
-//                    switchPages(tokens[j+1]);
-//                } else if (command.equals(PLAY)) {
-//                    playSound(tokens[j+1]);
-//                } else if (command.equals(HIDE)) {
-//                    hideShape(tokens[j+1]);
-//                } else if (command.equals(SHOW)) {
-//                    showShape(tokens[j+1]);
-//                } else {
-//                    return;
-//                }
-//            }
-//        }
-//    }
+    /**
+     * Executes script of given Shape
+     * @param thisShape the shape to be executed
+     */
+    public void executeScript(Shape thisShape) {
+        // not case-sensitive
+        String script = thisShape.getScript().toLowerCase();
+
+        // splits block of script into clauses
+        String[] clauses = script.split(";");
+
+        // uses loop to execute each clause
+        for (int i = 0; i < clauses.length; i++) {
+
+            // splits each clause into tokens based on whitespace delimiter
+            String[] tokens = clauses[i].split("\\s+");
+
+            // index of first start action
+            int actionStart = 2;
+
+            if (tokens[1].equals(CLICK)) {
+
+            } else if (tokens[1].equals(ENTER)) {
+
+            } else if (tokens[1].equals(DROP)) {
+                String shape = tokens[2];
+                actionStart = 3;
+            }
+
+            // parse triggers
+            for (int j = actionStart; j < tokens.length; j+=2) {
+                String command = tokens[j];
+                if (command.equals(GOTO)) {
+                    switchPages(tokens[j+1]);
+                } else if (command.equals(PLAY)) {
+                    playSound(tokens[j+1]);
+                } else if (command.equals(HIDE)) {
+                    hideShape(tokens[j+1]);
+                } else if (command.equals(SHOW)) {
+                    showShape(tokens[j+1]);
+                } else {
+                    return;
+                }
+            }
+        }
+    }
 
     private void playSound (String soundName) {
 

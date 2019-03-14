@@ -31,6 +31,7 @@ public class PlayView extends View {
     float inventoryY;
     Paint myPaint = new Paint();
     Paint selectPaint = new Paint();
+    Paint linePaint = new Paint();
 
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -270,6 +271,16 @@ public class PlayView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawPage(canvas);
+
+        float width = canvas.getWidth();
+        float height = canvas.getHeight();
+
+        inventoryY = (float)0.75*height;
+
+        linePaint.setColor(Color.BLACK);
+        linePaint.setStrokeWidth(2);
+
+        canvas.drawLine((float)0, (float)0.75*height, (float)width, (float)0.75*height, linePaint);
     }
 
 

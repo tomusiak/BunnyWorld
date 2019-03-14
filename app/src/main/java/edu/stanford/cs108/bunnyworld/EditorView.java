@@ -22,8 +22,6 @@ import java.util.ArrayList;
  */
 public class EditorView extends View {
 
-    //private Canvas canvas; // storing the canvas is broken, use onDraw method instead
-
     private int TRANSPARENT = Color.WHITE;
     Page currentPage;
     Shape selected;
