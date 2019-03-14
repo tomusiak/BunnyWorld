@@ -122,7 +122,7 @@ public class PlayActivity extends AppCompatActivity {
      */
     private void setPages(HashMap<String,Page> newPages) {
         pageMap = newPages;
-        System.out.println("pages");
+        // System.out.println("pages");
     }
 
     // Imports save data once user decides to play.
@@ -131,6 +131,10 @@ public class PlayActivity extends AppCompatActivity {
         //pageMap = thisDatabase.loadGame(saveName);
     }
 
+    /**
+     * Executes script of given Shape
+     * @param thisShape the shape to be executed
+     */
     public void executeScript(Shape thisShape) {
         // not case-sensitive
         String script = thisShape.getScript().toLowerCase();
@@ -160,7 +164,7 @@ public class PlayActivity extends AppCompatActivity {
             for (int j = actionStart; j < tokens.length; j+=2) {
                 String command = tokens[j];
                 if (command.equals(GOTO)) {
-                    switchPage(tokens[j+1]);
+                    switchPages(tokens[j+1]);
                 } else if (command.equals(PLAY)) {
                     playSound(tokens[j+1]);
                 } else if (command.equals(HIDE)) {
@@ -174,20 +178,30 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
-    private void switchPage (String pageName) {
-
-    }
-
     private void playSound (String soundName) {
 
     }
 
     private void hideShape (String shapeName) {
+        // refer to toasts (checks in PlayView for isHidden() etc)
+        // if it's hidden, it's not playable
 
+        // check to see if it exists, then sets
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.get(i).getShapeName().equals(shapeName)) {
+                inventory.get(i).setHidden(true);
+                break;
+            }
+        }
     }
 
     private void showShape (String shapeName) {
-
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.get(i).getShapeName().equals(shapeName)) {
+                inventory.get(i).setHidden(false);
+                break;
+            }
+        }
     }
 
 }
