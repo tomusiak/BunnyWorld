@@ -356,6 +356,7 @@ public class EditorActivity extends AppCompatActivity {
         if (editorView.deleteShape()) {
             Toast addToast = Toast.makeText(getApplicationContext(),"Shape Successfully Deleted.",Toast.LENGTH_SHORT);
             addToast.show();
+            numShapes--;
         } else {
             // show toast message if deletion did not work
             Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
@@ -736,28 +737,20 @@ public class EditorActivity extends AppCompatActivity {
     /** Loads an existing game.
      */
     private void loadExistingGame(){
-        final Database db = Database.getInstance(getApplicationContext());
+        final Database db = Database.getInstance(getApplicationContext()); // Loads database.
         editorView = findViewById(R.id.editorView);
-        setContentView( R.layout.database_load );
+        setContentView( R.layout.database_load ); // Shifts into loading view.
         ListView listView = findViewById( R.id.list_view );
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // Activates when user chooses a save.
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 String product = ((TextView) view).getText().toString();
-                Toast pageNameToast = Toast.makeText(getApplicationContext(),product,Toast.LENGTH_SHORT);
-                pageNameToast.show();
-                setPages(db.loadGame(product));
-                String firstPage = db.returnFirstPage( product );
-                Page page = getPages().get(firstPage);
-                if (editorView != null && page != null) {
-                    editorView.changeCurrentPage( page );
-                }
+                setPages(db.loadGame(product)); // Loads game into pages.
                 numShapes = db.getShapeCount(product);
                 numPages = db.getPageCount( product );
-                currentPage = getPages().get("page1");
                 displayNameToID = new HashMap<String, String>();
                 String startPage = null;
-                for (String key : getPages().keySet()) {
+                for (String key : getPages().keySet()) { // Finds which page is the starter page, and then makes that the first page to go to.
                     Page currentPage = getPages().get(key);
                     String pageName = currentPage.getDisplayName();
                     displayNameToID.put(key,pageName);
@@ -766,14 +759,11 @@ public class EditorActivity extends AppCompatActivity {
                         starterPage = currentPage;
                     }
                 }
-                initializeEditor();
-                editorView = findViewById(R.id.editorView);
-                if (pages != null) {
-                    editorView.changeCurrentPage(pages.get(startPage));
-                }
+                initializeEditor(); // Makes editor features visible, shifts back into EditorActivity.
+                editorView.changeCurrentPage(pages.get(startPage)); // Goes to first page.
             }
         });
-        String[] gameList = db.returnGameList().toArray( new String[0] );
+        String[] gameList = db.returnGameList().toArray( new String[0] ); // Shows list of saved games.
         if (gameList != null) {
              ArrayAdapter<String> itemsAdapter =
                      new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
@@ -827,8 +817,8 @@ public class EditorActivity extends AppCompatActivity {
     public void saveGame(View view) {
         Database db = Database.getInstance(getApplicationContext());
         String[] gameList = db.returnGameList().toArray(new String[0]);
-        setContentView( R.layout.database_popup );
-        if (gameList != null) {
+        setContentView( R.layout.database_popup ); // Goes into popup view.
+        if (gameList != null) { // Shows list of games.
             ArrayAdapter<String> itemsAdapter =
                     new ArrayAdapter<String>( EditorActivity.this, android.R.layout.test_list_item, gameList );
             ListView listView = (ListView) findViewById(R.id.list_view );
@@ -848,11 +838,11 @@ public class EditorActivity extends AppCompatActivity {
         if (gameList.length > 11) { // Ensures list of saves does not run off screen.
             Toast toast = Toast.makeText(this,"Please delete a save before adding more.",Toast.LENGTH_SHORT);
             toast.show();
-        } else if (getPages() == null) {
+        } else if (numShapes == 0) { // Checks that at least one shape has been added.
             Toast toast = Toast.makeText(this,"Please add at least one shape before saving.",Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            db.saveGame(text,getPages());
+            db.saveGame(text,getPages()); // Saves shapes into database.
             gameList = db.returnGameList().toArray(new String[0]);
             if (gameList != null) { // Updates appearance of games in list.
                 ArrayAdapter<String> itemsAdapter =
@@ -893,15 +883,15 @@ public class EditorActivity extends AppCompatActivity {
      */
     public void renameSave(View view) {
         final Database db = Database.getInstance(getApplicationContext());
-        final String[] gameList = db.returnGameList().toArray(new String[0]);
+        final String[] gameList = db.returnGameList().toArray(new String[0]); // Obtains list of games.
         TextView textView = findViewById(R.id.edit_text);
         final String text = textView.getText().toString();
-        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
+        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this); // Prompts user for which game they would like to re-name.
         newPagePrompt.setTitle("Which save would you like to rename? ");
         newPagePrompt.setItems(gameList, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
-                if (Arrays.asList(gameList).contains(text)) {
+                if (Arrays.asList(gameList).contains(text)) { // Ensures no save name duplicates (breaks database).
                     Toast addPageToast = Toast.makeText(getApplicationContext(),"Choose a different name.",Toast.LENGTH_SHORT);
                     addPageToast.show();
                 } else {
@@ -1093,5 +1083,7 @@ public class EditorActivity extends AppCompatActivity {
         if (pages != null) {
             db.autoSave( pages );
         }
+        Toast pageRenameError = Toast.makeText(getApplicationContext(), "Auto-saved!", Toast.LENGTH_SHORT);
+        pageRenameError.show();
     }
 }
