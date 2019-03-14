@@ -254,25 +254,29 @@ public class PlayView extends View {
                 xDelta = event.getX();
                 yDelta = event.getY();
 
+                double starterY = currentPage.getSelected().getTop();
+                double halfHeight = currentPage.getSelected().getHeight()/2;
+
                 // only enable moving the page if isMoveable == true
-                if(currentPage != null && currentPage.getSelected() != null
+                if (currentPage != null && currentPage.getSelected() != null
                         && currentPage.getSelected().getMoveableStatus()) {
                     currentPage.getSelected().move(xDelta, yDelta);
 
-                    double starterY = currentPage.getSelected().getTop();
-                    double halfHeight = currentPage.getSelected().getHeight()/2;
-
                     // move from play area to inventory
-                    if (yDelta >= inventoryY+halfHeight) {
+                    if (y1 <= inventoryY+halfHeight && yDelta >= inventoryY+halfHeight) {
                         inventory.addShape(currentPage.getSelected());
                         currentPage.removeShape(currentPage.getSelected());
                     }
+                }
 
-//                    // move from inventory to play area IN PROGRESS
-//                    if (starterY <= inventoryY+halfHeight && yDelta >= inventoryY+halfHeight) {
-//                        inventory.addShape(currentPage.getSelected());
-//                        currentPage.removeShape(currentPage.getSelected());
-//                    }
+                if (inventory != null && inventory.getSelected() != null) {
+                    inventory.getSelected().move(xDelta, yDelta);
+
+                    // move from inventory to play area IN PROGRESS
+                    if (y1 >= inventoryY+halfHeight && yDelta <= inventoryY+halfHeight) {
+                        currentPage.addShape(inventory.getSelected());
+                        inventory.removeShape(inventory.getSelected());
+                    }
                 }
 
                 invalidate();   // forces canvas update
