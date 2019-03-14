@@ -130,6 +130,8 @@ public class PlayActivity extends AppCompatActivity {
      */
     public void executeScript(Shape thisShape) {
 
+        // TODO: delete references to Shape in clauses (arraylist cycle)
+
         // Executes only if Shape is not hidden/unplayable
         if (!thisShape.getHiddenStatus()) {
             // not case-sensitive
