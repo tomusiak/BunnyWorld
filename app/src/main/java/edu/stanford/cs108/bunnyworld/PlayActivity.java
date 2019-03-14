@@ -44,14 +44,12 @@ public class PlayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play);
-        playView = findViewById(R.id.play_view);
+        setContentView(R.layout.activity_play); // goes to play activity
+        playView = findViewById(R.id.play_view); // initializes play view
         if (pageMap != null) {
             String startingPage = null;
             for (String key : getPages().keySet()) {
                 Page currentPage = getPages().get(key);
-                String pageName = currentPage.getDisplayName();
-                //displayNameToID.put(key,pageName);
                 if (currentPage.getStarterPageStatus() == true) {
                     startingPage = key;
                     starterPage = currentPage;
@@ -76,21 +74,8 @@ public class PlayActivity extends AppCompatActivity {
                 String product = ((TextView) view).getText().toString(); // Obtains game user chose.
                 setPages(db.loadGame(product)); // Loads the hashmap from the database into the hashmap stored in this file
                 displayNameToID = new HashMap<String, String>();
-                Page cPage = null;
-                Page startPage = null;
-                for (String key : getPages().keySet()) { // Sets the starter page to the correct page, fills in page keys to names.
-                    cPage = getPages().get(key);
-                    String pageName = cPage.getDisplayName();
-                    displayNameToID.put(key,pageName);
-                    if (cPage.getStarterPageStatus() == true) {
-                        startPage = cPage;
-                    }
-                }
-                Toast successToast = Toast.makeText(getApplicationContext(),"Loading successful.",Toast.LENGTH_SHORT); // Informs user of successful load.
-                successToast.show();
+
                 setContentView(R.layout.activity_play); // Goes into play activity.
-                starterPage = cPage;
-                playView.changeCurrentPage(startPage); // Changes to starter page.
                 playView = findViewById(R.id.play_view);
                 if (pageMap != null) {
                     String startingPage = null;
@@ -105,6 +90,8 @@ public class PlayActivity extends AppCompatActivity {
                     }
                     playView.changeCurrentPage(pageMap.get(startingPage));
                 }
+                Toast successToast = Toast.makeText(getApplicationContext(),"Loading successful.",Toast.LENGTH_SHORT); // Informs user of successful load.
+                successToast.show();
             }
         });
         String[] gameList = db.returnGameList().toArray( new String[0] ); // Shows list of games.
