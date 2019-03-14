@@ -84,6 +84,19 @@ public class EditorView extends View {
     public void renderBitmaps(Page page) {
         ArrayList<Shape> shapes = page.getList();  // get list of shapes from page
 
+        // render the page's background
+        if(page.hasBackground()) {
+            int bitmapDrawableID = getResources().getIdentifier(page.getBackgroundName(),
+                    "drawable", getContext().getPackageName());
+            BitmapDrawable drawableBM =
+                    (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
+            Bitmap bm = drawableBM.getBitmap();
+            bm = Bitmap.createScaledBitmap(bm, 1100,
+                    1100, false);
+
+            page.updateBackgroundBitmap(bm);    // set internal bitmap
+        }
+
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
@@ -91,30 +104,6 @@ public class EditorView extends View {
 
         }
         invalidate();
-    }
-
-    /**
-     * Renders the current page in question on the canvas by calling the
-     * page's render function.
-     */
-    public void drawPage(Canvas canvas) {
-        if(currentPage != null) currentPage.render(canvas);
-    }
-
-    /**
-     * Deletes the currently selected shape if one exists & returns true
-     * upon success. Also will force the canvas to reflect this update.
-     * @return true/false bases upon success of deletion
-     */
-    public boolean deleteShape() {
-
-        // try to delete to a shape
-        if(currentPage != null && currentPage.getSelected() != null) {
-            currentPage.removeShape(currentPage.getSelected());
-            invalidate();
-            return true;
-        }
-        return false;   // no shape to delete
     }
 
     /**
@@ -157,6 +146,32 @@ public class EditorView extends View {
 
         invalidate();
     }
+
+    /**
+     * Renders the current page in question on the canvas by calling the
+     * page's render function.
+     */
+    public void drawPage(Canvas canvas) {
+        if(currentPage != null) currentPage.render(canvas);
+    }
+
+    /**
+     * Deletes the currently selected shape if one exists & returns true
+     * upon success. Also will force the canvas to reflect this update.
+     * @return true/false bases upon success of deletion
+     */
+    public boolean deleteShape() {
+
+        // try to delete to a shape
+        if(currentPage != null && currentPage.getSelected() != null) {
+            currentPage.removeShape(currentPage.getSelected());
+            invalidate();
+            return true;
+        }
+        return false;   // no shape to delete
+    }
+
+
 
     /**
      * Finds a shape that exists at the specified x, y coordinate and returns

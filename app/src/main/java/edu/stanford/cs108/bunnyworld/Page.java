@@ -1,5 +1,6 @@
 package edu.stanford.cs108.bunnyworld;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,6 +18,10 @@ public class Page {
     private Shape selected;     // holds onto the selected shape
     private Paint borderColor;  // color for selection box
     private Paint transBoxFill;
+
+    private boolean hasBackground;
+    private Bitmap background;
+    private String backgroundName;
 
 
     /**
@@ -52,6 +57,39 @@ public class Page {
     }
 
     /**
+     * Whether or not this page has a custom background assigned to it
+     * @return true or false for background
+     */
+    public boolean hasBackground() { return hasBackground; }
+
+
+    public void changeBackground(String selectedBackground) {
+        if(!hasBackground) hasBackground = true;
+        backgroundName = selectedBackground;
+    }
+
+    /**
+     * Get the background bitmap of this page.
+     * @return bitmap containing the background of this page.
+     */
+    public Bitmap getBackgroundBitmap() { return background; }
+
+    /**
+     * Get the name of the background for this page, where the name is the
+     * resource file for the background image
+     * @return resource file name for page background
+     */
+    public String getBackgroundName() { return backgroundName; }
+
+    /**
+     * Set the internal bitmap for this page's background internally
+     * @param background bitmap to update the page to
+     */
+    public void updateBackgroundBitmap(Bitmap background) {
+        this.background = background;
+    }
+
+    /**
      * Accessor method for the page's underlying arraylist of shapes.
      * Used to store the pages into the database.
      */
@@ -74,6 +112,11 @@ public class Page {
      */
     public void render(Canvas canvas) {
         Paint paint = null;
+
+        // if the page has a background, render that
+        if(hasBackground) {
+            canvas.drawBitmap(background, (float)0.0, (float)0.0, paint);
+        }
 
         // render each shape onto the canvas
         for(int i = 0; i < shapes.size(); i++) {
