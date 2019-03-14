@@ -44,13 +44,14 @@ public class EditorActivity extends AppCompatActivity {
     private Dialog addShapeDialog;
 
     String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
-            "fire", "mystic"};
+            "fire", "mystic", "patrick"};
     int[] imageIds = {R.drawable.carrot,
             R.drawable.carrot2,
             R.drawable.death,
             R.drawable.duck,
             R.drawable.fire,
-            R.drawable.mystic,};
+            R.drawable.mystic,
+            R.drawable.patrick,};
 
     private ArrayList<ShapeResource> shapeResources;
 
@@ -655,6 +656,12 @@ public class EditorActivity extends AppCompatActivity {
 
         CheckBox visibleInput = dialog.findViewById(R.id.visibleInput);
         visibleInput.setChecked(!shape.getHiddenStatus());
+
+        EditText imageNameInput = dialog.findViewById(R.id.imageNameInput);
+        imageNameInput.setText(shape.getImageName());
+
+        EditText textInput = dialog.findViewById(R.id.textInput);
+        textInput.setText(shape.getText());
     }
 
     /**
@@ -692,6 +699,14 @@ public class EditorActivity extends AppCompatActivity {
        CheckBox visibleInput = editShapeDialog.findViewById(R.id.visibleInput);
        boolean isVisible = visibleInput.isChecked();
        shape.setHidden(!isVisible);
+
+       EditText imageNameInput = editShapeDialog.findViewById(R.id.imageNameInput);
+       String imageNameText = imageNameInput.getText().toString();
+       // TODO: set image name text
+
+       EditText textInput = editShapeDialog.findViewById(R.id.textInput);
+       String textText = textInput.getText().toString();
+       shape.setText(textText);
 
        editorView.renderShape(shape);
 
