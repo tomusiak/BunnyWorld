@@ -535,9 +535,9 @@ public class EditorActivity extends AppCompatActivity {
         ArrayList<String> names = new ArrayList<>();
         names.addAll(pages.keySet());
         final String[] pageNames = names.toArray(new String[pages.size()]);
-        AlertDialog.Builder pageToRenamePrompt = new AlertDialog.Builder(this);
-        pageToRenamePrompt.setTitle("Page To Change Background Of: ");
-        pageToRenamePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder pageChangePrompt = new AlertDialog.Builder(this);
+        pageChangePrompt.setTitle("Page To Change Background Of: ");
+        pageChangePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 String pageName = pageNames[selection];
@@ -545,7 +545,7 @@ public class EditorActivity extends AppCompatActivity {
                 backgroundDialog(uniqueID);
             }
         });
-        pageToRenamePrompt.show();
+        pageChangePrompt.show();
     }
 
     /**
@@ -964,9 +964,9 @@ public class EditorActivity extends AppCompatActivity {
         final String[] gameList = db.returnGameList().toArray(new String[0]); // Obtains list of games.
         TextView textView = findViewById(R.id.edit_text);
         final String text = textView.getText().toString();
-        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this); // Prompts user for which game they would like to re-name.
-        newPagePrompt.setTitle("Which save would you like to rename? ");
-        newPagePrompt.setItems(gameList, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder renameSavePrompt = new AlertDialog.Builder(this); // Prompts user for which game they would like to re-name.
+        renameSavePrompt.setTitle("Which save would you like to rename? ");
+        renameSavePrompt.setItems(gameList, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 if (Arrays.asList(gameList).contains(text)) { // Ensures no save name duplicates (breaks database).
@@ -986,7 +986,7 @@ public class EditorActivity extends AppCompatActivity {
                 }
             }
         });
-        newPagePrompt.show();
+        renameSavePrompt.show();
     }
 
     /** Deletes a save from the database.
@@ -994,9 +994,9 @@ public class EditorActivity extends AppCompatActivity {
     public void deleteSave(View view) {
         final Database db = Database.getInstance(getApplicationContext());
         final String[] gameList = db.returnGameList().toArray(new String[0]);
-        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
-        newPagePrompt.setTitle("Which save would you like to delete? ");
-        newPagePrompt.setItems(gameList, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder deleteSavePrompt = new AlertDialog.Builder(this);
+        deleteSavePrompt.setTitle("Which save would you like to delete? ");
+        deleteSavePrompt.setItems(gameList, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 db.deleteSave(gameList[selection]);
@@ -1011,7 +1011,7 @@ public class EditorActivity extends AppCompatActivity {
                 }
             }
         });
-        newPagePrompt.show();
+        deleteSavePrompt.show();
     }
 
     /** Exits back to editor activity.
