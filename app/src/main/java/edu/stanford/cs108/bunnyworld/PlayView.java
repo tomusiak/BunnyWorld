@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -12,18 +13,22 @@ import android.view.View;
 import java.util.ArrayList;
 
 /**
- * Creates custom view for PlayActivity
+ * Creates cu
+ * stom view for PlayActivity
  */
 public class PlayView extends View {
 
     Shape selected;
     Page currentPage;
+    Inventory inventory;
 
     private int TRANSPARENT = Color.WHITE;
 
     float x1, y1;   // x and y coordinate of initial press to the screen
     float x2, y2;   // x and y coordinate of when user lifts finger
     float xDelta, yDelta;
+
+    float inventoryY;
 
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -35,6 +40,7 @@ public class PlayView extends View {
      */
     private void init() {
         selected = null;
+        inventory = new Inventory();
     }
 
     /**
@@ -47,6 +53,8 @@ public class PlayView extends View {
         if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
+        renderBitmaps(inventory); // render the inventory
+
         invalidate();
     }
 
@@ -58,6 +66,24 @@ public class PlayView extends View {
      */
     public void renderBitmaps(Page page) {
         ArrayList<Shape> shapes = page.getList();  // get list of shapes from page
+
+        // render the bitmap for each shape
+        for(int i = 0; i < shapes.size(); i++) {
+            Shape currentShape = shapes.get(i);
+            renderShape(currentShape);
+
+        }
+        invalidate();
+    }
+
+    /**
+     * Render all of the bitmap images for the current active inventory and
+     * save them to the page's shape objects. Each shape object stores
+     * its own bitmap inside.
+     * @param inventory
+     */
+    public void renderBitmaps(Inventory inventory) {
+        ArrayList<Shape> shapes = inventory.getList();  // get list of shapes from page
 
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
@@ -174,6 +200,20 @@ public class PlayView extends View {
                 if(currentPage != null && currentPage.getSelected() != null
                         && currentPage.getSelected().getMoveableStatus()) {
                     currentPage.getSelected().move(xDelta, yDelta);
+
+                    double starterY = currentPage.getSelected().getTop();
+                    double halfHeight = currentPage.getSelected().getHeight()/2;
+                    // move from play area to inventory IN PROGRESS
+                    if (starterY >= inventoryY+halfHeight && yDelta <= inventoryY+halfHeight) {
+                        inventory.addShape(currentPage.getSelected());
+                        currentPage.removeShape(currentPage.getSelected());
+                    }
+
+                    // move from inventory to play area IN PROGRESS
+                    if (starterY <= inventoryY+halfHeight && yDelta >= inventoryY+halfHeight) {
+                        inventory.addShape(currentPage.getSelected());
+                        currentPage.removeShape(currentPage.getSelected());
+                    }
                 }
 
                 invalidate();   // forces canvas update
@@ -194,6 +234,17 @@ public class PlayView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawPage(canvas);
+
+        float width = canvas.getWidth();
+        float height = canvas.getHeight();
+
+        inventoryY = (float)0.75*height;
+
+        Paint linePaint = new Paint();
+        linePaint.setColor(Color.BLACK);
+        linePaint.setStrokeWidth(2);
+
+        canvas.drawLine((float)0, (float)0.75*height, (float)width, (float)0.75*height, linePaint);
     }
 
 

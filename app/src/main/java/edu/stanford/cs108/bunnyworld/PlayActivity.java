@@ -45,27 +45,21 @@ public class PlayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
-        loadGame();
         playView = findViewById(R.id.play_view);
+        loadGame();
     }
 
     private void loadGame() {
-       /* // initializes database
+        // initializes database
         final Database db = Database.getInstance(getApplicationContext());
-
         // we can now do stuff with the view
-        playView = findViewById(R.id.play_view);
-
         setContentView( R.layout.database_load );
         ListView listView = findViewById( R.id.list_view );
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // gets the name of the gamestate we're loading
                 String product = ((TextView) view).getText().toString();
-                Toast pageNameToast = Toast.makeText(getApplicationContext(),product,Toast.LENGTH_SHORT);
-                pageNameToast.show();
 
                 // loads the hashmap from the database into the hashmap stored in this file
                 setPages(db.loadGame(product));
@@ -77,22 +71,21 @@ public class PlayActivity extends AppCompatActivity {
                 if (playView != null && page != null) {
                     playView.changeCurrentPage( page );
                 }
-                currentPage = getPages().get("page1");
                 displayNameToID = new HashMap<String, String>();
-                String startPage = null;
-                starterPage = currentPage;
+                starterPage = null;
                 for (String key : getPages().keySet()) {
                     Page cPage = getPages().get(key);
                     String pageName = cPage.getDisplayName();
                     displayNameToID.put(key,pageName);
                     if (cPage.getStarterPageStatus() == true) {
-                        startPage = key;
                         starterPage = cPage;
                     }
                 }
-                playView = findViewById(R.id.play_view);
-                if (pageMap != null) {
+                if (playView != null) {
+                    Toast pageNameToast = Toast.makeText(getApplicationContext(),product,Toast.LENGTH_SHORT);
+                    pageNameToast.show();
                     playView.changeCurrentPage(starterPage);
+                    setContentView(R.layout.activity_play);
                 }
             }
         });
@@ -105,7 +98,7 @@ public class PlayActivity extends AppCompatActivity {
             if (listView != null) {
                 listView.setAdapter( itemsAdapter );
             }
-        }*/
+        }
     }
 
     /**
