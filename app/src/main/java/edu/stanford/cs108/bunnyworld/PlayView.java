@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -28,10 +29,17 @@ public class PlayView extends View {
     float xDelta, yDelta;
 
     float inventoryY;
+    Paint myPaint = new Paint();
+    Paint selectPaint = new Paint();
 
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
+        myPaint.setColor(Color.rgb(255,0,0));
+        myPaint.setStyle(Paint.Style.FILL);
+
+        selectPaint.setColor(Color.rgb(0,0,255));
+        selectPaint.setStyle(Paint.Style.STROKE);
     }
 
     /**
@@ -39,7 +47,7 @@ public class PlayView extends View {
      */
     private void init() {
         selected = null;
-        inventory = new Inventory();
+//        inventory = new Inventory();
     }
 
     /**
@@ -51,9 +59,10 @@ public class PlayView extends View {
         // set selected to null before changing the page
         if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
-        renderBitmaps(page); // render all the bitmaps for the page
-        renderBitmaps(inventory); // render the inventory
 
+        System.out.println(currentPage.getDisplayName());
+        renderBitmaps(page); // render all the bitmaps for the page
+//        renderBitmaps(inventory); // render the inventory
         invalidate();
     }
 
@@ -155,7 +164,6 @@ public class PlayView extends View {
         shape.setBitmap(myBitmap);
         shape.setWidth(myBitmap.getWidth());
         shape.setHeight(myBitmap.getHeight());
-
         invalidate();
     }
 
@@ -164,7 +172,7 @@ public class PlayView extends View {
      * page's render function.
      */
     public void drawPage(Canvas canvas) {
-        if(currentPage != null) currentPage.playRender(canvas);
+        if(currentPage != null) currentPage.render(canvas);
     }
 
     /**
@@ -262,17 +270,6 @@ public class PlayView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawPage(canvas);
-
-        float width = canvas.getWidth();
-        float height = canvas.getHeight();
-
-        inventoryY = (float)0.75*height;
-
-        Paint linePaint = new Paint();
-        linePaint.setColor(Color.BLACK);
-        linePaint.setStrokeWidth(2);
-
-        canvas.drawLine((float)0, (float)0.75*height, (float)width, (float)0.75*height, linePaint);
     }
 
 

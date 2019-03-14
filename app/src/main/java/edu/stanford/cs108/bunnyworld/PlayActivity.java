@@ -22,9 +22,9 @@ public class PlayActivity extends AppCompatActivity {
     // Commented out this first line and replaced with a Hashmap<String, Page> to match agreed upon structures
     //static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
     static HashMap<String, Page> pageMap; // Maps string keys to page objects
-    Page currentPage;
-    String currPage;
-    PlayView playView;
+    private Page currentPage;
+    private String currPage;
+    private PlayView playView;
     private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
     private Page starterPage; // Tracks user-selected starter page
 
@@ -46,6 +46,19 @@ public class PlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         playView = findViewById(R.id.play_view);
+        if (pageMap != null) {
+            String startingPage = null;
+            for (String key : getPages().keySet()) {
+                Page currentPage = getPages().get(key);
+                String pageName = currentPage.getDisplayName();
+                displayNameToID.put(key,pageName);
+                if (currentPage.getStarterPageStatus() == true) {
+                    startingPage = key;
+                    starterPage = currentPage;
+                }
+            }
+            playView.changeCurrentPage(pageMap.get(startingPage));
+        }
         loadGame();
     }
 
@@ -63,19 +76,35 @@ public class PlayActivity extends AppCompatActivity {
                 String product = ((TextView) view).getText().toString(); // Obtains game user chose.
                 setPages(db.loadGame(product)); // Loads the hashmap from the database into the hashmap stored in this file
                 displayNameToID = new HashMap<String, String>();
-                starterPage = null;
+                Page cPage = null;
+                Page startPage = null;
                 for (String key : getPages().keySet()) { // Sets the starter page to the correct page, fills in page keys to names.
-                    Page cPage = getPages().get(key);
+                    cPage = getPages().get(key);
                     String pageName = cPage.getDisplayName();
                     displayNameToID.put(key,pageName);
                     if (cPage.getStarterPageStatus() == true) {
-                        starterPage = cPage;
+                        startPage = cPage;
                     }
                 }
                 Toast successToast = Toast.makeText(getApplicationContext(),"Loading successful.",Toast.LENGTH_SHORT); // Informs user of successful load.
                 successToast.show();
                 setContentView(R.layout.activity_play); // Goes into play activity.
-                playView.changeCurrentPage(starterPage); // Changes to starter page.
+                starterPage = cPage;
+                playView.changeCurrentPage(startPage); // Changes to starter page.
+                playView = findViewById(R.id.play_view);
+                if (pageMap != null) {
+                    String startingPage = null;
+                    for (String key : getPages().keySet()) {
+                        Page currentPage = getPages().get(key);
+                        String pageName = currentPage.getDisplayName();
+                        displayNameToID.put(key,pageName);
+                        if (currentPage.getStarterPageStatus() == true) {
+                            startingPage = key;
+                            starterPage = currentPage;
+                        }
+                    }
+                    playView.changeCurrentPage(pageMap.get(startingPage));
+                }
             }
         });
         String[] gameList = db.returnGameList().toArray( new String[0] ); // Shows list of games.
@@ -93,11 +122,11 @@ public class PlayActivity extends AppCompatActivity {
      * Helper method to switch between pages
      * @param pageName the page to switch to
      */
-    private void switchPages(String pageName) {
-        currPage = pageName;
-        Page nextPage = pageMap.get(pageName);
-        playView.changeCurrentPage(nextPage);
-    }
+//    private void switchPages(String pageName) {
+//        currPage = pageName;
+//        Page nextPage = pageMap.get(pageName);
+//        playView.changeCurrentPage(nextPage);
+//    }
 
     /** Helper method to get pages
      * @return pages
@@ -119,52 +148,52 @@ public class PlayActivity extends AppCompatActivity {
         //pageMap = thisDatabase.loadGame(saveName);
     }
 
-    /**
-     * Executes script of given Shape
-     * @param thisShape the shape to be executed
-     */
-    public void executeScript(Shape thisShape) {
-        // not case-sensitive
-        String script = thisShape.getScript().toLowerCase();
-
-        // splits block of script into clauses
-        String[] clauses = script.split(";");
-
-        // uses loop to execute each clause
-        for (int i = 0; i < clauses.length; i++) {
-
-            // splits each clause into tokens based on whitespace delimiter
-            String[] tokens = clauses[i].split("\\s+");
-
-            // index of first start action
-            int actionStart = 2;
-
-            if (tokens[1].equals(CLICK)) {
-
-            } else if (tokens[1].equals(ENTER)) {
-
-            } else if (tokens[1].equals(DROP)) {
-                String shape = tokens[2];
-                actionStart = 3;
-            }
-
-            // parse triggers
-            for (int j = actionStart; j < tokens.length; j+=2) {
-                String command = tokens[j];
-                if (command.equals(GOTO)) {
-                    switchPages(tokens[j+1]);
-                } else if (command.equals(PLAY)) {
-                    playSound(tokens[j+1]);
-                } else if (command.equals(HIDE)) {
-                    hideShape(tokens[j+1]);
-                } else if (command.equals(SHOW)) {
-                    showShape(tokens[j+1]);
-                } else {
-                    return;
-                }
-            }
-        }
-    }
+//    /**
+//     * Executes script of given Shape
+//     * @param thisShape the shape to be executed
+//     */
+//    public void executeScript(Shape thisShape) {
+//        // not case-sensitive
+//        String script = thisShape.getScript().toLowerCase();
+//
+//        // splits block of script into clauses
+//        String[] clauses = script.split(";");
+//
+//        // uses loop to execute each clause
+//        for (int i = 0; i < clauses.length; i++) {
+//
+//            // splits each clause into tokens based on whitespace delimiter
+//            String[] tokens = clauses[i].split("\\s+");
+//
+//            // index of first start action
+//            int actionStart = 2;
+//
+//            if (tokens[1].equals(CLICK)) {
+//
+//            } else if (tokens[1].equals(ENTER)) {
+//
+//            } else if (tokens[1].equals(DROP)) {
+//                String shape = tokens[2];
+//                actionStart = 3;
+//            }
+//
+//            // parse triggers
+//            for (int j = actionStart; j < tokens.length; j+=2) {
+//                String command = tokens[j];
+//                if (command.equals(GOTO)) {
+//                    switchPages(tokens[j+1]);
+//                } else if (command.equals(PLAY)) {
+//                    playSound(tokens[j+1]);
+//                } else if (command.equals(HIDE)) {
+//                    hideShape(tokens[j+1]);
+//                } else if (command.equals(SHOW)) {
+//                    showShape(tokens[j+1]);
+//                } else {
+//                    return;
+//                }
+//            }
+//        }
+//    }
 
     private void playSound (String soundName) {
 
