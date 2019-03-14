@@ -319,8 +319,6 @@ public class EditorActivity extends AppCompatActivity {
                         addShapeToEditor(resource.getShapeName());
                         addShapeDialog.dismiss();
                     }
-
-
                 }
             });
 
@@ -506,7 +504,12 @@ public class EditorActivity extends AppCompatActivity {
      * Prompts the user to select which background to set for page -- hands off to changeBackground()
      */
     private void backgroundDialog(final String uniqueID) {
-        final String[] backgroundList = new String[]{"Background1", "Background2", "Background3", "Background4", "Background5", "Background6"};
+        final String[] backgroundList = new String[]{"coffeeshop",
+                "gates", "Background3", "Background4",
+                "Background5", "Background6"};
+        final String[] backgroundFiles = new String[]{"coffeeshop",
+                "gates", "Background3", "Background4",
+                "Background5", "Background6"};
         AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
         playPrompt.setTitle("Select Background: ");
         playPrompt.setItems(backgroundList, new DialogInterface.OnClickListener() {
@@ -523,6 +526,9 @@ public class EditorActivity extends AppCompatActivity {
      * Changes the background of the parameterized page associated with the uniqueID
      */
     private void changeBackground(String uniqueID, String background) {
+
+        currentPage.changeBackground(background);
+        editorView.renderBitmaps(currentPage);
 
         Toast backgroundToast = Toast.makeText(getApplicationContext(), "Background Changed", Toast.LENGTH_SHORT);
         backgroundToast.show();

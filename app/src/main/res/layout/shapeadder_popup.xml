@@ -14,7 +14,7 @@ android:layout_height="wrap_content">
     android:layout_marginLeft="4dp"
     android:layout_marginRight="4dp"
     android:layout_marginBottom="4dp"
-    android:text="   Choose a shape to add to the page!"
+    android:text="Choose a shape to add to the page!"
     android:textSize="20dp"
     android:layout_gravity="center_horizontal"/>
 
