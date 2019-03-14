@@ -2,6 +2,7 @@ package edu.stanford.cs108.bunnyworld;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -183,7 +184,34 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     private void playSound (String soundName) {
-
+        if (soundName.equals("carrotcarrotcarrot")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.carrotcarrotcarrot);
+            mp.start();
+        }
+        else if (soundName.equals("evillaugh")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.evillaugh);
+            mp.start();
+        }
+        else if (soundName.equals("fire")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.fire);
+            mp.start();
+        }
+        else if (soundName.equals("hooray")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.hooray);
+            mp.start();
+        }
+        else if (soundName.equals("munch")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.munch);
+            mp.start();
+        }
+        else if (soundName.equals("munching")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.munching);
+            mp.start();
+        }
+        else if (soundName.equals("woof")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.woof);
+            mp.start();
+        }
     }
 
     private void hideShape (String shapeName) {
