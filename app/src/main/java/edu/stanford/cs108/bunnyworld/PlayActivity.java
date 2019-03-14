@@ -130,47 +130,48 @@ public class PlayActivity extends AppCompatActivity {
      */
     public void executeScript(Shape thisShape) {
 
-        // TODO: delete references to Shape in clauses (arraylist cycle)
-
         // Executes only if Shape is not hidden/unplayable
         if (!thisShape.getHiddenStatus()) {
             // not case-sensitive
             String script = thisShape.getScript().toLowerCase();
 
-            // splits block of script into clauses
-            String[] clauses = script.split(";");
+            // Accounts for null script, in which case script will not execute
+            if (!script.equals("")) {
+                // splits block of script into clauses
+                String[] clauses = script.split(";");
 
-            // uses loop to execute each clause
-            for (int i = 0; i < clauses.length; i++) {
+                // uses loop to execute each clause
+                for (int i = 0; i < clauses.length; i++) {
 
-                // splits each clause into tokens based on whitespace delimiter
-                String[] tokens = clauses[i].split("\\s+");
+                    // splits each clause into tokens based on whitespace delimiter
+                    String[] tokens = clauses[i].split("\\s+");
 
-                // index of first start action
-                int actionStart = 2;
+                    // index of first start action
+                    int actionStart = 2;
 
-                if (tokens[1].equals(CLICK)) {
+                    if (tokens[1].equals(CLICK)) {
 
-                } else if (tokens[1].equals(ENTER)) {
+                    } else if (tokens[1].equals(ENTER)) {
 
-                } else if (tokens[1].equals(DROP)) {
-                    String shape = tokens[2];
-                    actionStart = 3;
-                }
+                    } else if (tokens[1].equals(DROP)) {
+                        String shape = tokens[2];
+                        actionStart = 3;
+                    }
 
-                // parse triggers
-                for (int j = actionStart; j < tokens.length; j+=2) {
-                    String command = tokens[j];
-                    if (command.equals(GOTO)) {
-                        switchPages(tokens[j+1]);
-                    } else if (command.equals(PLAY)) {
-                        playSound(tokens[j+1]);
-                    } else if (command.equals(HIDE)) {
-                        hideShape(tokens[j+1]);
-                    } else if (command.equals(SHOW)) {
-                        showShape(tokens[j+1]);
-                    } else {
-                        return;
+                    // parse triggers
+                    for (int j = actionStart; j < tokens.length; j+=2) {
+                        String command = tokens[j];
+                        if (command.equals(GOTO)) {
+                            switchPages(tokens[j+1]);
+                        } else if (command.equals(PLAY)) {
+                            playSound(tokens[j+1]);
+                        } else if (command.equals(HIDE)) {
+                            hideShape(tokens[j+1]);
+                        } else if (command.equals(SHOW)) {
+                            showShape(tokens[j+1]);
+                        } else {
+                            return;
+                        }
                     }
                 }
             }
