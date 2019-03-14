@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class PlayView extends View {
 
     Shape selected;
+    boolean inventorySelected; // is the last shape selected from the inventory?
     Page currentPage;
     Inventory inventory;
 
@@ -41,6 +42,8 @@ public class PlayView extends View {
 
         selectPaint.setColor(Color.rgb(0,0,255));
         selectPaint.setStyle(Paint.Style.STROKE);
+
+        inventorySelected = false;
     }
 
     /**
@@ -185,7 +188,7 @@ public class PlayView extends View {
      */
     public Shape shapeAtXY(double x, double y) {
 
-        if(currentPage == null) return null; // don't do anything if page just loaded
+        if(currentPage == null && inventory == null) return null; // don't do anything if page just loaded
 
         ArrayList<Shape> shapes = currentPage.getList();
 
@@ -195,6 +198,19 @@ public class PlayView extends View {
             // if the click is in bounds of this shape, return it
             if(x <= s.getRight() && x >= s.getLeft() &&
                     y >= s.getTop() && y <= s.getBottom()) {
+                inventorySelected = false;
+                return s;
+            }
+        }
+
+        ArrayList<Shape> inventoryShapes = inventory.getList();
+
+        for(int i = inventoryShapes.size() - 1; i >= 0; i--) {
+            Shape s = inventoryShapes.get(i);
+            // if the click is in bounds of this shape, return it
+            if(x <= s.getRight() && x >= s.getLeft() &&
+                    y >= s.getTop() && y <= s.getBottom()) {
+                inventorySelected = true;
                 return s;
             }
         }
@@ -220,7 +236,12 @@ public class PlayView extends View {
                 y1 = event.getY();
 
                 Shape selected = shapeAtXY(x1, y1);
-                if(currentPage != null) currentPage.selectShape(selected);
+                if (currentPage != null && !inventorySelected) {
+                    currentPage.selectShape(selected);
+                }
+                if (inventory != null && inventorySelected) {
+                    inventory.selectShape(selected);
+                }
 
                 break;
             // record coordinate where user lifts finger
@@ -244,9 +265,6 @@ public class PlayView extends View {
                     if (yDelta >= inventoryY+halfHeight) {
                         inventory.addShape(currentPage.getSelected());
                         currentPage.removeShape(currentPage.getSelected());
-
-                        invalidate();
-
                     }
 
 //                    // move from inventory to play area IN PROGRESS
