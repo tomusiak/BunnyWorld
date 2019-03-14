@@ -201,19 +201,19 @@ public class PlayView extends View {
                         && currentPage.getSelected().getMoveableStatus()) {
                     currentPage.getSelected().move(xDelta, yDelta);
 
-                    /*// move from play area to inventory IN PROGRESS
-                    if (currentPage.getSelected().getHeight()/2
-                            >= inventoryY + currentPage.getSelected().getHeight()/2) {
+                    double starterY = currentPage.getSelected().getTop();
+                    double halfHeight = currentPage.getSelected().getHeight()/2;
+                    // move from play area to inventory IN PROGRESS
+                    if (starterY >= inventoryY+halfHeight && yDelta <= inventoryY+halfHeight) {
                         inventory.addShape(currentPage.getSelected());
                         currentPage.removeShape(currentPage.getSelected());
                     }
 
                     // move from inventory to play area IN PROGRESS
-                    if (currentPage.getSelected().getTop()yDelta + currentPage.getSelected().getHeight()/2
-                            >= inventoryY + currentPage.getSelected().getHeight()/2) {
+                    if (starterY <= inventoryY+halfHeight && yDelta >= inventoryY+halfHeight) {
                         inventory.addShape(currentPage.getSelected());
                         currentPage.removeShape(currentPage.getSelected());
-                    }*/
+                    }
                 }
 
                 invalidate();   // forces canvas update
