@@ -18,6 +18,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Play mode for BunnyWorld
+ */
 public class PlayActivity extends AppCompatActivity {
 
     // Commented out this first line and replaced with a Hashmap<String, Page> to match agreed upon structures
@@ -85,6 +88,7 @@ public class PlayActivity extends AppCompatActivity {
                 successToast.show();
             }
         });
+        // Enables multiple games
         String[] gameList = db.returnGameList().toArray( new String[0] ); // Shows list of games.
         if (gameList != null) {
             ArrayAdapter<String> itemsAdapter =
@@ -167,6 +171,10 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Plays sound given result of parsed script
+     * @param soundName the name of the sound to be played
+     */
     private void playSound (String soundName) {
         if (soundName.equals("carrotcarrotcarrot")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.carrotcarrotcarrot);
@@ -198,6 +206,10 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets Shape to be hidden, or not executable
+     * @param shapeName the name of the Shape to be hidden
+     */
     private void hideShape (String shapeName) {
         // refer to toasts (checks in PlayView for isHidden() etc)
         // if it's hidden, it's not playable
@@ -211,6 +223,10 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets Shape to be not hidden, or executable
+     * @param shapeName the name of the Shape to be shown
+     */
     private void showShape (String shapeName) {
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).getShapeName().equals(shapeName)) {
@@ -219,5 +235,4 @@ public class PlayActivity extends AppCompatActivity {
             }
         }
     }
-
 }
