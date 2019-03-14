@@ -125,11 +125,11 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     /**
-     * Executes script of given Shape
-     * @param thisShape the shape to be executed
+     * Executes click scripts for Shape
+     * If Shape has multiple click scripts, only the first one is executed per spec requirements
+     * @param thisShape the Shape to be executed upon
      */
-    public void executeScript(Shape thisShape) {
-
+    public void executeClickScripts(Shape thisShape) {
         // Executes only if Shape is not hidden/unplayable
         if (!thisShape.getHiddenStatus()) {
             // not case-sensitive
@@ -152,13 +152,74 @@ public class PlayActivity extends AppCompatActivity {
                     if (tokens[1].equals(CLICK)) {
                         // add click condition, then call helper method to parse triggers
                         executeTriggers(tokens, actionStart);
-                    } else if (tokens[1].equals(ENTER)) {
-                        // add enter condition, then call helper method to parse triggers
+                        // only calls first click condition
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Executes enter scripts for Shape
+     * @param thisShape the Shape to be executed upon
+     */
+    public void executeEnterScripts(Shape thisShape) {
+        // Executes only if Shape is not hidden/unplayable
+        if (!thisShape.getHiddenStatus()) {
+            // not case-sensitive
+            String script = thisShape.getScript().toLowerCase();
+
+            // Accounts for null script, in which case script will not execute
+            if (!script.equals("")) {
+                // splits block of script into clauses
+                String[] clauses = script.split(";");
+
+                // uses loop to execute each clause
+                for (int i = 0; i < clauses.length; i++) {
+
+                    // splits each clause into tokens based on whitespace delimiter
+                    String[] tokens = clauses[i].split("\\s+");
+
+                    // index of first start action
+                    int actionStart = 2;
+
+                    if (tokens[1].equals(ENTER)) {
+                        // add click condition, then call helper method to parse triggers
                         executeTriggers(tokens, actionStart);
-                    } else if (tokens[1].equals(DROP)) {
-                        // String shape = tokens[2];
-                        actionStart = 3;
-                        // add drop condition, then call helper method to parse triggers
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Executes on drop scripts for Shape
+     * @param thisShape the Shape to be executed upon
+     */
+    public void executeDropScripts(Shape thisShape) {
+        // Executes only if Shape is not hidden/unplayable
+        if (!thisShape.getHiddenStatus()) {
+            // not case-sensitive
+            String script = thisShape.getScript().toLowerCase();
+
+            // Accounts for null script, in which case script will not execute
+            if (!script.equals("")) {
+                // splits block of script into clauses
+                String[] clauses = script.split(";");
+
+                // uses loop to execute each clause
+                for (int i = 0; i < clauses.length; i++) {
+
+                    // splits each clause into tokens based on whitespace delimiter
+                    String[] tokens = clauses[i].split("\\s+");
+
+                    // index of first start action
+                    // THREE instead of 2 because on drop is two words
+                    int actionStart = 3;
+
+                    if (tokens[1].equals(DROP)) {
+                        // add click condition, then call helper method to parse triggers
                         executeTriggers(tokens, actionStart);
                     }
                 }
