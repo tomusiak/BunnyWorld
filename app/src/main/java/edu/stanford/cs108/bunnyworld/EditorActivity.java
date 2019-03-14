@@ -404,7 +404,7 @@ public class EditorActivity extends AppCompatActivity {
                 ArrayList<Shape> shapes = page.getList();
                 for (int i = 0; i < shapes.size(); i++) {
                     // Breaks script into clauses
-                    String script = shapes.get(i).getScript();
+                    String script = shapes.get(i).getScript().toLowerCase();
                     String[] clauses = script.split(";");
                     // If clause contains that Shape name, delete clause
                     for (int j = 0; j < clauses.length; j++) {
