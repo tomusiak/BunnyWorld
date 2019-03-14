@@ -216,6 +216,7 @@ public class PlayView extends View {
         }
 
         inventorySelected = false;
+        selected = null;
         return null; // no shape is here
     }
 
@@ -237,25 +238,26 @@ public class PlayView extends View {
                 y1 = event.getY();
 
                 Shape selected = shapeAtXY(x1, y1);
-                if (currentPage != null && !inventorySelected) {
+
+                if (currentPage != null && !inventorySelected && selected != null) {
                     currentPage.selectShape(selected);
                 }
-                if (inventory != null && inventorySelected) {
+                if (inventory != null && inventorySelected && selected != null) {
                     inventory.selectShape(selected);
                 }
-
                 break;
+
             // record coordinate where user lifts finger
             case MotionEvent.ACTION_UP:
                 x2 = event.getX();
                 y2 = event.getY();
 
+                currentPage.selectShape(null);
+                inventory.selectShape(null);
+
             case MotionEvent.ACTION_MOVE:
                 xDelta = event.getX();
                 yDelta = event.getY();
-
-                double starterY = currentPage.getSelected().getTop();
-                double halfHeight = currentPage.getSelected().getHeight()/2;
 
                 // only enable moving the page if isMoveable == true
                 if (currentPage != null && currentPage.getSelected() != null
@@ -263,6 +265,7 @@ public class PlayView extends View {
                     currentPage.getSelected().move(xDelta, yDelta);
 
                     // move from play area to inventory
+                    double halfHeight = currentPage.getSelected().getHeight()/2;
                     if (y1 <= inventoryY+halfHeight && yDelta >= inventoryY+halfHeight) {
                         inventory.addShape(currentPage.getSelected());
                         currentPage.removeShape(currentPage.getSelected());
@@ -272,10 +275,12 @@ public class PlayView extends View {
                 if (inventory != null && inventory.getSelected() != null) {
                     inventory.getSelected().move(xDelta, yDelta);
 
-                    // move from inventory to play area IN PROGRESS
+                    // move from inventory to play area
+                    double halfHeight = inventory.getSelected().getHeight()/2;
                     if (y1 >= inventoryY+halfHeight && yDelta <= inventoryY+halfHeight) {
                         currentPage.addShape(inventory.getSelected());
                         inventory.removeShape(inventory.getSelected());
+                        inventorySelected = false;
                     }
                 }
 

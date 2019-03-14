@@ -51,6 +51,7 @@ public class PlayActivity extends AppCompatActivity {
         setContentView(R.layout.activity_play); // goes to play activity
         playView = findViewById(R.id.play_view); // initializes play view
         loadGame();
+        checkForEntryScript();
     }
 
     /** Loads a game from the database. Allows user to select which game to load.
@@ -279,6 +280,10 @@ public class PlayActivity extends AppCompatActivity {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.munching);
             mp.start();
         }
+        else if (soundName.equals("scream")) {
+            MediaPlayer mp = MediaPlayer.create(this, R.raw.scream);
+            mp.start();
+        }
         else if (soundName.equals("woof")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.woof);
             mp.start();
@@ -313,5 +318,13 @@ public class PlayActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    /**
+     * Checks for "on enter" scripts that should be executed at the beginning
+     * of the game.
+     */
+    private void checkForEntryScript() {
+
     }
 }
