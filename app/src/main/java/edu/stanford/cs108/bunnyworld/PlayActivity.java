@@ -47,17 +47,6 @@ public class PlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play); // goes to play activity
         playView = findViewById(R.id.play_view); // initializes play view
-        if (pageMap != null) {
-            String startingPage = null;
-            for (String key : getPages().keySet()) {
-                Page currentPage = getPages().get(key);
-                if (currentPage.getStarterPageStatus() == true) {
-                    startingPage = key;
-                    starterPage = currentPage;
-                }
-            }
-            playView.changeCurrentPage(pageMap.get(startingPage));
-        }
         loadGame();
     }
 
@@ -78,6 +67,7 @@ public class PlayActivity extends AppCompatActivity {
 
                 setContentView(R.layout.activity_play); // Goes into play activity.
                 playView = findViewById(R.id.play_view);
+
                 if (pageMap != null) {
                     String startingPage = null;
                     for (String key : getPages().keySet()) {
@@ -130,11 +120,11 @@ public class PlayActivity extends AppCompatActivity {
         // System.out.println("pages");
     }
 
-    // Imports save data once user decides to play.
+   /* // Imports save data once user decides to play.
     public void grabDatabase(String saveName) {
         Database thisDatabase = Database.getInstance(getApplicationContext()); // Gets context.
         //pageMap = thisDatabase.loadGame(saveName);
-    }
+    }*/
 
     /**
      * Executes script of given Shape
