@@ -434,6 +434,9 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Copies selected Shape and associated properties
+     */
     private void copyShape() {
         Shape selectedShape = currentPage.getSelected();
         if (selectedShape == null) {
@@ -444,6 +447,10 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Pastes the currently copied Shape and associated properties
+     * Error if there is no currently copied Shape
+     */
     private void pasteShape() {
         if (copiedShape == null) {
             Toast shapeCopyError = Toast.makeText(getApplicationContext(), "No Shape Copied", Toast.LENGTH_SHORT);
@@ -454,7 +461,10 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
-    private void undoShapeDelete() {
+    /**
+     * Undo functionality to undo Shape deletion
+     */
+    private void undoShapeDelete() {f
         currentPage.addShape(undoShapeDelete);
         editorView.renderShape(undoShapeDelete);  // renders the bitmaps for the newly added shape
         undoShapeDelete = null;
@@ -495,7 +505,9 @@ public class EditorActivity extends AppCompatActivity {
         deletePagePrompt.show();
     }
 
-    // prompts the user to select which page (of the created pages) to rename
+    /**
+     * Prompts the user to select which page (of the created pages) to rename
+     */
     private void selectPageToRenameDialog() {
         ArrayList<String> names = new ArrayList<>();
         names.addAll(getPages().keySet());
@@ -612,6 +624,9 @@ public class EditorActivity extends AppCompatActivity {
         backgroundToast.show();
     }
 
+    /**
+     * Allows user to select starter page for their game
+     */
     private void selectStarterPage() {
         ArrayList<String> names = new ArrayList<>();
         names.addAll(pages.keySet());
@@ -623,6 +638,7 @@ public class EditorActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int selection) {
                 String pageName = pageNames[selection];
                 String uniqueID = displayNameToID.get(pageName);
+                // Uses unique internal ID to track page in case name is changed
                 Page selectedPage = pages.get(uniqueID);
                 for (Page page : pages.values()) {
                     if (page.getStarterPageStatus()) page.setStarterPageStatus(false);
@@ -634,6 +650,9 @@ public class EditorActivity extends AppCompatActivity {
         starterPagePrompt.show();
     }
 
+    /**
+     * Undo support for page deletion
+     */
     private void undoPageDelete() {
         displayNameToID.put(undoPageDelete.getDisplayName(), undoPageDelete.getPageID());
 
