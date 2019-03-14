@@ -58,8 +58,6 @@ public class EditorView extends View {
      */
     private void init() {
         selected = null;
-
-
     }
 
     /**

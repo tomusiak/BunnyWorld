@@ -13,8 +13,7 @@ import android.view.View;
 import java.util.ArrayList;
 
 /**
- * Creates cu
- * stom view for PlayActivity
+ * Creates custom view for PlayActivity
  */
 public class PlayView extends View {
 
@@ -67,6 +66,19 @@ public class PlayView extends View {
     public void renderBitmaps(Page page) {
         ArrayList<Shape> shapes = page.getList();  // get list of shapes from page
 
+        // render the page's background
+        if(page.hasBackground()) {
+            int bitmapDrawableID = getResources().getIdentifier(page.getBackgroundName(),
+                    "drawable", getContext().getPackageName());
+            BitmapDrawable drawableBM =
+                    (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
+            Bitmap bm = drawableBM.getBitmap();
+            bm = Bitmap.createScaledBitmap(bm, 1100,
+                    1100, false);
+
+            page.updateBackgroundBitmap(bm);    // set internal bitmap
+        }
+
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
@@ -84,6 +96,19 @@ public class PlayView extends View {
      */
     public void renderBitmaps(Inventory inventory) {
         ArrayList<Shape> shapes = inventory.getList();  // get list of shapes from page
+
+        // render the page's background
+        if(inventory.hasBackground()) {
+            int bitmapDrawableID = getResources().getIdentifier(inventory.getBackgroundName(),
+                    "drawable", getContext().getPackageName());
+            BitmapDrawable drawableBM =
+                    (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
+            Bitmap bm = drawableBM.getBitmap();
+            bm = Bitmap.createScaledBitmap(bm, 1100,
+                    1100, false);
+
+            inventory.updateBackgroundBitmap(bm);    // set internal bitmap
+        }
 
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
@@ -123,10 +148,13 @@ public class PlayView extends View {
         Bitmap myBitmap = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
         myBitmap.setPixels(pixels, 0, bm.getWidth(), 0, 0, bm.getWidth(), bm.getHeight());
 
+        myBitmap = Bitmap.createScaledBitmap(myBitmap, (int)shape.getWidth(),
+                (int)shape.getHeight(), false);
+
         // update the shape's internal bitmap and set its attributes
         shape.setBitmap(myBitmap);
-        shape.setWidth(bm.getWidth());
-        shape.setHeight(bm.getHeight());
+        shape.setWidth(myBitmap.getWidth());
+        shape.setHeight(myBitmap.getHeight());
 
         invalidate();
     }

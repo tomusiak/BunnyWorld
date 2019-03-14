@@ -74,8 +74,8 @@ public class PlayActivity extends AppCompatActivity {
                 }
                 Toast successToast = Toast.makeText(getApplicationContext(),"Loading successful.",Toast.LENGTH_SHORT); // Informs user of successful load.
                 successToast.show();
-                playView.changeCurrentPage(starterPage); // Changes to starter page.
                 setContentView(R.layout.activity_play); // Goes into play activity.
+                playView.changeCurrentPage(starterPage); // Changes to starter page.
             }
         });
         String[] gameList = db.returnGameList().toArray( new String[0] ); // Shows list of games.
