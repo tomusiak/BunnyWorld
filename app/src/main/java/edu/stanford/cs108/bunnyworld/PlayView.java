@@ -19,7 +19,7 @@ public class PlayView extends View {
 
     Shape selected;
     Page currentPage;
-    Page inventory;
+    Inventory inventory;
 
     private int TRANSPARENT = Color.WHITE;
 
@@ -39,6 +39,7 @@ public class PlayView extends View {
      */
     private void init() {
         selected = null;
+        inventory = new Inventory();
     }
 
     /**
@@ -51,6 +52,7 @@ public class PlayView extends View {
         if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
+        renderBitmaps(inventory); // render the inventory
 
         invalidate();
     }
@@ -63,6 +65,24 @@ public class PlayView extends View {
      */
     public void renderBitmaps(Page page) {
         ArrayList<Shape> shapes = page.getList();  // get list of shapes from page
+
+        // render the bitmap for each shape
+        for(int i = 0; i < shapes.size(); i++) {
+            Shape currentShape = shapes.get(i);
+            renderShape(currentShape);
+
+        }
+        invalidate();
+    }
+
+    /**
+     * Render all of the bitmap images for the current active inventory and
+     * save them to the page's shape objects. Each shape object stores
+     * its own bitmap inside.
+     * @param inventory
+     */
+    public void renderBitmaps(Inventory inventory) {
+        ArrayList<Shape> shapes = inventory.getList();  // get list of shapes from page
 
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
@@ -180,9 +200,19 @@ public class PlayView extends View {
                         && currentPage.getSelected().getMoveableStatus()) {
                     currentPage.getSelected().move(xDelta, yDelta);
 
-                    if (yDelta >= inventoryY + currentPage.getSelected().getHeight()/2) {
-                        // add this to the inventory page
+                    /*// move from play area to inventory IN PROGRESS
+                    if (currentPage.getSelected().getHeight()/2
+                            >= inventoryY + currentPage.getSelected().getHeight()/2) {
+                        inventory.addShape(currentPage.getSelected());
+                        currentPage.removeShape(currentPage.getSelected());
                     }
+
+                    // move from inventory to play area IN PROGRESS
+                    if (currentPage.getSelected().getTop()yDelta + currentPage.getSelected().getHeight()/2
+                            >= inventoryY + currentPage.getSelected().getHeight()/2) {
+                        inventory.addShape(currentPage.getSelected());
+                        currentPage.removeShape(currentPage.getSelected());
+                    }*/
                 }
 
                 invalidate();   // forces canvas update
