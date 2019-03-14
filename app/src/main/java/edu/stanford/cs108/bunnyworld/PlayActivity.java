@@ -120,12 +120,6 @@ public class PlayActivity extends AppCompatActivity {
         // System.out.println("pages");
     }
 
-   /* // Imports save data once user decides to play.
-    public void grabDatabase(String saveName) {
-        Database thisDatabase = Database.getInstance(getApplicationContext()); // Gets context.
-        //pageMap = thisDatabase.loadGame(saveName);
-    }*/
-
     /**
      * Executes script of given Shape
      * @param thisShape the shape to be executed

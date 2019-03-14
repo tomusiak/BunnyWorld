@@ -48,7 +48,7 @@ public class PlayView extends View {
      */
     private void init() {
         selected = null;
-//        inventory = new Inventory();
+        inventory = new Inventory();
     }
 
     /**
@@ -60,10 +60,8 @@ public class PlayView extends View {
         // set selected to null before changing the page
         if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
-
-        System.out.println(currentPage.getDisplayName());
         renderBitmaps(page); // render all the bitmaps for the page
-//        renderBitmaps(inventory); // render the inventory
+        renderBitmaps(inventory); // render the inventory
         invalidate();
     }
 
@@ -174,6 +172,7 @@ public class PlayView extends View {
      */
     public void drawPage(Canvas canvas) {
         if(currentPage != null) currentPage.render(canvas);
+        if (inventory != null) inventory.render(canvas);
     }
 
     /**
@@ -237,15 +236,19 @@ public class PlayView extends View {
                 if(currentPage != null && currentPage.getSelected() != null
                         && currentPage.getSelected().getMoveableStatus()) {
                     currentPage.getSelected().move(xDelta, yDelta);
-//
-//                    double starterY = currentPage.getSelected().getTop();
-//                    double halfHeight = currentPage.getSelected().getHeight()/2;
-//                    // move from play area to inventory IN PROGRESS
-//                    if (starterY >= inventoryY+halfHeight && yDelta <= inventoryY+halfHeight) {
-//                        inventory.addShape(currentPage.getSelected());
-//                        currentPage.removeShape(currentPage.getSelected());
-//                    }
-//
+
+                    double starterY = currentPage.getSelected().getTop();
+                    double halfHeight = currentPage.getSelected().getHeight()/2;
+
+                    // move from play area to inventory
+                    if (yDelta >= inventoryY+halfHeight) {
+                        inventory.addShape(currentPage.getSelected());
+                        currentPage.removeShape(currentPage.getSelected());
+
+                        invalidate();
+
+                    }
+
 //                    // move from inventory to play area IN PROGRESS
 //                    if (starterY <= inventoryY+halfHeight && yDelta >= inventoryY+halfHeight) {
 //                        inventory.addShape(currentPage.getSelected());
