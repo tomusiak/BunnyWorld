@@ -234,12 +234,32 @@ public class EditorActivity extends AppCompatActivity {
     private void showScript() {
         Shape selectedShape = currentPage.getSelected();
         if (selectedShape != null) {
-            Dialog shapeScriptDialog = new Dialog(this);
-            shapeScriptDialog.setTitle(selectedShape.getScript());
+            String scriptText = selectedShape.getScript();
+            if (scriptText.isEmpty()) {
+                Toast scriptEmptyToast = Toast.makeText(getApplicationContext(), "Shape Does Not Have Script", Toast.LENGTH_SHORT);
+                scriptEmptyToast.show();
+            } else {
+                Dialog shapeScriptDialog = new Dialog(this);
+                shapeScriptDialog.setTitle(selectedShape.getScript());
+                final TextView script = new TextView(this);
+                script.setText(scriptText);
+                shapeScriptDialog.setContentView(script);
+                shapeScriptDialog.show();
+            }
         } else {
             // not able to show script because no shape selected
-            Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
-            addToast.show();
+            Toast showErrorToast = Toast.makeText(getApplicationContext(),"No Shape Was Selected",Toast.LENGTH_SHORT);
+            showErrorToast.show();
+        }
+    }
+
+    private void deleteScript() {
+        Shape selectedShape = currentPage.getSelected();
+        if (selectedShape != null) {
+            selectedShape.setScript("");
+        } else {
+            Toast selectErrorToast = Toast.makeText(getApplicationContext(), "No Shape Was Selected", Toast.LENGTH_SHORT);
+            selectErrorToast.show();
         }
     }
 
@@ -1060,7 +1080,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initialize spinner for script options
         final Spinner scriptSpinner = findViewById(R.id.scriptSpinner);
-        String[] scriptOptions = new String[]{"Script Options:", "Create Script", "Show Script"};
+        String[] scriptOptions = new String[]{"Script Options:", "Create Script", "Show Script", "Delete Script"};
         ArrayAdapter<String> scriptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, scriptOptions);
         scriptSpinner.setAdapter(scriptAdapter);
         scriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1073,6 +1093,10 @@ public class EditorActivity extends AppCompatActivity {
                         handleScript(view);
                         break;
                     case 2:
+                        showScript();
+                        break;
+                    case 3:
+                        deleteScript();
                         break;
                 }
                 scriptSpinner.setSelection(0);
