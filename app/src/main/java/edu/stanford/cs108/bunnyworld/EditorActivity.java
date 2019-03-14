@@ -408,12 +408,19 @@ public class EditorActivity extends AppCompatActivity {
                 // Removes correct page from pages
                 String pageName = pageNames[selection];
                 String uniqueID = displayNameToID.get(pageName);
-                getPages().remove(uniqueID);
-                displayNameToID.remove(pageName);
-                // TODO: update custom view to reflect this
-                // TODO: figure out starter page
-                Toast pageNameToast = Toast.makeText(getApplicationContext(), pageName + " Deleted",Toast.LENGTH_SHORT);
-                pageNameToast.show();
+                Page deletedPage = getPages().get(uniqueID);
+                if (deletedPage.equals(starterPage)) {
+                    Toast deleteErrorToast = Toast.makeText(getApplicationContext(), "Unable to Delete Starter Page",Toast.LENGTH_SHORT);
+                    deleteErrorToast.show();
+                } else {
+                    getPages().remove(uniqueID);
+                    displayNameToID.remove(pageName);
+                    // TODO: update custom view to reflect this (if delete page is curr page)
+                    if (deletedPage.equals(currentPage)) editorView.changeCurrentPage(starterPage);
+                    // TODO: figure out starter page
+                    Toast pageNameToast = Toast.makeText(getApplicationContext(), pageName + " Deleted",Toast.LENGTH_SHORT);
+                    pageNameToast.show();
+                }
             }
         });
         deleteShapePrompt.show();
@@ -809,7 +816,9 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void switchPages(String pageName) {
         currPage = pageName;
-        Page nextPage = pages.get(currPage);
+        String uniqueID = displayNameToID.get(pageName);
+        Page nextPage = pages.get(uniqueID);
+        currentPage = nextPage;
         editorView.changeCurrentPage(nextPage);
     }
 
