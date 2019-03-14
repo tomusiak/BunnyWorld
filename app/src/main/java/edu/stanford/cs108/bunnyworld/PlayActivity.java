@@ -45,59 +45,40 @@ public class PlayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
-        loadGame();
         playView = findViewById(R.id.play_view);
+        loadGame();
     }
 
+    /** Loads a game from the database. Allows user to select which game to load.
+     *  Replaces pageMap with saved pageMap. Moves into play activity and changes the
+     *  page.
+     */
     private void loadGame() {
-       /* // initializes database
-        final Database db = Database.getInstance(getApplicationContext());
-
-        // we can now do stuff with the view
-        playView = findViewById(R.id.play_view);
-
-        setContentView( R.layout.database_load );
+        final Database db = Database.getInstance(getApplicationContext()); // Initializes database.
+        setContentView( R.layout.database_load ); // Opens database view.
         ListView listView = findViewById( R.id.list_view );
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // Occurs when user selects a save game.
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                // gets the name of the gamestate we're loading
-                String product = ((TextView) view).getText().toString();
-                Toast pageNameToast = Toast.makeText(getApplicationContext(),product,Toast.LENGTH_SHORT);
-                pageNameToast.show();
-
-                // loads the hashmap from the database into the hashmap stored in this file
-                setPages(db.loadGame(product));
-
-                // sets the firstpage & ID to the firstpage & ID listed in the databse
-                String firstPage = db.returnFirstPage( product );
-                Page page = getPages().get(firstPage);
-
-                if (playView != null && page != null) {
-                    playView.changeCurrentPage( page );
-                }
-                currentPage = getPages().get("page1");
+                String product = ((TextView) view).getText().toString(); // Obtains game user chose.
+                setPages(db.loadGame(product)); // Loads the hashmap from the database into the hashmap stored in this file
                 displayNameToID = new HashMap<String, String>();
-                String startPage = null;
-                starterPage = currentPage;
-                for (String key : getPages().keySet()) {
+                starterPage = null;
+                for (String key : getPages().keySet()) { // Sets the starter page to the correct page, fills in page keys to names.
                     Page cPage = getPages().get(key);
                     String pageName = cPage.getDisplayName();
                     displayNameToID.put(key,pageName);
                     if (cPage.getStarterPageStatus() == true) {
-                        startPage = key;
                         starterPage = cPage;
                     }
                 }
-                playView = findViewById(R.id.play_view);
-                if (pageMap != null) {
-                    playView.changeCurrentPage(starterPage);
-                }
+                Toast successToast = Toast.makeText(getApplicationContext(),"Loading successful.",Toast.LENGTH_SHORT); // Informs user of successful load.
+                successToast.show();
+                playView.changeCurrentPage(starterPage); // Changes to starter page.
+                setContentView(R.layout.activity_play); // Goes into play activity.
             }
         });
-
-        String[] gameList = db.returnGameList().toArray( new String[0] );
+        String[] gameList = db.returnGameList().toArray( new String[0] ); // Shows list of games.
         if (gameList != null) {
             ArrayAdapter<String> itemsAdapter =
                     new ArrayAdapter<String>( PlayActivity.this, android.R.layout.test_list_item, gameList );
@@ -105,7 +86,7 @@ public class PlayActivity extends AppCompatActivity {
             if (listView != null) {
                 listView.setAdapter( itemsAdapter );
             }
-        }*/
+        }
     }
 
     /**
@@ -129,7 +110,7 @@ public class PlayActivity extends AppCompatActivity {
      */
     private void setPages(HashMap<String,Page> newPages) {
         pageMap = newPages;
-        System.out.println("pages");
+        // System.out.println("pages");
     }
 
     // Imports save data once user decides to play.
@@ -138,9 +119,13 @@ public class PlayActivity extends AppCompatActivity {
         //pageMap = thisDatabase.loadGame(saveName);
     }
 
-    public void executeScript(String script) {
+    /**
+     * Executes script of given Shape
+     * @param thisShape the shape to be executed
+     */
+    public void executeScript(Shape thisShape) {
         // not case-sensitive
-        script = script.toLowerCase();
+        String script = thisShape.getScript().toLowerCase();
 
         // splits block of script into clauses
         String[] clauses = script.split(";");
@@ -167,7 +152,7 @@ public class PlayActivity extends AppCompatActivity {
             for (int j = actionStart; j < tokens.length; j+=2) {
                 String command = tokens[j];
                 if (command.equals(GOTO)) {
-                    switchPage(tokens[j+1]);
+                    switchPages(tokens[j+1]);
                 } else if (command.equals(PLAY)) {
                     playSound(tokens[j+1]);
                 } else if (command.equals(HIDE)) {
@@ -181,20 +166,30 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
-    private void switchPage (String pageName) {
-
-    }
-
     private void playSound (String soundName) {
 
     }
 
     private void hideShape (String shapeName) {
+        // refer to toasts (checks in PlayView for isHidden() etc)
+        // if it's hidden, it's not playable
 
+        // check to see if it exists, then sets
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.get(i).getShapeName().equals(shapeName)) {
+                inventory.get(i).setHidden(true);
+                break;
+            }
+        }
     }
 
     private void showShape (String shapeName) {
-
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.get(i).getShapeName().equals(shapeName)) {
+                inventory.get(i).setHidden(false);
+                break;
+            }
+        }
     }
 
 }
