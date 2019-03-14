@@ -2,6 +2,7 @@ package edu.stanford.cs108.bunnyworld;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -17,14 +18,17 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Play mode for BunnyWorld
+ */
 public class PlayActivity extends AppCompatActivity {
 
     // Commented out this first line and replaced with a Hashmap<String, Page> to match agreed upon structures
     //static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
     static HashMap<String, Page> pageMap; // Maps string keys to page objects
-    Page currentPage;
-    String currPage;
-    PlayView playView;
+    private Page currentPage;
+    private String currPage;
+    private PlayView playView;
     private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
     private Page starterPage; // Tracks user-selected starter page
 
@@ -44,8 +48,8 @@ public class PlayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play);
-        playView = findViewById(R.id.play_view);
+        setContentView(R.layout.activity_play); // goes to play activity
+        playView = findViewById(R.id.play_view); // initializes play view
         loadGame();
     }
 
@@ -63,21 +67,28 @@ public class PlayActivity extends AppCompatActivity {
                 String product = ((TextView) view).getText().toString(); // Obtains game user chose.
                 setPages(db.loadGame(product)); // Loads the hashmap from the database into the hashmap stored in this file
                 displayNameToID = new HashMap<String, String>();
-                starterPage = null;
-                for (String key : getPages().keySet()) { // Sets the starter page to the correct page, fills in page keys to names.
-                    Page cPage = getPages().get(key);
-                    String pageName = cPage.getDisplayName();
-                    displayNameToID.put(key,pageName);
-                    if (cPage.getStarterPageStatus() == true) {
-                        starterPage = cPage;
+
+                setContentView(R.layout.activity_play); // Goes into play activity.
+                playView = findViewById(R.id.play_view);
+
+                if (pageMap != null) {
+                    String startingPage = null;
+                    for (String key : getPages().keySet()) {
+                        Page currentPage = getPages().get(key);
+                        String pageName = currentPage.getDisplayName();
+                        displayNameToID.put(key,pageName);
+                        if (currentPage.getStarterPageStatus() == true) {
+                            startingPage = key;
+                            starterPage = currentPage;
+                        }
                     }
+                    playView.changeCurrentPage(pageMap.get(startingPage));
                 }
                 Toast successToast = Toast.makeText(getApplicationContext(),"Loading successful.",Toast.LENGTH_SHORT); // Informs user of successful load.
                 successToast.show();
-                playView.changeCurrentPage(starterPage); // Changes to starter page.
-                setContentView(R.layout.activity_play); // Goes into play activity.
             }
         });
+        // Enables multiple games
         String[] gameList = db.returnGameList().toArray( new String[0] ); // Shows list of games.
         if (gameList != null) {
             ArrayAdapter<String> itemsAdapter =
@@ -113,63 +124,98 @@ public class PlayActivity extends AppCompatActivity {
         // System.out.println("pages");
     }
 
-    // Imports save data once user decides to play.
-    public void grabDatabase(String saveName) {
-        Database thisDatabase = Database.getInstance(getApplicationContext()); // Gets context.
-        //pageMap = thisDatabase.loadGame(saveName);
-    }
-
     /**
      * Executes script of given Shape
      * @param thisShape the shape to be executed
      */
     public void executeScript(Shape thisShape) {
-        // not case-sensitive
-        String script = thisShape.getScript().toLowerCase();
 
-        // splits block of script into clauses
-        String[] clauses = script.split(";");
+        // TODO: delete references to Shape in clauses (arraylist cycle)
 
-        // uses loop to execute each clause
-        for (int i = 0; i < clauses.length; i++) {
+        // Executes only if Shape is not hidden/unplayable
+        if (!thisShape.getHiddenStatus()) {
+            // not case-sensitive
+            String script = thisShape.getScript().toLowerCase();
 
-            // splits each clause into tokens based on whitespace delimiter
-            String[] tokens = clauses[i].split("\\s+");
+            // splits block of script into clauses
+            String[] clauses = script.split(";");
 
-            // index of first start action
-            int actionStart = 2;
+            // uses loop to execute each clause
+            for (int i = 0; i < clauses.length; i++) {
 
-            if (tokens[1].equals(CLICK)) {
+                // splits each clause into tokens based on whitespace delimiter
+                String[] tokens = clauses[i].split("\\s+");
 
-            } else if (tokens[1].equals(ENTER)) {
+                // index of first start action
+                int actionStart = 2;
 
-            } else if (tokens[1].equals(DROP)) {
-                String shape = tokens[2];
-                actionStart = 3;
-            }
+                if (tokens[1].equals(CLICK)) {
 
-            // parse triggers
-            for (int j = actionStart; j < tokens.length; j+=2) {
-                String command = tokens[j];
-                if (command.equals(GOTO)) {
-                    switchPages(tokens[j+1]);
-                } else if (command.equals(PLAY)) {
-                    playSound(tokens[j+1]);
-                } else if (command.equals(HIDE)) {
-                    hideShape(tokens[j+1]);
-                } else if (command.equals(SHOW)) {
-                    showShape(tokens[j+1]);
-                } else {
-                    return;
+                } else if (tokens[1].equals(ENTER)) {
+
+                } else if (tokens[1].equals(DROP)) {
+                    String shape = tokens[2];
+                    actionStart = 3;
+                }
+
+                // parse triggers
+                for (int j = actionStart; j < tokens.length; j+=2) {
+                    String command = tokens[j];
+                    if (command.equals(GOTO)) {
+                        switchPages(tokens[j+1]);
+                    } else if (command.equals(PLAY)) {
+                        playSound(tokens[j+1]);
+                    } else if (command.equals(HIDE)) {
+                        hideShape(tokens[j+1]);
+                    } else if (command.equals(SHOW)) {
+                        showShape(tokens[j+1]);
+                    } else {
+                        return;
+                    }
                 }
             }
         }
     }
 
+    /**
+     * Plays sound given result of parsed script
+     * @param soundName the name of the sound to be played
+     */
     private void playSound (String soundName) {
-
+        if (soundName.equals("carrotcarrotcarrot")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.carrotcarrotcarrot);
+            mp.start();
+        }
+        else if (soundName.equals("evillaugh")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.evillaugh);
+            mp.start();
+        }
+        else if (soundName.equals("fire")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.fire);
+            mp.start();
+        }
+        else if (soundName.equals("hooray")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.hooray);
+            mp.start();
+        }
+        else if (soundName.equals("munch")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.munch);
+            mp.start();
+        }
+        else if (soundName.equals("munching")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.munching);
+            mp.start();
+        }
+        else if (soundName.equals("woof")) {
+            MediaPlayer mp = MediaPlayer.create(this,R.raw.woof);
+            mp.start();
+        }
     }
 
+    /**
+     * Sets Shape to be hidden, or not executable
+     * @param shapeName the name of the Shape to be hidden
+     */
     private void hideShape (String shapeName) {
         // refer to toasts (checks in PlayView for isHidden() etc)
         // if it's hidden, it's not playable
@@ -183,6 +229,10 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets Shape to be not hidden, or executable
+     * @param shapeName the name of the Shape to be shown
+     */
     private void showShape (String shapeName) {
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).getShapeName().equals(shapeName)) {
@@ -191,5 +241,4 @@ public class PlayActivity extends AppCompatActivity {
             }
         }
     }
-
 }

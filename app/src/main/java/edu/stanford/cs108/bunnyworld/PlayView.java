@@ -7,18 +7,19 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
 
 /**
- * Creates cu
- * stom view for PlayActivity
+ * Creates custom view for PlayActivity
  */
 public class PlayView extends View {
 
     Shape selected;
+    boolean inventorySelected; // is the last shape selected from the inventory?
     Page currentPage;
     Inventory inventory;
 
@@ -29,10 +30,20 @@ public class PlayView extends View {
     float xDelta, yDelta;
 
     float inventoryY;
+    Paint myPaint = new Paint();
+    Paint selectPaint = new Paint();
+    Paint linePaint = new Paint();
 
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
+        myPaint.setColor(Color.rgb(255,0,0));
+        myPaint.setStyle(Paint.Style.FILL);
+
+        selectPaint.setColor(Color.rgb(0,0,255));
+        selectPaint.setStyle(Paint.Style.STROKE);
+
+        inventorySelected = false;
     }
 
     /**
@@ -54,7 +65,6 @@ public class PlayView extends View {
         currentPage = page;
         renderBitmaps(page); // render all the bitmaps for the page
         renderBitmaps(inventory); // render the inventory
-
         invalidate();
     }
 
@@ -66,6 +76,19 @@ public class PlayView extends View {
      */
     public void renderBitmaps(Page page) {
         ArrayList<Shape> shapes = page.getList();  // get list of shapes from page
+
+        // render the page's background
+        if(page.hasBackground()) {
+            int bitmapDrawableID = getResources().getIdentifier(page.getBackgroundName(),
+                    "drawable", getContext().getPackageName());
+            BitmapDrawable drawableBM =
+                    (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
+            Bitmap bm = drawableBM.getBitmap();
+            bm = Bitmap.createScaledBitmap(bm, 1100,
+                    1100, false);
+
+            page.updateBackgroundBitmap(bm);    // set internal bitmap
+        }
 
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
@@ -84,6 +107,19 @@ public class PlayView extends View {
      */
     public void renderBitmaps(Inventory inventory) {
         ArrayList<Shape> shapes = inventory.getList();  // get list of shapes from page
+
+        // render the page's background
+        if(inventory.hasBackground()) {
+            int bitmapDrawableID = getResources().getIdentifier(inventory.getBackgroundName(),
+                    "drawable", getContext().getPackageName());
+            BitmapDrawable drawableBM =
+                    (BitmapDrawable) getResources().getDrawable(bitmapDrawableID);
+            Bitmap bm = drawableBM.getBitmap();
+            bm = Bitmap.createScaledBitmap(bm, 1100,
+                    1100, false);
+
+            inventory.updateBackgroundBitmap(bm);    // set internal bitmap
+        }
 
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
@@ -123,11 +159,13 @@ public class PlayView extends View {
         Bitmap myBitmap = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Bitmap.Config.ARGB_8888);
         myBitmap.setPixels(pixels, 0, bm.getWidth(), 0, 0, bm.getWidth(), bm.getHeight());
 
+        myBitmap = Bitmap.createScaledBitmap(myBitmap, (int)shape.getWidth(),
+                (int)shape.getHeight(), false);
+
         // update the shape's internal bitmap and set its attributes
         shape.setBitmap(myBitmap);
-        shape.setWidth(bm.getWidth());
-        shape.setHeight(bm.getHeight());
-
+        shape.setWidth(myBitmap.getWidth());
+        shape.setHeight(myBitmap.getHeight());
         invalidate();
     }
 
@@ -136,7 +174,8 @@ public class PlayView extends View {
      * page's render function.
      */
     public void drawPage(Canvas canvas) {
-        if(currentPage != null) currentPage.playRender(canvas);
+        if(currentPage != null) currentPage.render(canvas);
+        if (inventory != null) inventory.render(canvas);
     }
 
     /**
@@ -149,7 +188,7 @@ public class PlayView extends View {
      */
     public Shape shapeAtXY(double x, double y) {
 
-        if(currentPage == null) return null; // don't do anything if page just loaded
+        if(currentPage == null && inventory == null) return null; // don't do anything if page just loaded
 
         ArrayList<Shape> shapes = currentPage.getList();
 
@@ -159,10 +198,24 @@ public class PlayView extends View {
             // if the click is in bounds of this shape, return it
             if(x <= s.getRight() && x >= s.getLeft() &&
                     y >= s.getTop() && y <= s.getBottom()) {
+                inventorySelected = false;
                 return s;
             }
         }
 
+        ArrayList<Shape> inventoryShapes = inventory.getList();
+
+        for(int i = inventoryShapes.size() - 1; i >= 0; i--) {
+            Shape s = inventoryShapes.get(i);
+            // if the click is in bounds of this shape, return it
+            if(x <= s.getRight() && x >= s.getLeft() &&
+                    y >= s.getTop() && y <= s.getBottom()) {
+                inventorySelected = true;
+                return s;
+            }
+        }
+
+        inventorySelected = false;
         return null; // no shape is here
     }
 
@@ -184,7 +237,12 @@ public class PlayView extends View {
                 y1 = event.getY();
 
                 Shape selected = shapeAtXY(x1, y1);
-                if(currentPage != null) currentPage.selectShape(selected);
+                if (currentPage != null && !inventorySelected) {
+                    currentPage.selectShape(selected);
+                }
+                if (inventory != null && inventorySelected) {
+                    inventory.selectShape(selected);
+                }
 
                 break;
             // record coordinate where user lifts finger
@@ -196,23 +254,28 @@ public class PlayView extends View {
                 xDelta = event.getX();
                 yDelta = event.getY();
 
+                double starterY = currentPage.getSelected().getTop();
+                double halfHeight = currentPage.getSelected().getHeight()/2;
+
                 // only enable moving the page if isMoveable == true
-                if(currentPage != null && currentPage.getSelected() != null
+                if (currentPage != null && currentPage.getSelected() != null
                         && currentPage.getSelected().getMoveableStatus()) {
                     currentPage.getSelected().move(xDelta, yDelta);
 
-                    double starterY = currentPage.getSelected().getTop();
-                    double halfHeight = currentPage.getSelected().getHeight()/2;
-                    // move from play area to inventory IN PROGRESS
-                    if (starterY >= inventoryY+halfHeight && yDelta <= inventoryY+halfHeight) {
+                    // move from play area to inventory
+                    if (y1 <= inventoryY+halfHeight && yDelta >= inventoryY+halfHeight) {
                         inventory.addShape(currentPage.getSelected());
                         currentPage.removeShape(currentPage.getSelected());
                     }
+                }
+
+                if (inventory != null && inventory.getSelected() != null) {
+                    inventory.getSelected().move(xDelta, yDelta);
 
                     // move from inventory to play area IN PROGRESS
-                    if (starterY <= inventoryY+halfHeight && yDelta >= inventoryY+halfHeight) {
-                        inventory.addShape(currentPage.getSelected());
-                        currentPage.removeShape(currentPage.getSelected());
+                    if (y1 >= inventoryY+halfHeight && yDelta <= inventoryY+halfHeight) {
+                        currentPage.addShape(inventory.getSelected());
+                        inventory.removeShape(inventory.getSelected());
                     }
                 }
 
@@ -240,7 +303,6 @@ public class PlayView extends View {
 
         inventoryY = (float)0.75*height;
 
-        Paint linePaint = new Paint();
         linePaint.setColor(Color.BLACK);
         linePaint.setStrokeWidth(2);
 

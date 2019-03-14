@@ -1,5 +1,6 @@
 package edu.stanford.cs108.bunnyworld;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,10 +16,14 @@ public class Inventory {
     private Paint borderColor;  // color for selection box
     private Paint transBoxFill;
 
+    private boolean hasBackground;
+    private Bitmap background;
+    private String backgroundName;
+
 
     /**
-     * Constructor for the Page Class. This is the empty
-     * constructor used for building a brand new page in the editor.
+     * Constructor for the Inventory Class. This is the empty
+     * constructor used for building an empty inventory in play mode.
      */
     public Inventory() {
         shapes = new ArrayList<Shape>();
@@ -34,7 +39,40 @@ public class Inventory {
         transBoxFill = new Paint();
         transBoxFill.setStyle(Paint.Style.FILL);
         transBoxFill.setColor(Color.TRANSPARENT);
+    }
 
+
+    /**
+     * Whether or not this page has a custom background assigned to it
+     * @return true or false for background
+     */
+    public boolean hasBackground() { return hasBackground; }
+
+
+    public void changeBackground(String selectedBackground) {
+        if(!hasBackground) hasBackground = true;
+        backgroundName = selectedBackground;
+    }
+
+    /**
+     * Get the background bitmap of this page.
+     * @return bitmap containing the background of this page.
+     */
+    public Bitmap getBackgroundBitmap() { return background; }
+
+    /**
+     * Get the name of the background for this page, where the name is the
+     * resource file for the background image
+     * @return resource file name for page background
+     */
+    public String getBackgroundName() { return backgroundName; }
+
+    /**
+     * Set the internal bitmap for this page's background internally
+     * @param background bitmap to update the page to
+     */
+    public void updateBackgroundBitmap(Bitmap background) {
+        this.background = background;
     }
 
     /**
@@ -121,11 +159,7 @@ public class Inventory {
 
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                         (float)currentShape.getY(), paint);
-
             }
-
-
-
         }
     }
 
@@ -147,7 +181,8 @@ public class Inventory {
      * Removes all shapes from the current page. Used to wipe this page
      * clean.
      */
-    public void clearShapes() { shapes.clear(); }
+    public void clearShapes() {
+        shapes.clear(); }
 
     public ArrayList<Shape> getShapes() {
         return shapes;
@@ -167,6 +202,16 @@ public class Inventory {
             shapes.add(selected);
         }
 
+    }
+
+    /**
+     * @return true if inventory is empty, false if it is not
+     */
+    public boolean isEmpty() {
+        if (this.getShapes() == null) {
+            return true;
+        }
+        return false;
     }
 
     /**
