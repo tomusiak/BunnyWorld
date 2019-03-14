@@ -216,6 +216,7 @@ public class PlayView extends View {
         }
 
         inventorySelected = false;
+        selected = null;
         return null; // no shape is here
     }
 
@@ -238,10 +239,10 @@ public class PlayView extends View {
 
                 Shape selected = shapeAtXY(x1, y1);
 
-                if (currentPage != null && !inventorySelected) {
+                if (currentPage != null && !inventorySelected && selected != null) {
                     currentPage.selectShape(selected);
                 }
-                if (inventory != null && inventorySelected) {
+                if (inventory != null && inventorySelected && selected != null) {
                     inventory.selectShape(selected);
                 }
                 break;
@@ -250,6 +251,9 @@ public class PlayView extends View {
             case MotionEvent.ACTION_UP:
                 x2 = event.getX();
                 y2 = event.getY();
+
+                currentPage.selectShape(null);
+                inventory.selectShape(null);
 
             case MotionEvent.ACTION_MOVE:
                 xDelta = event.getX();
@@ -271,7 +275,7 @@ public class PlayView extends View {
                 if (inventory != null && inventory.getSelected() != null) {
                     inventory.getSelected().move(xDelta, yDelta);
 
-                    // move from inventory to play area IN PROGRESS
+                    // move from inventory to play area
                     double halfHeight = inventory.getSelected().getHeight()/2;
                     if (y1 >= inventoryY+halfHeight && yDelta <= inventoryY+halfHeight) {
                         currentPage.addShape(inventory.getSelected());
