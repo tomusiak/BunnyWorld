@@ -35,7 +35,7 @@ public class EditorActivity extends AppCompatActivity {
     private String currPage; // Tracks user-selected name of current page
     private Page currentPage; // Tracks current page being displayed
     private Page starterPage; // Tracks user-selected starter page
-    private String currScript;
+    private static String currScript;
     private EditorView editorView;
     private Shape copiedShape;
     private ArrayList<String> resources;    // stores list of addable objects
@@ -44,18 +44,18 @@ public class EditorActivity extends AppCompatActivity {
     private Dialog addShapeDialog;
 
     String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
-            "fire", "mystic", "patrick"};
+            "fire", "mystic", "textbox", "patrick"};
     int[] imageIds = {R.drawable.carrot,
             R.drawable.carrot2,
             R.drawable.death,
             R.drawable.duck,
             R.drawable.fire,
             R.drawable.mystic,
+            R.drawable.textbox,
             R.drawable.patrick,};
 
     private ArrayList<ShapeResource> shapeResources;
 
-    /* TODO: Add copy and paste functionality */
     /**
      * Sets up spinners and their respective functions upon creation of page
      * @param savedInstanceState current saved state to be initialized
@@ -86,6 +86,8 @@ public class EditorActivity extends AppCompatActivity {
         resources.add("duck");
         resources.add("fire");
         resources.add("mystic");
+        resources.add("textbox");
+        resources.add("patrick");
 
 
 
@@ -95,11 +97,17 @@ public class EditorActivity extends AppCompatActivity {
      * Generates script given clicked commands
      * Pre-condition: User has gone through the other spinners and clicked sufficient options to generate a valid script
      */
-    private void handleScript() {
+    public void handleScript(View view) {
         // Initializes empty String to add new script
         currScript = "";
-        scriptTriggersDialog();
-        // TODO: in Shape, setScript(getScript() + currScript)
+        Shape selectedShape = currentPage.getSelected();
+        if (selectedShape == null) {
+            Toast shapeErrorToast = Toast.makeText(getApplicationContext(), "No Shape Selected", Toast.LENGTH_SHORT);
+            shapeErrorToast.show();
+        } else {
+            System.out.println("made it");
+            scriptTriggersDialog();;
+        }
     }
 
     /**
@@ -285,6 +293,8 @@ public class EditorActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         currScript = currScript.substring(0, currScript.length() - 1);
                         currScript += ";";
+                        Shape selectedShape = currentPage.getSelected();
+                        selectedShape.setScript(selectedShape.getScript() + currScript);
                         dialog.cancel();
                     }
                 });
@@ -342,8 +352,14 @@ public class EditorActivity extends AppCompatActivity {
 
         // Sample: Building a shape from a shape image name
         String shapeImgName = selection;
-        Shape shape = new Shape(numShapes, shapeImgName, "",
-                20, 20, 250, 250);
+        Shape shape;
+        if (shapeImgName.equals("textbox")) {
+            shape = new Shape(numShapes, shapeImgName, shapeName,
+                    20, 20, 250, 250);
+        } else {
+            shape = new Shape(numShapes, shapeImgName, "",
+                    20, 20, 250, 250);
+        }
 
         currentPage.addShape(shape);
         editorView.renderShape(shape);  // renders the bitmaps for the newly added shape
@@ -380,17 +396,8 @@ public class EditorActivity extends AppCompatActivity {
             Toast shapeCopyError = Toast.makeText(getApplicationContext(), "No Shape Copied", Toast.LENGTH_SHORT);
             shapeCopyError.show();
         } else {
-            numShapes++;
-            String shapeName = "shape" + numShapes;
-            Toast addToast = Toast.makeText(getApplicationContext(),shapeName + " Added",Toast.LENGTH_SHORT);
-            addToast.show();
-
-            String selection = "carrot";
-            Shape newShape = new Shape(numShapes, selection, "",
-                    20, 20, 50, 50);
-
-            currentPage.addShape(newShape);
-            editorView.renderShape(newShape);
+            String selection = copiedShape.getImageName();
+            addShapeToEditor(selection);
         }
     }
 
@@ -417,9 +424,7 @@ public class EditorActivity extends AppCompatActivity {
                 } else {
                     getPages().remove(uniqueID);
                     displayNameToID.remove(pageName);
-                    // TODO: update custom view to reflect this (if delete page is curr page)
                     if (deletedPage.equals(currentPage)) editorView.changeCurrentPage(starterPage);
-                    // TODO: figure out starter page
                     Toast pageNameToast = Toast.makeText(getApplicationContext(), pageName + " Deleted",Toast.LENGTH_SHORT);
                     pageNameToast.show();
                 }
@@ -663,10 +668,14 @@ public class EditorActivity extends AppCompatActivity {
 
         EditText textInput = dialog.findViewById(R.id.textInput);
         textInput.setText(shape.getText());
+
+        TextView scriptText = dialog.findViewById(R.id.scriptText);
+        scriptText.setText(shape.getScript());
+
     }
 
     /**
-     * TODO: Helper method that, on click, updates shape properties
+     * Helper method that, on click, updates shape properties
      * @param view
      */
    public void editShapeProperties(View view) {
@@ -703,7 +712,12 @@ public class EditorActivity extends AppCompatActivity {
 
        EditText imageNameInput = editShapeDialog.findViewById(R.id.imageNameInput);
        String imageNameText = imageNameInput.getText().toString();
-       // TODO: set image name text
+       if (resources.contains(imageNameText)) {
+           shape.setImageName(imageNameText);
+       } else {
+           Toast invalidNameToast = Toast.makeText(getApplicationContext(), "Invalid Image Name", Toast.LENGTH_SHORT);
+           invalidNameToast.show();
+       }
 
        EditText textInput = editShapeDialog.findViewById(R.id.textInput);
        String textText = textInput.getText().toString();
@@ -1007,7 +1021,7 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape"};
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape", "Copy Shape", "Paste Shape"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1027,6 +1041,12 @@ public class EditorActivity extends AppCompatActivity {
                         break;
                     case 4:
                         deleteShape();
+                        break;
+                    case 5:
+                        copyShape();
+                        break;
+                    case 6:
+                        pasteShape();
                         break;
                 }
                 shapeSpinner.setSelection(0);
@@ -1050,7 +1070,7 @@ public class EditorActivity extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
-                        handleScript();
+                        handleScript(view);
                         break;
                     case 2:
                         break;

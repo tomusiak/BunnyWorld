@@ -95,6 +95,12 @@ public class Shape {
     }
 
     /**
+     * Modifier method for current image name being displayed
+     * @param name the user-set image name of the shape
+     */
+    public void setImageName(String name) { this.image = name; }
+
+    /**
      * Accessor method for current text being displayed
      * @return String the name of the image being displayed, empty String "" if not available
      */

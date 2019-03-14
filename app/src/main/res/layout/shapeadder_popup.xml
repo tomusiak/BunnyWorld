@@ -21,10 +21,14 @@ android:layout_height="wrap_content">
 
     <GridView
         android:id="@+id/resource_gridview"
-        android:numColumns="auto_fit"
+        android:numColumns="2"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:stretchMode="spacingWidthUniform"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:columnWidth="100dp">
     </GridView>
 
 

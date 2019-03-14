@@ -165,24 +165,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Script:"/>
+            android:text="Script: "/>
 
-        <Button
+        <TextView
+            android:id="@+id/scriptText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="handleScript"/>
+            android:text=""/>
 
     </LinearLayout>
 
-    <LinearLayout
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:text="Change Script"
+        android:onClick="handleScript"/>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Make Changes"
-            android:onClick="editShapeProperties"/>
-    </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Make Changes"
+        android:onClick="editShapeProperties"/>
 
 </LinearLayout>
