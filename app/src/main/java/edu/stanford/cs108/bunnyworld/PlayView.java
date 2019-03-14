@@ -13,7 +13,8 @@ import android.view.View;
 import java.util.ArrayList;
 
 /**
- * Creates custom view for PlayActivity
+ * Creates cu
+ * stom view for PlayActivity
  */
 public class PlayView extends View {
 
