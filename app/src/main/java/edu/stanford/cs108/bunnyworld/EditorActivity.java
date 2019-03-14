@@ -464,7 +464,7 @@ public class EditorActivity extends AppCompatActivity {
     /**
      * Undo functionality to undo Shape deletion
      */
-    private void undoShapeDelete() {f
+    private void undoShapeDelete() {
         currentPage.addShape(undoShapeDelete);
         editorView.renderShape(undoShapeDelete);  // renders the bitmaps for the newly added shape
         undoShapeDelete = null;
@@ -595,11 +595,11 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void backgroundDialog(final String uniqueID) {
         final String[] backgroundList = new String[]{"coffeeshop",
-                "gates", "Background3", "Background4",
-                "Background5", "Background6"};
+                "gates", "moon", "mounteverest",
+                "egyptianpyramid", "molly"};
         final String[] backgroundFiles = new String[]{"coffeeshop",
-                "gates", "Background3", "Background4",
-                "Background5", "Background6"};
+                "gates", "moon", "mounteverest",
+                "egyptianpyramid", "molly"};
         AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
         playPrompt.setTitle("Select Background: ");
         playPrompt.setItems(backgroundList, new DialogInterface.OnClickListener() {
