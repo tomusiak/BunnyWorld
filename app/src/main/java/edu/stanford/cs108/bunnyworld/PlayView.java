@@ -215,6 +215,7 @@ public class PlayView extends View {
             }
         }
 
+        inventorySelected = false;
         return null; // no shape is here
     }
 
