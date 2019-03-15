@@ -53,6 +53,7 @@ public class PlayView extends View {
     private void init() {
         selected = null;
         inventory = new Inventory();
+        currentPage = null;
     }
 
     /**
@@ -62,12 +63,10 @@ public class PlayView extends View {
      */
     public void changeCurrentPage(Page page) {
 
-        if(currentPage != null) currentPage.selectShape(null);
-        currentPage = page;
-        renderBitmaps(page); // render all the bitmaps for the page
-        invalidate();
+        // currentPage = page;
+
         // set selected to null before changing the page
-        /* if(currentPage != null) {
+        if(currentPage != null) {
             currentPage.selectShape(null);
         }
         currentPage = page;
@@ -76,13 +75,12 @@ public class PlayView extends View {
 
         renderBitmaps(inventory); // render the inventory
 
-
         if (currentPage != null) {
             ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
             ((PlayActivity)getContext()).checkForEntryScript();
         }
 
-        invalidate(); */
+        invalidate();
     }
 
     /**

@@ -255,6 +255,7 @@ public class PlayActivity extends AppCompatActivity {
      * @param pageName the page to switch to
      */
     private void switchPages(String pageName, Shape thisShape) {
+        currentPage = starterPage;
         // thisShape.setHidden(false);
         // System.out.println("switching");
         currPage = pageName;
@@ -272,13 +273,19 @@ public class PlayActivity extends AppCompatActivity {
 
         String uniqueID = displayNameToID.get(pageName);
         Page nextPage = pageMap.get(uniqueID);
+
+        // Checks for "drag" scenario
+        ArrayList<Shape> shapes = nextPage.getList();
+        for (int i = 0; i < shapes.size(); i++) {
+            Shape temp = shapes.get(i);
+            if (temp.getShapeID().equals(uniqueID)) {
+                shapes.remove(temp);
+                nextPage.updateList(shapes);
+            }
+        }
+
         currentPage = nextPage;
         playView.changeCurrentPage(nextPage);
-
-        /* Page nextPage = pageMap.get(uniqueID);
-        currentPage = nextPage;
-        playView.changeCurrentPage(nextPage); */
-
     }
 
    /* private void goToNewPageDialog() {
