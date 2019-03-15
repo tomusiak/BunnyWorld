@@ -36,6 +36,14 @@
             android:text="Pläy"
             android:textSize="20sp"
             android:onClick="playGame"/>
+        <Button
+            android:id="@+id/character"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Make New Charačter"
+            android:textSize="20sp"
+            android:onClick="makeCharacter"/>
 
     </LinearLayout>
 

@@ -32,7 +32,8 @@ public class PlayActivity extends AppCompatActivity {
     private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
     private Page starterPage; // Tracks user-selected starter page
 
-    ArrayList<Shape> inventory = new ArrayList<Shape>();
+    // ArrayList<Shape> inventory = new ArrayList<Shape>();
+    // Inventory inventory;
 
     // actions for script parsing
     private static final String GOTO = "goto";
@@ -75,8 +76,12 @@ public class PlayActivity extends AppCompatActivity {
                 if (pageMap != null) {
                     String startingPage = null;
                     for (String key : getPages().keySet()) {
+
                         Page currentPage = getPages().get(key);
+
                         String pageName = currentPage.getDisplayName();
+                        // System.out.println("is hiding");
+
                         displayNameToID.put(key,pageName);
                         if (currentPage.getStarterPageStatus() == true) {
                             startingPage = key;
@@ -146,6 +151,7 @@ public class PlayActivity extends AppCompatActivity {
 
                     // splits each clause into tokens based on whitespace delimiter
                     String[] tokens = clauses[i].split("\\s+");
+                    // System.out.println("tokens" + tokens);
 
                     // index of first start action
                     int actionStart = 2;
@@ -297,13 +303,18 @@ public class PlayActivity extends AppCompatActivity {
     private void hideShape (String shapeName) {
         // refer to toasts (checks in PlayView for isHidden() etc)
         // if it's hidden, it's not playable
+        // System.out.println("is hiding");
+
+        ArrayList<Shape> shapes = currentPage.getList();
+
 
         // check to see if it exists, then sets
-        for (int i = 0; i < inventory.size(); i++) {
-            if (inventory.get(i).getShapeName().equals(shapeName)) {
-                inventory.get(i).setHidden(true);
+        for (int i = 0; i < shapes.size(); i++) {
+            if (shapes.get(i).getShapeName().equals(shapeName)) {
+                Shape current = shapes.get(i);
+                current.setHidden(true);
                 // redraw page
-                // playRender()
+                // System.out.println("is hiding");
                 playView.renderBitmaps(currentPage);
                 break;
             }
@@ -315,9 +326,11 @@ public class PlayActivity extends AppCompatActivity {
      * @param shapeName the name of the Shape to be shown
      */
     private void showShape (String shapeName) {
-        for (int i = 0; i < inventory.size(); i++) {
-            if (inventory.get(i).getShapeName().equals(shapeName)) {
-                inventory.get(i).setHidden(false);
+        ArrayList<Shape> shapes = currentPage.getList();
+        for (int i = 0; i < shapes.size(); i++) {
+            if (shapes.get(i).getShapeName().equals(shapeName)) {
+                Shape current = shapes.get(i);
+                current.setHidden(false);
                 // redraw page
                 playView.renderBitmaps(currentPage);
                 break;
@@ -338,7 +351,7 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     /**
-     * sets current page
+     * Sets current page
      */
     public void setCurrentPage(Page page) {
         currentPage = page;

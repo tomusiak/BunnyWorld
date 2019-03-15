@@ -24,7 +24,6 @@ public class Shape {
 
     private boolean moveable;
     private boolean hidden;
-    private boolean isSelected;
 
     private static final int DEFAULT_FONT_SIZE = 24; // Sets default font size to 24
 
@@ -71,6 +70,27 @@ public class Shape {
         this.fontColor = Color.BLACK;
         this.text = "";
     }
+
+    public Shape(Shape copyShape) {
+
+        // Default format is "shape1", "shape2", etc.
+        this.shapeName = copyShape.getShapeName();
+        this.shapeID = this.shapeName; // internal ID and shape name are the same, but user can set shape name to be something else
+
+        this.image = copyShape.getImageName();
+        this.text = copyShape.getText();
+        this.x = copyShape.getX();
+        this.y = copyShape.getY();
+        this.height = copyShape.getHeight();
+        this.width = copyShape.getWidth();
+
+        this.moveable = copyShape.getMoveableStatus();
+        this.hidden = copyShape.isHidden();
+
+        this.fontSize = copyShape.getFontSize();
+
+        this.script = copyShape.getScript();
+        }
 
     /**
      * Accessor method for shape's internal ID

@@ -65,14 +65,23 @@ public class PlayView extends View {
         if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
 
-        //((PlayActivity)getContext()).setCurrentPage(currentPage);
-
         renderBitmaps(page); // render all the bitmaps for the page
         renderBitmaps(inventory); // render the inventory
 
-        ((PlayActivity)getContext()).checkForEntryScript();
+        if (currentPage != null) {
+            ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+            ((PlayActivity)getContext()).checkForEntryScript();
+        }
 
         invalidate();
+    }
+
+    /**
+     * Accessor method for inventory
+     * @return current Inventory
+     */
+    public Inventory getInventory() {
+        return inventory;
     }
 
     /**
@@ -131,8 +140,9 @@ public class PlayView extends View {
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
-            renderShape(currentShape);
-
+            if (!currentShape.isHidden()) {
+                renderShape(currentShape);
+            }
         }
         invalidate();
     }
@@ -140,7 +150,7 @@ public class PlayView extends View {
     /**
      * Renders a single shape's bitmap.
      *
-     * Note: must be called manuallly after a new shape with
+     * Note: must be called manually after a new shape with
      * an image is created.
      * @param shape to render the bitmap for
      */
@@ -181,8 +191,8 @@ public class PlayView extends View {
      * page's render function.
      */
     public void drawPage(Canvas canvas) {
-        if(currentPage != null) currentPage.playRender(canvas);
-        if (inventory != null) inventory.playRender(canvas);
+        if(currentPage != null) currentPage.render(canvas);
+        if (inventory != null) inventory.render(canvas);
     }
 
     /**
@@ -245,7 +255,10 @@ public class PlayView extends View {
                 y1 = event.getY();
 
                 Shape selected = shapeAtXY(x1, y1);
-                ((PlayActivity)this.getContext()).executeClickScripts(selected);
+                if (selected != null) {
+                    ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+                    ((PlayActivity)this.getContext()).executeClickScripts(selected);
+                }
 
                 if (currentPage != null && !inventorySelected && selected != null) {
                     currentPage.selectShape(selected);
@@ -279,7 +292,13 @@ public class PlayView extends View {
                         currentPage.removeShape(currentPage.getSelected());
                     }
 
-                    // add something about the drop script
+                    // drop script code
+                    if (shapeAtXY(xDelta, yDelta) != null || shapeAtXY(xDelta, yDelta+2*halfHeight) != null ||
+                            shapeAtXY(xDelta+2*halfHeight, yDelta+2*halfHeight) != null || shapeAtXY(xDelta+2*halfHeight, yDelta) != null) {
+                        Shape dropped = shapeAtXY(xDelta, yDelta);
+                        ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+                        ((PlayActivity)this.getContext()).executeDropScripts(dropped);
+                    }
                 }
 
                 if (inventory != null && inventory.getSelected() != null) {

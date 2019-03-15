@@ -46,4 +46,13 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this,PlayActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * Launches character creator
+     * @param view the MakeCharacter view
+     */
+    public void makeCharacter(View view) {
+        Intent intent = new Intent(this,MakeCharacter.class);
+        startActivity(intent);
+    }
 }
