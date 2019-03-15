@@ -254,8 +254,10 @@ public class PlayView extends View {
                 y1 = event.getY();
 
                 Shape selected = shapeAtXY(x1, y1);
-                ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
-                ((PlayActivity)this.getContext()).executeClickScripts(selected);
+                if (selected != null) {
+                    ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+                    ((PlayActivity)this.getContext()).executeClickScripts(selected);
+                }
 
                 if (currentPage != null && !inventorySelected && selected != null) {
                     currentPage.selectShape(selected);
