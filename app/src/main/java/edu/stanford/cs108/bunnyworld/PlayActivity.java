@@ -27,7 +27,7 @@ public class PlayActivity extends AppCompatActivity {
     //static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
     static HashMap<String, Page> pageMap; // Maps unique string ID to page objects
     private Page currentPage;
-    // private String currPage;
+    private String currPage;
     private PlayView playView;
     private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
     private Page starterPage; // Tracks user-selected starter page
@@ -257,25 +257,52 @@ public class PlayActivity extends AppCompatActivity {
     private void switchPages(String pageName, Shape thisShape) {
         // thisShape.setHidden(false);
         // System.out.println("switching");
-        // currPage = pageName;
+        currPage = pageName;
         // currentPage = pageMap.get(pageName);
         // playView.changeCurrentPage(___);
         // pageName.removeShape(thisShape);
 
         // TODO: remove/hide current Shapes from screen
         // create blank Page and automatically render
+        // playView.deleteShape();
+        // playView.renderBitmaps(currentPage);
 
-        // Page blank = new Page
+        // Page placeHolder = new Page ("blank", "blank");
+        // playView.changeCurrentPage(placeHolder);
 
-        String name = displayNameToID.get(pageName);
-        // remove current Shape
-        // thisShape.setHidden(true); // need to remove (not necessarily hide) before switch
+        String uniqueID = displayNameToID.get(pageName);
+        Page nextPage = pageMap.get(uniqueID);
+        currentPage = nextPage;
+        playView.changeCurrentPage(nextPage);
 
-        // setCurrentPage(null);
-        Page next = pageMap.get(name);
-        playView.changeCurrentPage(next);
+        /* Page nextPage = pageMap.get(uniqueID);
+        currentPage = nextPage;
+        playView.changeCurrentPage(nextPage); */
 
     }
+
+   /* private void goToNewPageDialog() {
+        ArrayList<String> names = new ArrayList<>();
+        // Builds ArrayList of page display names for user to select
+        for (String uniquePageID: pages.keySet()) {
+            names.add(pages.get(uniquePageID).getDisplayName());
+        }
+        final String[] pageNames = names.toArray(new String[pages.size()]);
+        AlertDialog.Builder newPagePrompt = new AlertDialog.Builder(this);
+        newPagePrompt.setTitle("Input Name Of Page To Go To: ");
+        newPagePrompt.setItems(pageNames, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                String newPageName = pageNames[selection];
+                Toast pageNameToast = Toast.makeText(getApplicationContext(),newPageName,Toast.LENGTH_SHORT);
+                pageNameToast.show();
+                // From the selected display name, pull the original page object
+                String uniqueID = displayNameToID.get(newPageName);
+                switchPages(uniqueID);
+            }
+        });
+        newPagePrompt.show();
+    } */
 
     /**
      * Plays sound given result of parsed script
