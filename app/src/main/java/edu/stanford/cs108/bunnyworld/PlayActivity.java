@@ -249,7 +249,7 @@ public class PlayActivity extends AppCompatActivity {
                         int shapeIndex = 2;
 
                         String shapeName = tokens[shapeIndex];
-                        String internalShapeID = displayNameToID.get(shapeName);
+                        // String internalShapeID = displayNameToID.get(shapeName);
                         // Loop through all shapes to find the indicated shape
                         Iterator it = pageMap.values().iterator();
                         while (it.hasNext()) {
@@ -257,9 +257,11 @@ public class PlayActivity extends AppCompatActivity {
                             ArrayList<Shape> shapes = page.getList();
                             for (int j = 0; j < shapes.size(); j++) {
                                 Shape current = shapes.get(j);
-                                if (current.getShapeID().equals(internalShapeID)) {
+                                // if (current.getShapeID().equals(internalShapeID)) {
+                                if (current.getShapeName().equals(shapeName)) {
                                     return current;
                                 }
+                                // }
                             }
                         }
                     }
