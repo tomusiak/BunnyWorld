@@ -181,6 +181,11 @@ public class Page {
     public void playRender(Canvas canvas) {
         Paint paint = null;
 
+        // if the page has a background, render that
+        if(hasBackground) {
+            canvas.drawBitmap(background, (float)0.0, (float)0.0, paint);
+        }
+
         // render each shape onto the canvas
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
