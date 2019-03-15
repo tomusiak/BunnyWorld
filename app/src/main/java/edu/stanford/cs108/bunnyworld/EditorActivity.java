@@ -375,7 +375,9 @@ public class EditorActivity extends AppCompatActivity {
         Shape shape;
         if (shapeImgName.equals("textbox")) {
             shape = new Shape(numShapes, shapeImgName, shapeName,
-                    20, 20, 250, 250);
+                    20, 20, 250, 150);
+            shape.setIsText(true);
+            shape.setText("Text");
         } else {
             shape = new Shape(numShapes, shapeImgName, "",
                     20, 20, 250, 250);

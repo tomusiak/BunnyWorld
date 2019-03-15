@@ -12,6 +12,8 @@ public class Shape {
     private String image;
     private String text;
 
+    private boolean isText;
+
     private double x;
     private double y;
     private double height;
@@ -61,6 +63,10 @@ public class Shape {
 
         // Script will be set once it's read in from interface
         this.script = "";
+
+        // set text defaults
+        this.isText = false;
+        this.text = "";
     }
 
     /**
@@ -113,6 +119,17 @@ public class Shape {
      * @param text the user-set text
      */
     public void setText(String text) { this.text = text; };
+
+    /**
+     * update the boolean variable that tracks whether this shape is actually text
+     * @param isText
+     */
+    public void setIsText(boolean isText) { this.isText = isText; }
+
+    /**
+     * see if this shape is actually text
+     */
+    public boolean isText() { return isText; }
 
     /**
      * Modifier method that sets the script of the shape
