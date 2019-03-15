@@ -300,7 +300,12 @@ public class EditorActivity extends AppCompatActivity {
         shapeNamePrompt.show();
     }
 
-    private Boolean shapeNameExists(String name) {
+    /**
+     *
+     * @param name name of the Shape to be checked
+     * @return boolean true if exists, false if otherwise
+     */
+    private boolean shapeNameExists(String name) {
         for (Page page : pages.values()) {
             for (Shape shape : page.getList()) {
                 if (shape.getShapeName().equals(name)) return true;
@@ -516,7 +521,6 @@ public class EditorActivity extends AppCompatActivity {
 
             Toast addToast = Toast.makeText(getApplicationContext(),"Shape Successfully Deleted",Toast.LENGTH_SHORT);
             addToast.show();
-            //numShapes--;
         } else {
             // show toast message if deletion did not work
             Toast addToast = Toast.makeText(getApplicationContext(),"No Shape Selected",Toast.LENGTH_SHORT);
@@ -815,7 +819,6 @@ public class EditorActivity extends AppCompatActivity {
             // show toast message if there is no shape selected
             Toast addToast = Toast.makeText(getApplicationContext(),"No Shape Selected",Toast.LENGTH_SHORT);
             addToast.show();
-
         }
     }
 
@@ -852,7 +855,6 @@ public class EditorActivity extends AppCompatActivity {
 
         TextView scriptText = dialog.findViewById(R.id.scriptText);
         scriptText.setText(shape.getScript());
-
     }
 
     /**
@@ -1024,8 +1026,6 @@ public class EditorActivity extends AppCompatActivity {
            editorView.renderShape(currentPage.getSelected());
            editFontColorDialog.dismiss();
        }
-
-
    }
 
     /**
@@ -1452,6 +1452,9 @@ public class EditorActivity extends AppCompatActivity {
         pages = newPages;
     }
 
+    /**
+     * Overrides command for back button to auto-save and re-initialize game
+     */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
