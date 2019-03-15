@@ -19,6 +19,7 @@ public class Page {
     private Shape selected;     // holds onto the selected shape
     private Paint borderColor;  // color for selection box
     private Paint transBoxFill;
+    private Paint fontColor;
 
     private boolean hasBackground;
     private Bitmap background;
@@ -47,6 +48,8 @@ public class Page {
         transBoxFill.setStyle(Paint.Style.FILL);
         transBoxFill.setColor(Color.TRANSPARENT);
 
+        fontColor = new Paint();
+        fontColor.setColor(Color.BLACK);
     }
 
     /**
@@ -149,8 +152,22 @@ public class Page {
                     paint.setAlpha(70);
                 }
 
-                canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
-                        (float)currentShape.getY(), paint);
+                // if this shape is text, render it as such
+                if(currentShape.isText()) {
+                    if(paint == null) paint = new Paint();
+                    paint.setColor(currentShape.getFontColor());
+                    paint.setTextSize((float)currentShape.getHeight());
+                    canvas.drawText(currentShape.getText(),
+                            (float)currentShape.getX(),
+                            (float)currentShape.getY() +
+                                    (float) (currentShape.getHeight()), paint);
+                // otherwise, simply render the image bitmap
+                } else {
+                    canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
+                            (float)currentShape.getY(), paint);
+                }
+
+
 
             }
         }
@@ -170,6 +187,20 @@ public class Page {
             if(!currentShape.isHidden() && currentShape.getImageName() != "") {
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                         (float)currentShape.getY(), paint);
+                // if this shape is text, render it as such
+                if(currentShape.isText()) {
+                    if(paint == null) paint = new Paint();
+                    paint.setColor(currentShape.getFontColor());
+                    paint.setTextSize((float)currentShape.getHeight());
+                    canvas.drawText(currentShape.getText(),
+                            (float)currentShape.getX(),
+                            (float)currentShape.getY() +
+                                    (float) (currentShape.getHeight()), paint);
+
+                } else {    // otherwise, simply render the image bitmap
+                    canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
+                            (float)currentShape.getY(), paint);
+                }
             }
         }
     }
