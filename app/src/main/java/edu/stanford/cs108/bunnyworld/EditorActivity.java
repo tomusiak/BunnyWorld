@@ -51,6 +51,7 @@ public class EditorActivity extends AppCompatActivity {
 
     private Dialog editShapeDialog;
     private Dialog addShapeDialog;
+    private Dialog editFontColorDialog;
 
     String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
             "fire", "mystic", "textbox", "patrick"};
@@ -903,6 +904,13 @@ public class EditorActivity extends AppCompatActivity {
 
        editShapeDialog.dismiss();
 
+   }
+
+   public void changeFontDialog(View view) {
+       Dialog dialog = new Dialog(this);
+       editFontColorDialog = dialog;
+       dialog.setContentView(R.layout.fontcolor);
+       dialog.show();
    }
 
     /**

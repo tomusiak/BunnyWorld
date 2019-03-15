@@ -86,7 +86,7 @@ public class Shape {
         this.width = copyShape.getWidth();
 
         this.moveable = copyShape.getMoveableStatus();
-        this.hidden = copyShape.getHiddenStatus();
+        this.hidden = copyShape.isHidden();
 
         this.fontSize = copyShape.getFontSize();
 
