@@ -253,7 +253,7 @@ public class Shape {
      * Returns whether the shape is hidden or not
      * @return true and false for hidden and not hidden
      */
-    public boolean getHiddenStatus() { return hidden; }
+    public boolean isHidden() { return hidden; }
 
     /**
      * Updates the internal shape to store its current bitmap representation

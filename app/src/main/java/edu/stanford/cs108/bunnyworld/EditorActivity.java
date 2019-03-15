@@ -824,7 +824,7 @@ public class EditorActivity extends AppCompatActivity {
         moveInput.setChecked(shape.getMoveableStatus());
 
         CheckBox visibleInput = dialog.findViewById(R.id.visibleInput);
-        visibleInput.setChecked(!shape.getHiddenStatus());
+        visibleInput.setChecked(!shape.isHidden());
 
         EditText imageNameInput = dialog.findViewById(R.id.imageNameInput);
         imageNameInput.setText(shape.getImageName());

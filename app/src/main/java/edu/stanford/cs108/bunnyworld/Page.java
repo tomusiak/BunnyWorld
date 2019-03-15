@@ -141,7 +141,7 @@ public class Page {
                 }
 
                 // if this shape is hidden, display it as semi-transparent
-                if(currentShape.getHiddenStatus()) {
+                if(currentShape.isHidden()) {
                     paint = new Paint();
                     paint.setAlpha(70);
                 }
@@ -167,7 +167,7 @@ public class Page {
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
             // if shape has a valid bitmap image AND is visible
-            if(currentShape.getHiddenStatus() && currentShape.getImageName() != "") {
+            if(!currentShape.isHidden() && currentShape.getImageName() != "") {
 
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                         (float)currentShape.getY(), paint);

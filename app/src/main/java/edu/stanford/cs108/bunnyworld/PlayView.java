@@ -174,8 +174,8 @@ public class PlayView extends View {
      * page's render function.
      */
     public void drawPage(Canvas canvas) {
-        if(currentPage != null) currentPage.render(canvas);
-        if (inventory != null) inventory.render(canvas);
+        if(currentPage != null) currentPage.playRender(canvas);
+        if (inventory != null) inventory.playRender(canvas);
     }
 
     /**
