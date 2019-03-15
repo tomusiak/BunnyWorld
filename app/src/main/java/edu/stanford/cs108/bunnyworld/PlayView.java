@@ -402,6 +402,4 @@ public class PlayView extends View {
         canvas.drawLine((float)0, (float)0.75 * height, (float)width,
                 (float)0.75 * height, linePaint);
     }
-
-
 }

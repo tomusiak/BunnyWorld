@@ -23,17 +23,12 @@ import java.util.HashMap;
  */
 public class PlayActivity extends AppCompatActivity {
 
-    // Commented out this first line and replaced with a Hashmap<String, Page> to match agreed upon structures
-    //static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
     static HashMap<String, Page> pageMap; // Maps unique string ID to page objects
     private Page currentPage;
     private String currPage;
     private PlayView playView;
     private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
     private Page starterPage; // Tracks user-selected starter page
-
-    // ArrayList<Shape> inventory = new ArrayList<Shape>();
-    // Inventory inventory;
 
     // actions for script parsing
     private static final String GOTO = "goto";
@@ -60,14 +55,19 @@ public class PlayActivity extends AppCompatActivity {
      *  page.
      */
     private void loadGame() {
-        final Database db = Database.getInstance(getApplicationContext()); // Initializes database.
-        setContentView( R.layout.database_load ); // Opens database view.
+        // Initializes database.
+        final Database db = Database.getInstance(getApplicationContext());
+        // Opens database view.
+        setContentView( R.layout.database_load );
         ListView listView = findViewById( R.id.list_view );
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // Occurs when user selects a save game.
+        // Occurs when user selects a save game.
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                String product = ((TextView) view).getText().toString(); // Obtains game user chose.
-                setPages(db.loadGame(product)); // Loads the hashmap from the database into the hashmap stored in this file
+                // Obtains game user chose.
+                String product = ((TextView) view).getText().toString();
+                // Loads the hashmap from the database into the hashmap stored in this file
+                setPages(db.loadGame(product));
                 displayNameToID = new HashMap<String, String>();
 
                 setContentView(R.layout.activity_play); // Goes into play activity.
@@ -80,7 +80,6 @@ public class PlayActivity extends AppCompatActivity {
                         Page currentPage = getPages().get(key);
 
                         String pageName = currentPage.getDisplayName();
-                        // System.out.println("is hiding");
 
                         displayNameToID.put(pageName,key);
                         if (currentPage.getStarterPageStatus() == true) {
@@ -358,8 +357,6 @@ public class PlayActivity extends AppCompatActivity {
         // refer to toasts (checks in PlayView for isHidden() etc)
         // if it's hidden, it's not playable
 
-        // System.out.println("hiding");
-
         ArrayList<Shape> shapes = currentPage.getList();
 
         // check to see if it exists, then sets
@@ -368,7 +365,6 @@ public class PlayActivity extends AppCompatActivity {
                 Shape current = shapes.get(i);
                 current.setHidden(true);
                 // redraw page
-                // System.out.println("is hiding");
                 playView.renderBitmaps(currentPage);
                 break;
             }
