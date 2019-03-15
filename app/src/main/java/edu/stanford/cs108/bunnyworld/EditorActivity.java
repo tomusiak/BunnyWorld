@@ -1,5 +1,6 @@
 package edu.stanford.cs108.bunnyworld;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -205,7 +206,7 @@ public class EditorActivity extends AppCompatActivity {
     private void scriptPlayDialog() {
         // Predetermined list of names of sounds
         final String[] scriptSounds = new String[]{"CarrotCarrotCarrot", "EvilLaugh", "Fire", "Hooray",
-                "Munch", "Munching", "Woof"};
+                "Munch", "Munching", "Scream", "Woof"};
         AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
         playPrompt.setTitle("Select Script Trigger: ");
         playPrompt.setItems(scriptSounds, new DialogInterface.OnClickListener() {
@@ -239,6 +240,10 @@ public class EditorActivity extends AppCompatActivity {
                         mp.start();
                         break;
                     case 6:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.scream);
+                        mp.start();
+                        break;
+                    case 7:
                         mp = MediaPlayer.create(getApplicationContext(), R.raw.woof);
                         mp.start();
                         break;
@@ -918,6 +923,33 @@ public class EditorActivity extends AppCompatActivity {
        editFontColorDialog = dialog;
        dialog.setContentView(R.layout.fontcolor);
        dialog.show();
+   }
+
+   public void changeColor(View view) {
+       SeekBar redBar = editFontColorDialog.findViewById(R.id.red);
+       SeekBar greenBar = editFontColorDialog.findViewById(R.id.green);
+       SeekBar blueBar = editFontColorDialog.findViewById(R.id.blue);
+
+       int red = redBar.getProgress();
+       int green = greenBar.getProgress();
+       int blue = blueBar.getProgress();
+
+       int color = Color.rgb(red, green, blue);
+
+       View colorView = editFontColorDialog.findViewById(R.id.colorview);
+       colorView.setBackgroundColor(color);
+
+       String text = "Red: " + red + ", Green: " + green + ", Blue: " + blue;
+       TextView colorText = editFontColorDialog.findViewById(R.id.colortext);
+       colorText.setText(text);
+
+       // if we can update the color, do it
+       if(currentPage != null && currentPage.getSelected() != null) {
+           currentPage.getSelected().setFontColor(color);
+           editFontColorDialog.dismiss();
+       }
+
+
    }
 
     /**
