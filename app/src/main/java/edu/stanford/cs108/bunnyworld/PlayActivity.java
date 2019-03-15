@@ -82,7 +82,7 @@ public class PlayActivity extends AppCompatActivity {
                         String pageName = currentPage.getDisplayName();
                         // System.out.println("is hiding");
 
-                        displayNameToID.put(key,pageName);
+                        displayNameToID.put(pageName,key);
                         if (currentPage.getStarterPageStatus() == true) {
                             startingPage = key;
                             starterPage = currentPage;
