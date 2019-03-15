@@ -292,7 +292,13 @@ public class PlayView extends View {
                         currentPage.removeShape(currentPage.getSelected());
                     }
 
-                    // add something about the drop script
+                    // drop script code
+                    if (shapeAtXY(xDelta, yDelta) != null || shapeAtXY(xDelta, yDelta+2*halfHeight) != null ||
+                            shapeAtXY(xDelta+2*halfHeight, yDelta+2*halfHeight) != null || shapeAtXY(xDelta+2*halfHeight, yDelta) != null) {
+                        Shape dropped = shapeAtXY(xDelta, yDelta);
+                        ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+                        ((PlayActivity)this.getContext()).executeDropScripts(dropped);
+                    }
                 }
 
                 if (inventory != null && inventory.getSelected() != null) {
