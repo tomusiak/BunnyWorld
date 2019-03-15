@@ -464,7 +464,7 @@ public class EditorActivity extends AppCompatActivity {
     /**
      * Undo functionality to undo Shape deletion
      */
-    private void undoShapeDelete() {f
+    private void undoShapeDelete() {
         currentPage.addShape(undoShapeDelete);
         editorView.renderShape(undoShapeDelete);  // renders the bitmaps for the newly added shape
         undoShapeDelete = null;
