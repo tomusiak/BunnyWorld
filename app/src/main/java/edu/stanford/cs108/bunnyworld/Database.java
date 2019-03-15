@@ -53,6 +53,45 @@ class Database extends SQLiteOpenHelper {
                 "SAVE TEXT," +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT"+ ");";
         db.execSQL(createShapeDatabase);
+        populateSampleGame();
+    }
+
+    private void populateSampleGame() {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Shape currentShape = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        String shapeName = currentShape.getShapeName();
+        String imageName = currentShape.getImageName();
+        String text = currentShape.getText();
+        double x = currentShape.getX();
+        double y = currentShape.getY();
+        double height = currentShape.getHeight();
+        double width = currentShape.getWidth();
+        int moveable = currentShape.getMoveableStatus() ? 1 : 0;
+        int hidden = currentShape.isHidden() ? 1 : 0;
+        int fontSize = 48;
+        String script = "";
+        int starterPage = 1;
+        String pageName = "page1";
+        String pageID = "page1";
+        String saveName = "Sample Game";
+        String insertStr = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + shapeName + "', '" +
+                imageName + "', '" +
+                text + "'," +
+                x + "," +
+                y + "," +
+                height + "," +
+                width + "," +
+                moveable + "," +
+                hidden + "," +
+                fontSize + "," +
+                starterPage + ", '" +
+                script + "', '" +
+                pageName + "', '" +
+                pageID + "', '" +
+                saveName + "', NULL)";
+        db.execSQL(insertStr);
     }
 
     @Override
@@ -62,6 +101,7 @@ class Database extends SQLiteOpenHelper {
     }
 
     /** Saves the game by taking the HashMap of pages and parsing each page. Once within a page, all of the shapes and their data are
+     * dumped into the database with accompanying page information. Before the game is saved, saveGame ensures that it does not create a
      * dumped into the database with accompanying page information. Before the game is saved, saveGame ensures that it does not create a
      * duplicate by deleting any values with the original save name.
      */
