@@ -19,6 +19,7 @@ import android.app.*;
 import android.content.*;
 import android.widget.*;
 import android.text.*;
+import android.media.*;
 
 /*
     edu.stanford.cs108.bunnyworld.EditorActivity Class is the class that encapsulates an instance
@@ -198,13 +199,45 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void scriptPlayDialog() {
         // Predetermined list of names of sounds
-        final String[] scriptSounds = new String[]{"CarrotCarrotCarrot", "EvilLaugh", "Fire", "Hooray", "Munch", "Munching", "Woof"};
+        final String[] scriptSounds = new String[]{"CarrotCarrotCarrot", "EvilLaugh", "Fire", "Hooray",
+                "Munch", "Munching", "Woof"};
         AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
         playPrompt.setTitle("Select Script Trigger: ");
         playPrompt.setItems(scriptSounds, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
-                currScript += scriptSounds[selection] + " ";
+                    currScript += scriptSounds[selection] + " ";
+                    MediaPlayer mp;
+                switch(selection) {
+                    case 0:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.carrotcarrotcarrot);
+                        mp.start();
+                        break;
+                    case 1:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.evillaugh);
+                        mp.start();
+                        break;
+                    case 2:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.fire);
+                        mp.start();
+                        break;
+                    case 3:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.hooray);
+                        mp.start();
+                        break;
+                    case 4:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.munch);
+                        mp.start();
+                        break;
+                    case 5:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.munching);
+                        mp.start();
+                        break;
+                    case 6:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.woof);
+                        mp.start();
+                        break;
+                }
                 currScriptSteps++;
             }
         });
@@ -598,6 +631,7 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newPageName = input.getText().toString();
+                newPageName = newPageName.toLowerCase();
                 if (pageList.contains(newPageName)) {
                     Toast pageRenameError = Toast.makeText(getApplicationContext(), "Page Name Already Used", Toast.LENGTH_SHORT);
                     pageRenameError.show();
@@ -654,7 +688,7 @@ public class EditorActivity extends AppCompatActivity {
     private void backgroundDialog(final String uniqueID) {
         final String[] backgroundList = new String[]{"coffeeshop",
                 "gates", "moon", "mounteverest",
-                "egyptianpyramid", "molly"};
+                "egyptianpyramid", "molly", "nobackground"};
         final String[] backgroundFiles = new String[]{"coffeeshop",
                 "gates", "moon", "mounteverest",
                 "egyptianpyramid", "molly"};
@@ -743,15 +777,9 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newShapeName = input.getText().toString();
+                newShapeName = newShapeName.toLowerCase();
                 ArrayList<Shape> shapes = currentPage.getShapes();
                 // checks to make sure shape name not already used; if used, prompts user to re-enter name
-                /*for (int i = 0; i < shapes.size(); i++) {
-                    if (shapes.get(i).getShapeName().equals(newShapeName)) {
-                        Toast shapeRenameError = Toast.makeText(getApplicationContext(), "Shape Name Already Used On This Page", Toast.LENGTH_SHORT);
-                        shapeRenameError.show();
-                        return;
-                    }
-                }*/
                 if (shapeNameExists(newShapeName)) {
                     Toast shapeRenameError = Toast.makeText(getApplicationContext(), "Shape Name Already Exists", Toast.LENGTH_SHORT);
                     shapeRenameError.show();
@@ -776,7 +804,8 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void renameShape(String newName) {
         Shape selectedShape = currentPage.getSelected();
-        selectedShape.setShapeName(newName);
+        String name = newName.toLowerCase();
+        selectedShape.setShapeName(name);
     }
 
     /**
@@ -868,6 +897,7 @@ public class EditorActivity extends AppCompatActivity {
            Toast shapeRenameError = Toast.makeText(getApplicationContext(), "Shape Name Already Exists", Toast.LENGTH_SHORT);
            shapeRenameError.show();
        } else {
+           name = name.toLowerCase();
            shape.setShapeName(name);
        }
 
@@ -1151,7 +1181,8 @@ public class EditorActivity extends AppCompatActivity {
         initializeResources();
         // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background",  "Change Starter Page", "Undo Delete"};
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page",
+                "Open Page", "Change Background",  "Change Starter Page", "Undo Delete"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
         pageSpinner.setSelection(0);
