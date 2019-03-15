@@ -144,6 +144,7 @@ public class Page {
                     // draw transparent box and colored selection border
                     canvas.drawRect(shapeBorder, transBoxFill);
                     canvas.drawRect(shapeBorder, borderColor);
+
                 }
 
                 // if this shape is hidden, display it as semi-transparent

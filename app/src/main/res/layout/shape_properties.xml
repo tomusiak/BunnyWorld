@@ -157,12 +157,6 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Change Font Color Of Text"
-        android:onClick="changeFontDialog"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -184,6 +178,12 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Change Text Font Color"
+        android:onClick="changeFontDialog"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Add To Script"
         android:onClick="handleScript"/>
 
@@ -191,6 +191,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Make Changes"
-        android:onClick="editShapeProperties"/>
+        android:onClick="editShapeProperties"
+        android:background="@android:color/holo_green_dark"/>
 
 </LinearLayout>

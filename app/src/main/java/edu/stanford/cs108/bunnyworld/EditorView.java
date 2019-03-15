@@ -36,6 +36,8 @@ public class EditorView extends View {
     Paint myPaint = new Paint();
     Paint selectPaint = new Paint();
 
+    float inventoryY;
+
     /**
      * Sets up EditorView
      */
@@ -207,6 +209,9 @@ public class EditorView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawPage(canvas);
+
+        float height = canvas.getWidth();
+        inventoryY = (float)0.75 * height;
     }
 
     /**
@@ -255,7 +260,8 @@ public class EditorView extends View {
                 yDelta = event.getY();
 
                 if(currentPage != null && currentPage.getSelected() != null) {
-                    currentPage.getSelected().move(xDelta, yDelta);
+                        currentPage.getSelected().move(xDelta, yDelta);
+
                 }
 
                 invalidate();   // forces canvas update
