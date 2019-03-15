@@ -140,8 +140,12 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
                 currScript += scriptTriggers[selection] + " ";
-                // Allows users to set actions after setting triggers
-                scriptActionsDialog();
+                if (selection == 2) {
+                    scriptShapeNameDialog(true);
+                } else {
+                    // Allows users to set actions after setting triggers
+                    scriptActionsDialog();
+                }
             }
         });
         triggersPrompt.show();
@@ -152,7 +156,7 @@ public class EditorActivity extends AppCompatActivity {
      * Calls respective methods for each action to continue adding to currScript
      */
     private void scriptActionsDialog() {
-        final String[] scriptActions = new String[]{"Go To", "Play", "Hide", "Show"};
+        final String[] scriptActions = new String[]{"GoTo", "Play", "Hide", "Show"};
         AlertDialog.Builder actionsPrompt = new AlertDialog.Builder(this);
         actionsPrompt.setTitle("Select Script Action: ");
         actionsPrompt.setItems(scriptActions, new DialogInterface.OnClickListener() {
@@ -168,10 +172,10 @@ public class EditorActivity extends AppCompatActivity {
                         scriptPlayDialog();
                         break;
                     case 2:
-                        scriptShapeNameDialog();
+                        scriptShapeNameDialog(false);
                         break;
                     case 3:
-                        scriptShapeNameDialog();
+                        scriptShapeNameDialog(false);
                         break;
                 }
             }
@@ -261,7 +265,7 @@ public class EditorActivity extends AppCompatActivity {
     /**
      * Allows for custom input of Shape names by the user
      */
-    private void scriptShapeNameDialog() {
+    private void scriptShapeNameDialog(final boolean onDrop) {
         AlertDialog.Builder shapeNamePrompt = new AlertDialog.Builder(this);
         shapeNamePrompt.setTitle("Input Name of Shape: ");
         final EditText input = new EditText(this);
@@ -275,10 +279,14 @@ public class EditorActivity extends AppCompatActivity {
                 if (!shapeNameExists(name)) {
                     Toast nameErrorToast = Toast.makeText(getApplicationContext(), "Shape Name Does Not Exist", Toast.LENGTH_SHORT);
                     nameErrorToast.show();
-                    scriptShapeNameDialog();
+                    scriptShapeNameDialog(onDrop);
                 } else {
                     currScript += input.getText().toString() + " ";
-                    currScriptSteps++;
+                    if (onDrop) {
+                        scriptActionsDialog();
+                    } else {
+                        currScriptSteps++;
+                    }
                 }
             }
         });
@@ -915,6 +923,9 @@ public class EditorActivity extends AppCompatActivity {
        editShapeDialog.dismiss();
    }
 
+    /**
+     * Prompts the user to select a color to make new font color
+     */
    public void changeFontDialog(View view) {
        Dialog dialog = new Dialog(this);
        editFontColorDialog = dialog;
@@ -1070,13 +1081,14 @@ public class EditorActivity extends AppCompatActivity {
                 for (String key : getPages().keySet()) { // Finds which page is the starter page, and then makes that the first page to go to.
                     Page currentPage = getPages().get(key);
                     String pageName = currentPage.getDisplayName();
-                    displayNameToID.put(key,pageName);
+                    displayNameToID.put(pageName, key);
                     if (currentPage.getStarterPageStatus() == true) {
                         startPage = key;
                         starterPage = currentPage;
                     }
                 }
                 initializeEditor(); // Makes editor features visible, shifts back into EditorActivity.
+                currentPage = starterPage;
                 editorView.changeCurrentPage(pages.get(startPage)); // Goes to first page.
             }
         });
@@ -1407,12 +1419,20 @@ public class EditorActivity extends AppCompatActivity {
         if (pages != null) {
             String startPage = null;
             for (String key : getPages().keySet()) {
-                Page currentPage = getPages().get(key);
+                /*Page currentPage = getPages().get(key);
                 String pageName = currentPage.getDisplayName();
                 displayNameToID.put(key,pageName);
                 if (currentPage.getStarterPageStatus() == true) {
                     startPage = key;
                     starterPage = currentPage;
+                }*/
+                Page currentPage = getPages().get(key);
+                String pageName = currentPage.getDisplayName();
+                displayNameToID.put(pageName, key);
+                if (currentPage.getStarterPageStatus() == true) {
+                    startPage = key;
+                    starterPage = currentPage;
+                    currentPage = starterPage;
                 }
             }
             editorView.changeCurrentPage(pages.get(startPage));
