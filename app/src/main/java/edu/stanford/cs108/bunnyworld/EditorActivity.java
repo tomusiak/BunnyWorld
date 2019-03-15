@@ -95,9 +95,6 @@ public class EditorActivity extends AppCompatActivity {
         resources.add("mystic");
         resources.add("textbox");
         resources.add("patrick");
-
-
-
     }
 
     /**
@@ -925,7 +922,6 @@ public class EditorActivity extends AppCompatActivity {
        editorView.renderShape(shape);
 
        editShapeDialog.dismiss();
-
    }
 
     /**

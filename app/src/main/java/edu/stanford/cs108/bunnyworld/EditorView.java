@@ -158,7 +158,7 @@ public class EditorView extends View {
      */
     public boolean deleteShape() {
 
-        // try to delete to a shape
+        // try to delete a shape
         if(currentPage != null && currentPage.getSelected() != null) {
             currentPage.removeShape(currentPage.getSelected());
             invalidate();
@@ -166,8 +166,6 @@ public class EditorView extends View {
         }
         return false;   // no shape to delete
     }
-
-
 
     /**
      * Finds a shape that exists at the specified x, y coordinate and returns
