@@ -157,6 +157,12 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Change Font Color Of Text"
+        android:onClick="changeFontDialog"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

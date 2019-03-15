@@ -48,9 +48,11 @@ public class EditorActivity extends AppCompatActivity {
     private int numScriptAdds;
     private Shape undoShapeEdit;
     private Shape lastShapeEdited;
+    private String defaultImageName = "grayshape";
 
     private Dialog editShapeDialog;
     private Dialog addShapeDialog;
+    private Dialog editFontColorDialog;
 
     String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
             "fire", "mystic", "textbox", "patrick"};
@@ -882,8 +884,7 @@ public class EditorActivity extends AppCompatActivity {
        if (resources.contains(imageNameText)) {
            shape.setImageName(imageNameText);
        } else {
-           Toast invalidNameToast = Toast.makeText(getApplicationContext(), "Invalid Image Name", Toast.LENGTH_SHORT);
-           invalidNameToast.show();
+           shape.setImageName(defaultImageName);
        }
 
        EditText textInput = editShapeDialog.findViewById(R.id.textInput);
@@ -899,6 +900,13 @@ public class EditorActivity extends AppCompatActivity {
        editorView.renderShape(shape);
 
        editShapeDialog.dismiss();
+   }
+
+   public void changeFontDialog(View view) {
+       Dialog dialog = new Dialog(this);
+       editFontColorDialog = dialog;
+       dialog.setContentView(R.layout.fontcolor);
+       dialog.show();
    }
 
     /**
