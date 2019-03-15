@@ -34,6 +34,7 @@ public class PlayView extends View {
     Paint myPaint = new Paint();
     Paint selectPaint = new Paint();
     Paint linePaint = new Paint();
+    Paint numPaint = new Paint();
 
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -421,6 +422,14 @@ public class PlayView extends View {
         float height = canvas.getHeight();
 
         inventoryY = (float)0.75 * height;
+
+//        numPaint.setColor(Color.WHITE);
+//        numPaint.setStyle(Paint.Style.FILL);
+//        canvas.drawPaint(numPaint);
+
+        numPaint.setColor(Color.BLACK);
+        numPaint.setTextSize(80);
+        canvas.drawText(currentPage.getDisplayName(), 10, 65, numPaint);
 
         linePaint.setColor(Color.BLACK);
         linePaint.setStrokeWidth(2);
