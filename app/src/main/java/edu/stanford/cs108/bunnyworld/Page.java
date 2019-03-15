@@ -194,6 +194,20 @@ public class Page {
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                         (float)currentShape.getY(), paint);
                 // if this shape is text, render it as such
+                // if the shape to be drawn is selected, render a box around it
+                if(currentShape == selected) {
+
+                    // use rectangle that is larger than the image as a border
+                    RectF shapeBorder = new RectF((float)currentShape.getLeft() - 10,
+                            (float)currentShape.getTop() - 10,
+                            (float)currentShape.getRight() + 10,
+                            (float)currentShape.getBottom() + 10);
+
+                    // draw transparent box and colored selection border
+                    canvas.drawRect(shapeBorder, transBoxFill);
+                    canvas.drawRect(shapeBorder, borderColor);
+
+                }
                 if(currentShape.isText()) {
                     if(paint == null) paint = new Paint();
                     paint.setColor(currentShape.getFontColor());
