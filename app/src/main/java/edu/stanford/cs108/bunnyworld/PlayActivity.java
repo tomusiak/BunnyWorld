@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Play mode for BunnyWorld
@@ -223,7 +224,11 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
-    /* public Shape checkOnDrop(Shape thisShape) {
+    /**
+     * Returns the top Shape in first onDrop script
+     * @return Shape on top (not the parameter)
+     */
+    public Shape checkOnDrop(Shape thisShape) {
         // Executes only if Shape is not hidden/unplayable
         if (!thisShape.isHidden()) {
             // not case-sensitive
@@ -240,18 +245,27 @@ public class PlayActivity extends AppCompatActivity {
                     // splits each clause into tokens based on whitespace delimiter
                     String[] tokens = clauses[i].split("\\s+");
 
-                    // index of first start action
-                    // THREE instead of 2 because on drop is two words
-                    int actionStart = 3;
+                    int shapeIndex = 2;
 
-                    if (tokens[1].equals(DROP)) {
-                        // add click condition, then call helper method to parse triggers
-                        executeTriggers(tokens, actionStart, thisShape);
+                    String shapeName = tokens[2];
+                    String internalShapeID = displayNameToID.get(shapeName);
+                    // Loop through all shapes to find the indicated shape
+                    Iterator it = pageMap.values().iterator();
+                    while (it.hasNext()) {
+                        Page page = (Page) it.next();
+                        ArrayList<Shape> shapes = page.getList();
+                        for (int j = 0; j < shapes.size(); j++) {
+                            Shape current = shapes.get(j);
+                            if (current.getShapeID().equals(internalShapeID)) {
+                                return current;
+                            }
+                        }
                     }
                 }
             }
         }
-    } */
+        return null;
+    }
 
     /**
      * Executes appropriate command given provided trigger word
