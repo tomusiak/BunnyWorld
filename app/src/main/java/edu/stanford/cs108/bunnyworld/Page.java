@@ -144,7 +144,6 @@ public class Page {
                     // draw transparent box and colored selection border
                     canvas.drawRect(shapeBorder, transBoxFill);
                     canvas.drawRect(shapeBorder, borderColor);
-
                 }
 
                 // if this shape is hidden, display it as semi-transparent
@@ -171,9 +170,6 @@ public class Page {
 
 
             }
-
-
-
         }
     }
 
@@ -189,7 +185,8 @@ public class Page {
             Shape currentShape = shapes.get(i);
             // if shape has a valid bitmap image AND is visible
             if(!currentShape.isHidden() && currentShape.getImageName() != "") {
-
+                canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
+                        (float)currentShape.getY(), paint);
                 // if this shape is text, render it as such
                 if(currentShape.isText()) {
                     if(paint == null) paint = new Paint();
@@ -204,11 +201,7 @@ public class Page {
                     canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                             (float)currentShape.getY(), paint);
                 }
-
             }
-
-
-
         }
     }
 

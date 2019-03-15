@@ -76,6 +76,13 @@ public class PlayView extends View {
     }
 
     /**
+     * Accessor method for inventory
+     * @return current Inventory
+     */
+    public Inventory getInventory() {
+        return inventory;
+    }
+    /**
      * Render all of the bitmap images for the current active page and
      * save them to the page's shape objects. Each shape object stores
      * its own bitmap inside.
@@ -131,8 +138,9 @@ public class PlayView extends View {
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
-            renderShape(currentShape);
-
+            if (!currentShape.isHidden()) {
+                renderShape(currentShape);
+            }
         }
         invalidate();
     }
@@ -140,7 +148,7 @@ public class PlayView extends View {
     /**
      * Renders a single shape's bitmap.
      *
-     * Note: must be called manuallly after a new shape with
+     * Note: must be called manually after a new shape with
      * an image is created.
      * @param shape to render the bitmap for
      */

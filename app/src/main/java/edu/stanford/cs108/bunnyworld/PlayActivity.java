@@ -32,7 +32,8 @@ public class PlayActivity extends AppCompatActivity {
     private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
     private Page starterPage; // Tracks user-selected starter page
 
-    ArrayList<Shape> inventory = new ArrayList<Shape>();
+    // ArrayList<Shape> inventory = new ArrayList<Shape>();
+    Inventory inventory;
 
     // actions for script parsing
     private static final String GOTO = "goto";
@@ -52,6 +53,7 @@ public class PlayActivity extends AppCompatActivity {
         playView = findViewById(R.id.play_view); // initializes play view
         loadGame();
         checkForEntryScript();
+        inventory = playView.getInventory();
     }
 
     /** Loads a game from the database. Allows user to select which game to load.
@@ -146,6 +148,7 @@ public class PlayActivity extends AppCompatActivity {
 
                     // splits each clause into tokens based on whitespace delimiter
                     String[] tokens = clauses[i].split("\\s+");
+                    // System.out.println("tokens" + tokens);
 
                     // index of first start action
                     int actionStart = 2;
@@ -298,12 +301,15 @@ public class PlayActivity extends AppCompatActivity {
         // refer to toasts (checks in PlayView for isHidden() etc)
         // if it's hidden, it's not playable
 
+        ArrayList<Shape> inventoryShapes = inventory.getList();
+
         // check to see if it exists, then sets
-        for (int i = 0; i < inventory.size(); i++) {
-            if (inventory.get(i).getShapeName().equals(shapeName)) {
-                inventory.get(i).setHidden(true);
+        for (int i = 0; i < inventoryShapes.size(); i++) {
+            if (inventoryShapes.get(i).getShapeName().equals(shapeName)) {
+                Shape current = inventoryShapes.get(i);
+                current.setHidden(true);
                 // redraw page
-                // playRender()
+                // System.out.println("is hiding");
                 playView.renderBitmaps(currentPage);
                 break;
             }
@@ -315,9 +321,10 @@ public class PlayActivity extends AppCompatActivity {
      * @param shapeName the name of the Shape to be shown
      */
     private void showShape (String shapeName) {
-        for (int i = 0; i < inventory.size(); i++) {
-            if (inventory.get(i).getShapeName().equals(shapeName)) {
-                inventory.get(i).setHidden(false);
+        ArrayList<Shape> inventoryShapes = inventory.getList();
+        for (int i = 0; i < inventoryShapes.size(); i++) {
+            if (inventoryShapes.get(i).getShapeName().equals(shapeName)) {
+                inventoryShapes.get(i).setHidden(false);
                 // redraw page
                 playView.renderBitmaps(currentPage);
                 break;
