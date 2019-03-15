@@ -76,8 +76,12 @@ public class PlayActivity extends AppCompatActivity {
                 if (pageMap != null) {
                     String startingPage = null;
                     for (String key : getPages().keySet()) {
+
                         Page currentPage = getPages().get(key);
+
                         String pageName = currentPage.getDisplayName();
+                        // System.out.println("is hiding");
+
                         displayNameToID.put(key,pageName);
                         if (currentPage.getStarterPageStatus() == true) {
                             startingPage = key;
@@ -299,8 +303,10 @@ public class PlayActivity extends AppCompatActivity {
     private void hideShape (String shapeName) {
         // refer to toasts (checks in PlayView for isHidden() etc)
         // if it's hidden, it's not playable
+        // System.out.println("is hiding");
 
         ArrayList<Shape> shapes = currentPage.getList();
+
 
         // check to see if it exists, then sets
         for (int i = 0; i < shapes.size(); i++) {
