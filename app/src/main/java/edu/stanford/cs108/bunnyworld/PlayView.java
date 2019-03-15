@@ -316,12 +316,13 @@ public class PlayView extends View {
         float width = canvas.getWidth();
         float height = canvas.getHeight();
 
-        inventoryY = (float)0.75*height;
+        inventoryY = (float)0.75 * height;
 
         linePaint.setColor(Color.BLACK);
         linePaint.setStrokeWidth(2);
 
-        canvas.drawLine((float)0, (float)0.75*height, (float)width, (float)0.75*height, linePaint);
+        canvas.drawLine((float)0, (float)0.75 * height, (float)width,
+                (float)0.75 * height, linePaint);
     }
 
 
