@@ -912,13 +912,21 @@ public class EditorActivity extends AppCompatActivity {
 
        EditText textInput = editShapeDialog.findViewById(R.id.textInput);
        String textText = textInput.getText().toString();
-       shape.setText(textText);
 
-       lastShapeEdited = shape;
+       // if the shape was not text and the user typed something in, update to a text shape
+       if(!shape.isText() && !textText.equals("")) {
+           shape.setIsText(true);
+       }
        // if the text is empty string, we want to mark isText false
        if(textText.equals("")) {
            shape.setIsText(false);
        }
+
+       shape.setText(textText);
+
+       lastShapeEdited = shape;
+
+
 
        editorView.renderShape(shape);
 
