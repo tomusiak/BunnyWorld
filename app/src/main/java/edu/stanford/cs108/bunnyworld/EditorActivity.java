@@ -925,7 +925,7 @@ public class EditorActivity extends AppCompatActivity {
        shape.setText(textText);
 
        // if the text is empty string, we want to mark isText false
-       if(textText == "") {
+       if(textText.equals("")) {
            shape.setIsText(false);
        }
 
