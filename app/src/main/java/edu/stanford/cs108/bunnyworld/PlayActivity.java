@@ -255,7 +255,7 @@ public class PlayActivity extends AppCompatActivity {
      * Plays sound given result of parsed script
      * @param soundName the name of the sound to be played
      */
-    private void playSound (String soundName) {
+    public void playSound (String soundName) {
         if (soundName.equals("carrotcarrotcarrot")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.carrotcarrotcarrot);
             mp.start();
@@ -324,11 +324,18 @@ public class PlayActivity extends AppCompatActivity {
      * Checks for "on enter" scripts that should be executed at the beginning
      * of the game.
      */
-    private void checkForEntryScript() {
-        if(currPage == null) return;
+    public void checkForEntryScript() {
+        if(currentPage == null) return;
         ArrayList<Shape> shapes = currentPage.getShapes();
         for (int i = 0; i < shapes.size(); i++) {
             executeEnterScripts(shapes.get(i));
         }
+    }
+
+    /**
+     * sets current page
+     */
+    public void setCurrentPage(Page page) {
+        currentPage = page;
     }
 }
