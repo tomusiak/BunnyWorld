@@ -325,6 +325,9 @@ public class PlayActivity extends AppCompatActivity {
      * of the game.
      */
     private void checkForEntryScript() {
-
+        ArrayList<Shape> shapes = currentPage.getShapes();
+        for (int i = 0; i < shapes.size(); i++) {
+            executeEnterScripts(shapes.get(i));
+        }
     }
 }
