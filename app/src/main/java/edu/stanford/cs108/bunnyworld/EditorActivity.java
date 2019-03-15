@@ -313,6 +313,9 @@ public class EditorActivity extends AppCompatActivity {
         // Updates the current page in the view
         editorView.changeCurrentPage(currentPage);
 
+        undoShapeDelete = null;
+        undoShapeAdd = null;
+
         Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
         addPageToast.show();
     }
@@ -428,7 +431,7 @@ public class EditorActivity extends AppCompatActivity {
             // EXTENSION: Delete references to that deleted shape in scripts of all other shapes
 
             // Iterate through all pages and Shapes in those pages
-           /* Iterator it = pages.entrySet().iterator();
+            Iterator it = pages.values().iterator();
             while (it.hasNext()) {
                 Page page = (Page) it.next();
                 ArrayList<Shape> shapes = page.getList();
@@ -452,7 +455,7 @@ public class EditorActivity extends AppCompatActivity {
                     // Set script of that Shape to that newly re-assembled script
                     shapes.get(i).setScript(newScript);
                 }
-            }*/
+            }
 
             Toast addToast = Toast.makeText(getApplicationContext(),"Shape Successfully Deleted",Toast.LENGTH_SHORT);
             addToast.show();
@@ -509,6 +512,9 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Undo functionality for most recent shape added to page
+     */
     private void undoShapeAdd() {
         if (undoShapeAdd == null) {
             Toast undoErrorToast = Toast.makeText(getApplicationContext(), "Can Only Undo Most Recent Shape Addition", Toast.LENGTH_SHORT);
@@ -1001,6 +1007,8 @@ public class EditorActivity extends AppCompatActivity {
         String uniqueID = displayNameToID.get(pageName);
         Page nextPage = pages.get(uniqueID);
         currentPage = nextPage;
+        undoShapeAdd = null;
+        undoShapeDelete = null;
         editorView.changeCurrentPage(nextPage);
     }
 
