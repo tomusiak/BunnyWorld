@@ -46,6 +46,8 @@ public class EditorActivity extends AppCompatActivity {
     private Shape undoShapeAdd;
     private int currScriptSteps;
     private int numScriptAdds;
+    private Shape undoShapeEdit;
+    private Shape lastShapeEdited;
 
     private Dialog editShapeDialog;
     private Dialog addShapeDialog;
@@ -564,6 +566,22 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
+     * Undo functionality for most recent shape edited
+     */
+    private void undoShapeEdit() {
+        if (undoShapeEdit != null) {
+            currentPage.removeShape(lastShapeEdited);
+            currentPage.addShape(undoShapeEdit);
+            undoShapeEdit = null;
+            lastShapeEdited = null;
+            editorView.renderBitmaps(currentPage);
+        } else {
+            Toast errorToast = Toast.makeText(getApplicationContext(), "Can Only Undo Most Recent Shape Edit", Toast.LENGTH_SHORT);
+            errorToast.show();
+        }
+    }
+
+    /**
      * Deletes selected page from internal data structures and external view
      */
     private void deletePageDialog() {
@@ -758,57 +776,6 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /**
-     * Prompts user to input a new name for the shape
-     */
-    private void renameShapeDialog() {
-        Shape selectedShape = currentPage.getSelected();
-        if (selectedShape == null) {
-            Toast shapeSelectedError = Toast.makeText(getApplicationContext(), "No Shape Selected", Toast.LENGTH_SHORT);
-            shapeSelectedError.show();
-            return;
-        }
-        AlertDialog.Builder renameShapePrompt = new AlertDialog.Builder(this);
-        renameShapePrompt.setTitle("Input New Name For Shape: ");
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        renameShapePrompt.setView(input);
-        // Enables saving new name
-        renameShapePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String newShapeName = input.getText().toString();
-                newShapeName = newShapeName.toLowerCase();
-                ArrayList<Shape> shapes = currentPage.getShapes();
-                // checks to make sure shape name not already used; if used, prompts user to re-enter name
-                if (shapeNameExists(newShapeName)) {
-                    Toast shapeRenameError = Toast.makeText(getApplicationContext(), "Shape Name Already Exists", Toast.LENGTH_SHORT);
-                    shapeRenameError.show();
-                } else {
-                    renameShape(newShapeName);
-                }
-            }
-        });
-        // Cancels save
-        renameShapePrompt.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        renameShapePrompt.show();
-    }
-
-    /**
-     * Helper method to rename shape internally
-     * @param newName the new name of the shape
-     */
-    private void renameShape(String newName) {
-        Shape selectedShape = currentPage.getSelected();
-        String name = newName.toLowerCase();
-        selectedShape.setShapeName(name);
-    }
-
-    /**
      * Dialog that pops up that allows user to change the properties of the selected shape
      */
     private void editShapeDialog() {
@@ -874,6 +841,8 @@ public class EditorActivity extends AppCompatActivity {
 
        Shape shape = currentPage.getSelected();
 
+       undoShapeEdit = new Shape(shape);
+
        EditText xInput = editShapeDialog.findViewById(R.id.xInput);
        double x = Double.parseDouble(xInput.getText().toString());
        shape.setX(x);
@@ -893,7 +862,7 @@ public class EditorActivity extends AppCompatActivity {
        EditText shapeName = editShapeDialog.findViewById(R.id.nameInput);
        String name = shapeName.getText().toString();
        ArrayList<Shape> shapes = currentPage.getShapes();
-       if (shapeNameExists(name)) {
+       if (shapeNameExists(name) && !name.equals(shape.getShapeName())) {
            Toast shapeRenameError = Toast.makeText(getApplicationContext(), "Shape Name Already Exists", Toast.LENGTH_SHORT);
            shapeRenameError.show();
        } else {
@@ -921,6 +890,8 @@ public class EditorActivity extends AppCompatActivity {
        EditText textInput = editShapeDialog.findViewById(R.id.textInput);
        String textText = textInput.getText().toString();
        shape.setText(textText);
+
+       lastShapeEdited = shape;
 
        editorView.renderShape(shape);
 
@@ -1174,6 +1145,29 @@ public class EditorActivity extends AppCompatActivity {
         db.autoSave(getPages()); // Autosaves in case someone did not mean to lose all of their data.\
     }
 
+    private void undoShapeDialog() {
+        final String[] scriptTriggers = new String[]{"Undo Delete", "Undo Add", "Undo Edit"};
+        AlertDialog.Builder triggersPrompt = new AlertDialog.Builder(this);
+        triggersPrompt.setTitle("Select Shape Action To Undo: ");
+        triggersPrompt.setItems(scriptTriggers, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int selection) {
+                switch(selection) {
+                    case 0:
+                        undoShapeDelete();
+                        break;
+                    case 1:
+                        undoShapeAdd();
+                        break;
+                    case 2:
+                        undoShapeEdit();
+                        break;
+                }
+            }
+        });
+        triggersPrompt.show();
+    }
+
     /** Resets editor activity.
      */
     public void initializeEditor() {
@@ -1225,8 +1219,8 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape",
-                "Delete Shape", "Copy Shape", "Paste Shape", "Undo Delete", "Undo Add"};
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Edit Shape",
+                "Delete Shape", "Copy Shape", "Paste Shape", "Undo"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1239,25 +1233,19 @@ public class EditorActivity extends AppCompatActivity {
                         addShape();
                         break;
                     case 2:
-                        renameShapeDialog();
-                        break;
-                    case 3:
                         editShapeDialog();
                         break;
-                    case 4:
+                    case 3:
                         deleteShape();
                         break;
-                    case 5:
+                    case 4:
                         copyShape();
                         break;
-                    case 6:
+                    case 5:
                         pasteShape();
                         break;
-                    case 7:
-                        undoShapeDelete();
-                        break;
-                    case 8:
-                        undoShapeAdd();
+                    case 6:
+                        undoShapeDialog();
                         break;
                 }
                 shapeSpinner.setSelection(0);
