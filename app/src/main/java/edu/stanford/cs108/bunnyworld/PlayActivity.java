@@ -33,7 +33,7 @@ public class PlayActivity extends AppCompatActivity {
     private Page starterPage; // Tracks user-selected starter page
 
     // ArrayList<Shape> inventory = new ArrayList<Shape>();
-    Inventory inventory;
+    // Inventory inventory;
 
     // actions for script parsing
     private static final String GOTO = "goto";
@@ -53,7 +53,6 @@ public class PlayActivity extends AppCompatActivity {
         playView = findViewById(R.id.play_view); // initializes play view
         loadGame();
         checkForEntryScript();
-        inventory = playView.getInventory();
     }
 
     /** Loads a game from the database. Allows user to select which game to load.
@@ -301,12 +300,12 @@ public class PlayActivity extends AppCompatActivity {
         // refer to toasts (checks in PlayView for isHidden() etc)
         // if it's hidden, it's not playable
 
-        ArrayList<Shape> inventoryShapes = inventory.getList();
+        ArrayList<Shape> shapes = currentPage.getList();
 
         // check to see if it exists, then sets
-        for (int i = 0; i < inventoryShapes.size(); i++) {
-            if (inventoryShapes.get(i).getShapeName().equals(shapeName)) {
-                Shape current = inventoryShapes.get(i);
+        for (int i = 0; i < shapes.size(); i++) {
+            if (shapes.get(i).getShapeName().equals(shapeName)) {
+                Shape current = shapes.get(i);
                 current.setHidden(true);
                 // redraw page
                 // System.out.println("is hiding");
@@ -321,10 +320,10 @@ public class PlayActivity extends AppCompatActivity {
      * @param shapeName the name of the Shape to be shown
      */
     private void showShape (String shapeName) {
-        ArrayList<Shape> inventoryShapes = inventory.getList();
-        for (int i = 0; i < inventoryShapes.size(); i++) {
-            if (inventoryShapes.get(i).getShapeName().equals(shapeName)) {
-                inventoryShapes.get(i).setHidden(false);
+        ArrayList<Shape> shapes = currentPage.getList();
+        for (int i = 0; i < shapes.size(); i++) {
+            if (shapes.get(i).getShapeName().equals(shapeName)) {
+                shapes.get(i).setHidden(false);
                 // redraw page
                 playView.renderBitmaps(currentPage);
                 break;

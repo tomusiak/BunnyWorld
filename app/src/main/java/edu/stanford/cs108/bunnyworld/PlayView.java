@@ -82,6 +82,7 @@ public class PlayView extends View {
     public Inventory getInventory() {
         return inventory;
     }
+
     /**
      * Render all of the bitmap images for the current active page and
      * save them to the page's shape objects. Each shape object stores
