@@ -238,6 +238,36 @@ public class PlayView extends View {
     }
 
     /**
+     * Finds a shape that exists at the specified x, y coordinate and isn't the currently selected shape
+     * and returns it. null is returned if no shape is found. Only works for stuff in the page (not inventory).
+     * Used exclusively for onDrop detection.
+     *
+     * @param x coordinate to search for shape at
+     * @param y coordinate to search for shape at
+     * @return the found shape, or null if no shape is found at x, y (not counting currently selected)
+     */
+    public Shape notSelectedShapeAtXY(double x, double y) {
+
+        if(currentPage == null && inventory == null) return null; // don't do anything if page just loaded
+
+        ArrayList<Shape> shapes = currentPage.getList();
+
+        // search from back to get the images closet to the front
+        for(int i = shapes.size() - 1; i >= 0; i--) {
+            Shape s = shapes.get(i);
+            // if the click is in bounds of this shape, return it
+            if(x <= s.getRight() && x >= s.getLeft() &&
+                    y >= s.getTop() && y <= s.getBottom()) {
+                if (!s.equals(currentPage.getSelected())) {
+                    return s;
+                }
+            }
+        }
+
+        return null; // no shape is here
+    }
+
+    /**
      * Override onTouch Event. This is responsible for reading the touch
      * activity to tell where the user clicks and update the x and y coords
      * accordingly.
@@ -273,6 +303,19 @@ public class PlayView extends View {
                 x2 = event.getX();
                 y2 = event.getY();
 
+                if (currentPage.getSelected() != null) {
+                    double height = currentPage.getSelected().getHeight();
+
+                    // drop script code
+                    if (notSelectedShapeAtXY(x2, y2) != null ||
+                            notSelectedShapeAtXY(x2+(height), y2) != null  ||
+                            notSelectedShapeAtXY(x2, y2+(height)) != null  ||
+                            notSelectedShapeAtXY(x2+(height), y2+(height)) != null ) {
+                        ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+                        ((PlayActivity)this.getContext()).executeDropScripts(currentPage.getSelected());
+                    }
+                }
+
                 currentPage.selectShape(null);
                 inventory.selectShape(null);
 
@@ -292,12 +335,6 @@ public class PlayView extends View {
                         currentPage.removeShape(currentPage.getSelected());
                     }
 
-                    // drop script code
-                    if (shapeAtXY(xDelta, yDelta) != null) {
-                        Shape dropped = shapeAtXY(xDelta, yDelta);
-                        ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
-                        ((PlayActivity)this.getContext()).executeDropScripts(dropped);
-                    }
                 }
 
                 if (inventory != null && inventory.getSelected() != null) {
