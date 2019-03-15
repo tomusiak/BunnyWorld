@@ -59,23 +59,23 @@ class Database extends SQLiteOpenHelper {
     private void populateSampleGame() {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Shape currentShape = new Shape(1, "carrot", "", 20, 20, 250, 250);
-        String shapeName = currentShape.getShapeName();
-        String imageName = currentShape.getImageName();
-        String text = currentShape.getText();
-        double x = currentShape.getX();
-        double y = currentShape.getY();
-        double height = currentShape.getHeight();
-        double width = currentShape.getWidth();
-        int moveable = currentShape.getMoveableStatus() ? 1 : 0;
-        int hidden = currentShape.isHidden() ? 1 : 0;
+        Shape carrot1 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        String shapeName = carrot1.getShapeName();
+        String imageName = carrot1.getImageName();
+        String text = carrot1.getText();
+        double x = carrot1.getX();
+        double y = carrot1.getY();
+        double height = carrot1.getHeight();
+        double width = carrot1.getWidth();
+        int moveable = carrot1.getMoveableStatus() ? 1 : 0;
+        int hidden = carrot1.isHidden() ? 1 : 0;
         int fontSize = 48;
         String script = "";
         int starterPage = 1;
         String pageName = "page1";
         String pageID = "page1";
         String saveName = "Sample Game";
-        String insertStr = "INSERT INTO ShapeDatabase VALUES "
+        String carrot1Str = "INSERT INTO ShapeDatabase VALUES "
                 + "('" + shapeName + "', '" +
                 imageName + "', '" +
                 text + "'," +
@@ -91,7 +91,41 @@ class Database extends SQLiteOpenHelper {
                 pageName + "', '" +
                 pageID + "', '" +
                 saveName + "', NULL)";
-        db.execSQL(insertStr);
+        db.execSQL(carrot1Str);
+
+        Shape bunny1 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        String bunny1shapeName = bunny1.getShapeName();
+        String bunny1imageName = bunny1.getImageName();
+        String bunny1text = bunny1.getText();
+        double bunny1x = bunny1.getX();
+        double bunny1y = bunny1.getY();
+        double bunny1height = bunny1.getHeight();
+        double bunny1width = bunny1.getWidth();
+        int bunny1moveable = bunny1.getMoveableStatus() ? 1 : 0;
+        int bunny1hidden = bunny1.isHidden() ? 1 : 0;
+        int bunny1fontSize = 48;
+        String bunny1script = "";
+        int bunny1starterPage = 1;
+        String bunny1pageName = "page1";
+        String bunny1pageID = "page1";
+        String bunny1saveName = "Sample Game";
+        String bunny1Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + shapeName + "', '" +
+                imageName + "', '" +
+                text + "'," +
+                x + "," +
+                y + "," +
+                height + "," +
+                width + "," +
+                moveable + "," +
+                hidden + "," +
+                fontSize + "," +
+                starterPage + ", '" +
+                script + "', '" +
+                pageName + "', '" +
+                pageID + "', '" +
+                saveName + "', NULL)";
+        db.execSQL(bunny1Str);
     }
 
     @Override
