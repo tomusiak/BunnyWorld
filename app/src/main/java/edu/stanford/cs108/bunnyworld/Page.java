@@ -256,7 +256,9 @@ public class Page {
         if(selected != null) {
             shapes.remove(selected);
             shapes.add(selected);
-        }
+        } // else {
+            // shapes.remove(selected);
+        // }
 
     }
 
