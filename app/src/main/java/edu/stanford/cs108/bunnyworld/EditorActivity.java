@@ -438,7 +438,7 @@ public class EditorActivity extends AppCompatActivity {
         Shape shape;
         if (shapeImgName.equals("textbox")) {
             shape = new Shape(numShapes, shapeImgName, shapeName,
-                    20, 20, 250, 150);
+                    20, 20, 250, 48 );
             shape.setIsText(true);
             shape.setText("Text");
         } else {
@@ -923,6 +923,11 @@ public class EditorActivity extends AppCompatActivity {
        EditText textInput = editShapeDialog.findViewById(R.id.textInput);
        String textText = textInput.getText().toString();
        shape.setText(textText);
+
+       // if the text is empty string, we want to mark isText false
+       if(textText == "") {
+           shape.setIsText(false);
+       }
 
        editorView.renderShape(shape);
 

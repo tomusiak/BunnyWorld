@@ -1,6 +1,7 @@
 package edu.stanford.cs108.bunnyworld;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
 /*
     The edu.stanford.cs108.bunnyworld.Shape class represents an object that has been added
@@ -13,6 +14,8 @@ public class Shape {
     private String text;
 
     private boolean isText;
+    private int fontSize;
+    private int fontColor;
 
     private double x;
     private double y;
@@ -23,7 +26,6 @@ public class Shape {
     private boolean hidden;
     private boolean isSelected;
 
-    private int fontSize;
     private static final int DEFAULT_FONT_SIZE = 24; // Sets default font size to 24
 
     // Script, which may contain multiple executable clauses, is stored as a String
@@ -66,6 +68,7 @@ public class Shape {
 
         // set text defaults
         this.isText = false;
+        this.fontColor = Color.BLACK;
         this.text = "";
     }
 
@@ -130,6 +133,18 @@ public class Shape {
      * see if this shape is actually text
      */
     public boolean isText() { return isText; }
+
+    /**
+     * Set the font color of this shape
+     * @param c color to be selected
+     */
+    public void setFontColor(int c) { fontColor = c; }
+
+    /**
+     * Get the font color of this shape
+     * @return font color
+     */
+    public int getFontColor() { return fontColor; }
 
     /**
      * Modifier method that sets the script of the shape

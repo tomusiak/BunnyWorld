@@ -156,12 +156,12 @@ public class Page {
                 // if this shape is text, render it as such
                 if(currentShape.isText()) {
                     if(paint == null) paint = new Paint();
-                    paint.setColor(Color.BLACK);
-                    paint.setTextSize(48);
+                    paint.setColor(currentShape.getFontColor());
+                    paint.setTextSize((float)currentShape.getHeight());
                     canvas.drawText(currentShape.getText(),
                             (float)currentShape.getX(),
                             (float)currentShape.getY() +
-                                    (float) (currentShape.getHeight() / 2), paint);
+                                    (float) (currentShape.getHeight()), paint);
                 // otherwise, simply render the image bitmap
                 } else {
                     canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
@@ -190,8 +190,20 @@ public class Page {
             // if shape has a valid bitmap image AND is visible
             if(!currentShape.isHidden() && currentShape.getImageName() != "") {
 
-                canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
-                        (float)currentShape.getY(), paint);
+                // if this shape is text, render it as such
+                if(currentShape.isText()) {
+                    if(paint == null) paint = new Paint();
+                    paint.setColor(currentShape.getFontColor());
+                    paint.setTextSize((float)currentShape.getHeight());
+                    canvas.drawText(currentShape.getText(),
+                            (float)currentShape.getX(),
+                            (float)currentShape.getY() +
+                                    (float) (currentShape.getHeight()), paint);
+
+                } else {    // otherwise, simply render the image bitmap
+                    canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
+                            (float)currentShape.getY(), paint);
+                }
 
             }
 
