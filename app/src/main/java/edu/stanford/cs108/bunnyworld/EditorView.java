@@ -99,7 +99,6 @@ public class EditorView extends View {
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
             renderShape(currentShape);
-
         }
         invalidate();
     }

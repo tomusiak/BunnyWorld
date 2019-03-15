@@ -223,6 +223,36 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
+    /* public Shape checkOnDrop(Shape thisShape) {
+        // Executes only if Shape is not hidden/unplayable
+        if (!thisShape.isHidden()) {
+            // not case-sensitive
+            String script = thisShape.getScript().toLowerCase();
+
+            // Accounts for null script, in which case script will not execute
+            if (!script.equals("")) {
+                // splits block of script into clauses
+                String[] clauses = script.split(";");
+
+                // uses loop to execute each clause
+                for (int i = 0; i < clauses.length; i++) {
+
+                    // splits each clause into tokens based on whitespace delimiter
+                    String[] tokens = clauses[i].split("\\s+");
+
+                    // index of first start action
+                    // THREE instead of 2 because on drop is two words
+                    int actionStart = 3;
+
+                    if (tokens[1].equals(DROP)) {
+                        // add click condition, then call helper method to parse triggers
+                        executeTriggers(tokens, actionStart, thisShape);
+                    }
+                }
+            }
+        }
+    } */
+
     /**
      * Executes appropriate command given provided trigger word
      * Pre-condition: Script is valid and called correctly

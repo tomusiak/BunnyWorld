@@ -132,8 +132,9 @@ public class PlayView extends View {
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
-            renderShape(currentShape);
-
+            if (!currentShape.isHidden()) {
+                renderShape(currentShape);
+            }
         }
         invalidate();
     }
@@ -214,8 +215,8 @@ public class PlayView extends View {
      * page's render function.
      */
     public void drawPage(Canvas canvas) {
-        if(currentPage != null) currentPage.render(canvas);
-        if (inventory != null) inventory.render(canvas);
+        if(currentPage != null) currentPage.playRender(canvas);
+        if (inventory != null) inventory.playRender(canvas);
     }
 
     /**
