@@ -106,20 +106,6 @@ public class PlayActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Helper method to switch between pages
-     * @param pageName the page to switch to
-     */
-    private void switchPages(String pageName) {
-        // System.out.println("switching");
-        // currPage = pageName;
-        currentPage = pageMap.get(pageName);
-        playView.changeCurrentPage(currentPage);
-        // Page nextPage = pageMap.get(pageName);
-        // playView.changeCurrentPage(nextPage);
-
-    }
-
     /** Helper method to get pages
      * @return pages
      */
@@ -247,6 +233,7 @@ public class PlayActivity extends AppCompatActivity {
     private void executeTriggers(String[] tokens, int actionStart) {
         for (int j = actionStart; j < tokens.length; j+=2) {
             String command = tokens[j];
+            // System.out.println(command);
             if (command.equals(GOTO)) {
                 // System.out.println("switching");
                 switchPages(tokens[j+1]);
@@ -261,6 +248,26 @@ public class PlayActivity extends AppCompatActivity {
                 return;
             }
         }
+    }
+
+    /**
+     * Helper method to switch between pages
+     * @param pageName the page to switch to
+     */
+    private void switchPages(String pageName) {
+
+        // System.out.println("switching");
+        // currPage = pageName;
+        // currentPage = pageMap.get(pageName);
+
+        String name = displayNameToID.get(pageName);
+
+        Page next = pageMap.get(name);
+        playView.changeCurrentPage(next);
+        setCurrentPage(next);
+        // Page nextPage = pageMap.get(pageName);
+        // playView.changeCurrentPage(nextPage);
+
     }
 
     /**
@@ -309,7 +316,8 @@ public class PlayActivity extends AppCompatActivity {
     private void hideShape (String shapeName) {
         // refer to toasts (checks in PlayView for isHidden() etc)
         // if it's hidden, it's not playable
-        // System.out.println("is hiding");
+
+        // System.out.println("hiding");
 
         ArrayList<Shape> shapes = currentPage.getList();
 
