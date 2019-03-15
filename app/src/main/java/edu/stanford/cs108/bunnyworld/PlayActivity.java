@@ -109,7 +109,8 @@ public class PlayActivity extends AppCompatActivity {
      */
     private void switchPages(String pageName) {
         currPage = pageName;
-        Page nextPage = pageMap.get(pageName);
+        String name = displayNameToID.get(pageName);
+        Page nextPage = pageMap.get(name);
         playView.changeCurrentPage(nextPage);
     }
 
