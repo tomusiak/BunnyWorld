@@ -25,9 +25,9 @@ public class PlayActivity extends AppCompatActivity {
 
     // Commented out this first line and replaced with a Hashmap<String, Page> to match agreed upon structures
     //static HashMap<String, ArrayList<Shape>> fullShapeList; // Contains key of string of page names linked to an ArrayList of shapes.
-    static HashMap<String, Page> pageMap; // Maps string keys to page objects
+    static HashMap<String, Page> pageMap; // Maps unique string ID to page objects
     private Page currentPage;
-    private String currPage;
+    // private String currPage;
     private PlayView playView;
     private HashMap<String, String> displayNameToID; // Maps display name of Page to unique ID of Page
     private Page starterPage; // Tracks user-selected starter page
@@ -111,9 +111,13 @@ public class PlayActivity extends AppCompatActivity {
      * @param pageName the page to switch to
      */
     private void switchPages(String pageName) {
-        currPage = pageName;
-        Page nextPage = pageMap.get(pageName);
-        playView.changeCurrentPage(nextPage);
+        // System.out.println("switching");
+        // currPage = pageName;
+        currentPage = pageMap.get(pageName);
+        playView.changeCurrentPage(currentPage);
+        // Page nextPage = pageMap.get(pageName);
+        // playView.changeCurrentPage(nextPage);
+
     }
 
     /** Helper method to get pages
@@ -202,7 +206,7 @@ public class PlayActivity extends AppCompatActivity {
 
     /**
      * Executes on drop scripts for Shape
-     * @param thisShape the Shape to be executed upon
+     * @param thisShape the Shape to be executed upon, in this case the bottom Shape
      */
     public void executeDropScripts(Shape thisShape) {
         // Executes only if Shape is not hidden/unplayable
@@ -244,10 +248,12 @@ public class PlayActivity extends AppCompatActivity {
         for (int j = actionStart; j < tokens.length; j+=2) {
             String command = tokens[j];
             if (command.equals(GOTO)) {
+                // System.out.println("switching");
                 switchPages(tokens[j+1]);
             } else if (command.equals(PLAY)) {
                 playSound(tokens[j+1]);
             } else if (command.equals(HIDE)) {
+                // System.out.println("hiding");
                 hideShape(tokens[j+1]);
             } else if (command.equals(SHOW)) {
                 showShape(tokens[j+1]);
@@ -306,7 +312,6 @@ public class PlayActivity extends AppCompatActivity {
         // System.out.println("is hiding");
 
         ArrayList<Shape> shapes = currentPage.getList();
-
 
         // check to see if it exists, then sets
         for (int i = 0; i < shapes.size(); i++) {
