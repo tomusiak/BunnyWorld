@@ -366,34 +366,50 @@ public class PlayActivity extends AppCompatActivity {
         if (soundName.equals("carrotcarrotcarrot")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.carrotcarrotcarrot);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*carrot carrot carrot*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("evillaugh")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.evillaugh);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*mwa ha ha ha ha*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("fire")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.fire);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*burning sounds intensify*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("hooray")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.hooray);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"HOORAY!!!",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("munch")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.munch);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*munch*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("munching")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.munching);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*munch munch munch*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("scream")) {
             MediaPlayer mp = MediaPlayer.create(this, R.raw.scream);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"aAAAaaaAAaAAAaaAAaaAaA",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("woof")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.woof);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*bork bork*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
     }
 
