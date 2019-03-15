@@ -421,6 +421,8 @@ public class EditorActivity extends AppCompatActivity {
         Shape selectedShape = currentPage.getSelected();
         if (selectedShape != null) {
             undoShapeDelete = selectedShape;
+            if (copiedShape != null && copiedShape.equals(selectedShape)) copiedShape = null;
+            if (undoShapeAdd != null && undoShapeAdd.equals(selectedShape)) undoShapeAdd = null;
             editorView.deleteShape();
 
             // EXTENSION: Delete references to that deleted shape in scripts of all other shapes
