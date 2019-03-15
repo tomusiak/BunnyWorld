@@ -335,8 +335,25 @@ public class PlayView extends View {
                             notSelectedShapeAtXY(x2+(height), y2) != null  ||
                             notSelectedShapeAtXY(x2, y2+(height)) != null  ||
                             notSelectedShapeAtXY(x2+(height), y2+(height)) != null ) {
-                        ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
-                        ((PlayActivity)this.getContext()).executeDropScripts(currentPage.getSelected());
+
+                        Shape dropped;
+
+                        if (notSelectedShapeAtXY(x2, y2) != null) {
+                            dropped = notSelectedShapeAtXY(x2, y2);
+                        }
+                        else if (notSelectedShapeAtXY(x2+(height), y2) != null) {
+                            dropped = notSelectedShapeAtXY(x2+(height), y2);
+                        }
+                        else if (notSelectedShapeAtXY(x2, y2+(height)) != null) {
+                            dropped = (notSelectedShapeAtXY(x2, y2+(height)));
+                        }
+                        else {
+                            dropped = notSelectedShapeAtXY(x2+(height), y2+(height));
+                        }
+                        if (((PlayActivity)this.getContext()).checkOnDrop(dropped).equals(currentPage.getSelected())) {
+                            ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+                            ((PlayActivity)this.getContext()).executeDropScripts(dropped);
+                        }
                     }
                 }
 
