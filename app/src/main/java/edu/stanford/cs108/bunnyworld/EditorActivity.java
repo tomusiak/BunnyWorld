@@ -148,7 +148,7 @@ public class EditorActivity extends AppCompatActivity {
      * Calls respective methods for each action to continue adding to currScript
      */
     private void scriptActionsDialog() {
-        final String[] scriptActions = new String[]{"Go To", "Play", "Hide", "Show"};
+        final String[] scriptActions = new String[]{"GoTo", "Play", "Hide", "Show"};
         AlertDialog.Builder actionsPrompt = new AlertDialog.Builder(this);
         actionsPrompt.setTitle("Select Script Action: ");
         actionsPrompt.setItems(scriptActions, new DialogInterface.OnClickListener() {
