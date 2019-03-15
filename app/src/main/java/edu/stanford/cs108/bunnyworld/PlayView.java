@@ -62,21 +62,43 @@ public class PlayView extends View {
      */
     public void changeCurrentPage(Page page) {
 
+        if(currentPage != null) currentPage.selectShape(null);
+        currentPage = page;
+        renderBitmaps(page); // render all the bitmaps for the page
+        invalidate();
         // set selected to null before changing the page
-        if(currentPage != null) {
+        /* if(currentPage != null) {
             currentPage.selectShape(null);
         }
         currentPage = page;
 
         renderBitmaps(page); // render all the bitmaps for the page
+
         renderBitmaps(inventory); // render the inventory
+
 
         if (currentPage != null) {
             ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
             ((PlayActivity)getContext()).checkForEntryScript();
         }
 
-        invalidate();
+        invalidate(); */
+    }
+
+    /**
+     * Deletes the currently selected shape if one exists & returns true
+     * upon success. Also will force the canvas to reflect this update.
+     * @return true/false bases upon success of deletion
+     */
+    public boolean deleteShape() {
+
+        // try to delete a shape
+        if(currentPage != null && currentPage.getSelected() != null) {
+            currentPage.removeShape(currentPage.getSelected());
+            invalidate();
+            return true;
+        }
+        return false;   // no shape to delete
     }
 
     /**
