@@ -55,6 +55,10 @@ public class EditorActivity extends AppCompatActivity {
     private Dialog addShapeDialog;
     private Dialog editFontColorDialog;
 
+    private int red;
+    private int blue;
+    private int green;
+
     String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
             "fire", "mystic", "textbox", "patrick"};
     int[] imageIds = {R.drawable.carrot,
@@ -100,6 +104,10 @@ public class EditorActivity extends AppCompatActivity {
         resources.add("mystic");
         resources.add("textbox");
         resources.add("patrick");
+
+        red = 0;
+        green = 0;
+        blue = 0;
     }
 
     /**
@@ -923,6 +931,73 @@ public class EditorActivity extends AppCompatActivity {
        editFontColorDialog = dialog;
        dialog.setContentView(R.layout.fontcolor);
        dialog.show();
+
+       SeekBar redBar = editFontColorDialog.findViewById(R.id.red);
+       final SeekBar greenBar = editFontColorDialog.findViewById(R.id.green);
+       SeekBar blueBar = editFontColorDialog.findViewById(R.id.blue);
+
+       redBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+           @Override
+           public void onProgressChanged(SeekBar seekBar, int progress,
+                                         boolean fromUser) {
+               red = seekBar.getProgress();
+               int color = Color.rgb(red, green, blue);
+
+               View colorView = editFontColorDialog.findViewById(R.id.colorview);
+               colorView.setBackgroundColor(color);
+
+               String text = "Red: " + red + ", Green: " + green + ", Blue: " + blue;
+               TextView colorText = editFontColorDialog.findViewById(R.id.colortext);
+               colorText.setText(text);
+           }
+           @Override
+           public void onStartTrackingTouch(SeekBar seekBar) {  }
+
+           @Override
+           public void onStopTrackingTouch(SeekBar seekBar) { }
+       });
+
+       greenBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+           @Override
+           public void onProgressChanged(SeekBar seekBar, int progress,
+                                         boolean fromUser) {
+               green = seekBar.getProgress();
+               int color = Color.rgb(red, green, blue);
+
+               View colorView = editFontColorDialog.findViewById(R.id.colorview);
+               colorView.setBackgroundColor(color);
+
+               String text = "Red: " + red + ", Green: " + green + ", Blue: " + blue;
+               TextView colorText = editFontColorDialog.findViewById(R.id.colortext);
+               colorText.setText(text);
+           }
+           @Override
+           public void onStartTrackingTouch(SeekBar seekBar) {  }
+
+           @Override
+           public void onStopTrackingTouch(SeekBar seekBar) { }
+       });
+
+       blueBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+           @Override
+           public void onProgressChanged(SeekBar seekBar, int progress,
+                                         boolean fromUser) {
+               blue = seekBar.getProgress();
+               int color = Color.rgb(red, green, blue);
+
+               View colorView = editFontColorDialog.findViewById(R.id.colorview);
+               colorView.setBackgroundColor(color);
+
+               String text = "Red: " + red + ", Green: " + green + ", Blue: " + blue;
+               TextView colorText = editFontColorDialog.findViewById(R.id.colortext);
+               colorText.setText(text);
+           }
+           @Override
+           public void onStartTrackingTouch(SeekBar seekBar) {  }
+
+           @Override
+           public void onStopTrackingTouch(SeekBar seekBar) { }
+       });
    }
 
    public void changeColor(View view) {
@@ -946,6 +1021,7 @@ public class EditorActivity extends AppCompatActivity {
        // if we can update the color, do it
        if(currentPage != null && currentPage.getSelected() != null) {
            currentPage.getSelected().setFontColor(color);
+           editorView.renderShape(currentPage.getSelected());
            editFontColorDialog.dismiss();
        }
 
