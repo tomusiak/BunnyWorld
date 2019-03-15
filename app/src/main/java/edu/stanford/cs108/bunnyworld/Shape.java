@@ -24,7 +24,6 @@ public class Shape {
 
     private boolean moveable;
     private boolean hidden;
-    private boolean isSelected;
 
     private static final int DEFAULT_FONT_SIZE = 24; // Sets default font size to 24
 
