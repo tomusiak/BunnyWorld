@@ -132,7 +132,7 @@ public class PlayActivity extends AppCompatActivity {
      */
     public void executeClickScripts(Shape thisShape) {
         // Executes only if Shape is not hidden/unplayable
-        if (!thisShape.getHiddenStatus()) {
+        if (!thisShape.isHidden()) {
             // not case-sensitive
             String script = thisShape.getScript().toLowerCase();
 
@@ -167,7 +167,7 @@ public class PlayActivity extends AppCompatActivity {
      */
     public void executeEnterScripts(Shape thisShape) {
         // Executes only if Shape is not hidden/unplayable
-        if (!thisShape.getHiddenStatus()) {
+        if (!thisShape.isHidden()) {
             // not case-sensitive
             String script = thisShape.getScript().toLowerCase();
 
@@ -200,7 +200,7 @@ public class PlayActivity extends AppCompatActivity {
      */
     public void executeDropScripts(Shape thisShape) {
         // Executes only if Shape is not hidden/unplayable
-        if (!thisShape.getHiddenStatus()) {
+        if (!thisShape.isHidden()) {
             // not case-sensitive
             String script = thisShape.getScript().toLowerCase();
 
@@ -255,7 +255,7 @@ public class PlayActivity extends AppCompatActivity {
      * Plays sound given result of parsed script
      * @param soundName the name of the sound to be played
      */
-    private void playSound (String soundName) {
+    public void playSound (String soundName) {
         if (soundName.equals("carrotcarrotcarrot")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.carrotcarrotcarrot);
             mp.start();
@@ -302,6 +302,9 @@ public class PlayActivity extends AppCompatActivity {
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).getShapeName().equals(shapeName)) {
                 inventory.get(i).setHidden(true);
+                // redraw page
+                // playRender()
+                playView.renderBitmaps(currentPage);
                 break;
             }
         }
@@ -315,6 +318,8 @@ public class PlayActivity extends AppCompatActivity {
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).getShapeName().equals(shapeName)) {
                 inventory.get(i).setHidden(false);
+                // redraw page
+                playView.renderBitmaps(currentPage);
                 break;
             }
         }
@@ -324,11 +329,18 @@ public class PlayActivity extends AppCompatActivity {
      * Checks for "on enter" scripts that should be executed at the beginning
      * of the game.
      */
-    private void checkForEntryScript() {
-        if(currPage == null) return;
+    public void checkForEntryScript() {
+        if(currentPage == null) return;
         ArrayList<Shape> shapes = currentPage.getShapes();
         for (int i = 0; i < shapes.size(); i++) {
             executeEnterScripts(shapes.get(i));
         }
+    }
+
+    /**
+     * sets current page
+     */
+    public void setCurrentPage(Page page) {
+        currentPage = page;
     }
 }

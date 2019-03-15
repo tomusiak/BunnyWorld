@@ -90,7 +90,7 @@ class Database extends SQLiteOpenHelper {
                     double height = currentShape.getHeight();
                     double width = currentShape.getWidth();
                     int moveable = currentShape.getMoveableStatus() ? 1 : 0;
-                    int hidden = currentShape.getHiddenStatus() ? 1 : 0;
+                    int hidden = currentShape.isHidden() ? 1 : 0;
                     int fontSize = currentShape.getFontSize();
                     String script = currentShape.getScript();
                     String insertStr = "INSERT INTO ShapeDatabase VALUES "

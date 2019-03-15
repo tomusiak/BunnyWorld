@@ -44,6 +44,7 @@ public class PlayView extends View {
         selectPaint.setStyle(Paint.Style.STROKE);
 
         inventorySelected = false;
+
     }
 
     /**
@@ -63,8 +64,14 @@ public class PlayView extends View {
         // set selected to null before changing the page
         if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
+
+        //((PlayActivity)getContext()).setCurrentPage(currentPage);
+
         renderBitmaps(page); // render all the bitmaps for the page
         renderBitmaps(inventory); // render the inventory
+
+        ((PlayActivity)getContext()).checkForEntryScript();
+
         invalidate();
     }
 
@@ -174,8 +181,8 @@ public class PlayView extends View {
      * page's render function.
      */
     public void drawPage(Canvas canvas) {
-        if(currentPage != null) currentPage.render(canvas);
-        if (inventory != null) inventory.render(canvas);
+        if(currentPage != null) currentPage.playRender(canvas);
+        if (inventory != null) inventory.playRender(canvas);
     }
 
     /**
@@ -238,6 +245,7 @@ public class PlayView extends View {
                 y1 = event.getY();
 
                 Shape selected = shapeAtXY(x1, y1);
+                ((PlayActivity)this.getContext()).executeClickScripts(selected);
 
                 if (currentPage != null && !inventorySelected && selected != null) {
                     currentPage.selectShape(selected);
@@ -270,6 +278,8 @@ public class PlayView extends View {
                         inventory.addShape(currentPage.getSelected());
                         currentPage.removeShape(currentPage.getSelected());
                     }
+
+                    // add something about the drop script
                 }
 
                 if (inventory != null && inventory.getSelected() != null) {

@@ -19,6 +19,7 @@ import android.app.*;
 import android.content.*;
 import android.widget.*;
 import android.text.*;
+import android.media.*;
 
 /*
     edu.stanford.cs108.bunnyworld.EditorActivity Class is the class that encapsulates an instance
@@ -41,6 +42,10 @@ public class EditorActivity extends AppCompatActivity {
     private ArrayList<String> resources;    // stores list of addable objects
     private Page undoPageDelete; // stores last deleted page
     private Shape undoShapeDelete; // stores last deleted shape
+    private Page undoPageAdd;
+    private Shape undoShapeAdd;
+    private int currScriptSteps;
+    private int numScriptAdds;
 
     private Dialog editShapeDialog;
     private Dialog addShapeDialog;
@@ -107,7 +112,8 @@ public class EditorActivity extends AppCompatActivity {
             Toast shapeErrorToast = Toast.makeText(getApplicationContext(), "No Shape Selected", Toast.LENGTH_SHORT);
             shapeErrorToast.show();
         } else {
-            System.out.println("made it");
+            currScriptSteps = 0;
+            numScriptAdds = 1;
             scriptTriggersDialog();;
         }
     }
@@ -182,6 +188,7 @@ public class EditorActivity extends AppCompatActivity {
                 // From the selected display name, pull the original page object
                 String uniqueID = displayNameToID.get(newPageName);
                 currScript += uniqueID + " ";
+                currScriptSteps++;
             }
         });
         goToPrompt.show();
@@ -192,13 +199,46 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void scriptPlayDialog() {
         // Predetermined list of names of sounds
-        final String[] scriptSounds = new String[]{"CarrotCarrotCarrot", "EvilLaugh", "Fire", "Hooray", "Munch", "Munching", "Woof"};
+        final String[] scriptSounds = new String[]{"CarrotCarrotCarrot", "EvilLaugh", "Fire", "Hooray",
+                "Munch", "Munching", "Woof"};
         AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
         playPrompt.setTitle("Select Script Trigger: ");
         playPrompt.setItems(scriptSounds, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selection) {
-                currScript += scriptSounds[selection] + " ";
+                    currScript += scriptSounds[selection] + " ";
+                    MediaPlayer mp;
+                switch(selection) {
+                    case 0:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.carrotcarrotcarrot);
+                        mp.start();
+                        break;
+                    case 1:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.evillaugh);
+                        mp.start();
+                        break;
+                    case 2:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.fire);
+                        mp.start();
+                        break;
+                    case 3:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.hooray);
+                        mp.start();
+                        break;
+                    case 4:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.munch);
+                        mp.start();
+                        break;
+                    case 5:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.munching);
+                        mp.start();
+                        break;
+                    case 6:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.woof);
+                        mp.start();
+                        break;
+                }
+                currScriptSteps++;
             }
         });
         playPrompt.show();
@@ -217,7 +257,15 @@ public class EditorActivity extends AppCompatActivity {
         shapeNamePrompt.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                currScript += input.getText().toString() + " ";
+                String name = input.getText().toString();
+                if (!shapeNameExists(name)) {
+                    Toast nameErrorToast = Toast.makeText(getApplicationContext(), "Shape Name Does Not Exist", Toast.LENGTH_SHORT);
+                    nameErrorToast.show();
+                    scriptShapeNameDialog();
+                } else {
+                    currScript += input.getText().toString() + " ";
+                    currScriptSteps++;
+                }
             }
         });
         // Enables cancel option
@@ -228,6 +276,15 @@ public class EditorActivity extends AppCompatActivity {
             }
         });
         shapeNamePrompt.show();
+    }
+
+    private Boolean shapeNameExists(String name) {
+        for (Page page : pages.values()) {
+            for (Shape shape : page.getList()) {
+                if (shape.getShapeName().equals(name)) return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -289,6 +346,9 @@ public class EditorActivity extends AppCompatActivity {
         // Updates the current page in the view
         editorView.changeCurrentPage(currentPage);
 
+        undoShapeDelete = null;
+        undoShapeAdd = null;
+
         Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
         addPageToast.show();
     }
@@ -305,6 +365,7 @@ public class EditorActivity extends AppCompatActivity {
                 "Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        numScriptAdds++;
                         scriptActionsDialog();
                     }
                 });
@@ -313,11 +374,13 @@ public class EditorActivity extends AppCompatActivity {
                 "NO",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        currScript = currScript.substring(0, currScript.length() - 1);
-                        currScript += ";";
-                        Shape selectedShape = currentPage.getSelected();
-                        selectedShape.setScript(selectedShape.getScript() + currScript);
-                        dialog.cancel();
+                        if (currScriptSteps == numScriptAdds) {
+                            currScript = currScript.substring(0, currScript.length() - 1);
+                            currScript += ";";
+                            Shape selectedShape = currentPage.getSelected();
+                            selectedShape.setScript(selectedShape.getScript() + currScript);
+                            dialog.cancel();
+                        }
                     }
                 });
         dialog.show();
@@ -385,6 +448,7 @@ public class EditorActivity extends AppCompatActivity {
 
         currentPage.addShape(shape);
         editorView.renderShape(shape);  // renders the bitmaps for the newly added shape
+        undoShapeAdd = shape;
     }
 
     /**
@@ -395,12 +459,14 @@ public class EditorActivity extends AppCompatActivity {
         Shape selectedShape = currentPage.getSelected();
         if (selectedShape != null) {
             undoShapeDelete = selectedShape;
+            if (copiedShape != null && copiedShape.equals(selectedShape)) copiedShape = null;
+            if (undoShapeAdd != null && undoShapeAdd.equals(selectedShape)) undoShapeAdd = null;
             editorView.deleteShape();
 
             // EXTENSION: Delete references to that deleted shape in scripts of all other shapes
 
             // Iterate through all pages and Shapes in those pages
-            Iterator it = pages.entrySet().iterator();
+            Iterator it = pages.values().iterator();
             while (it.hasNext()) {
                 Page page = (Page) it.next();
                 ArrayList<Shape> shapes = page.getList();
@@ -428,7 +494,7 @@ public class EditorActivity extends AppCompatActivity {
 
             Toast addToast = Toast.makeText(getApplicationContext(),"Shape Successfully Deleted",Toast.LENGTH_SHORT);
             addToast.show();
-            numShapes--;
+            //numShapes--;
         } else {
             // show toast message if deletion did not work
             Toast addToast = Toast.makeText(getApplicationContext(),"No Shape Selected",Toast.LENGTH_SHORT);
@@ -470,13 +536,31 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void undoShapeDelete() {
         if (undoShapeDelete == null) {
-            Toast undoErrorToast = Toast.makeText(getApplicationContext(), "No Shape Deletion To Undo", Toast.LENGTH_SHORT);
+            Toast undoErrorToast = Toast.makeText(getApplicationContext(), "Can Only Undo Most Recent Shape Deletion", Toast.LENGTH_SHORT);
             undoErrorToast.show();
         } else {
             currentPage.addShape(undoShapeDelete);
             editorView.renderShape(undoShapeDelete);  // renders the bitmaps for the newly added shape
             undoShapeDelete = null;
             Toast undoShapeToast = Toast.makeText(getApplicationContext(), "Deleted Shape Added Back to Game", Toast.LENGTH_SHORT);
+            undoShapeToast.show();
+        }
+    }
+
+    /**
+     * Undo functionality for most recent shape added to page
+     */
+    private void undoShapeAdd() {
+        if (undoShapeAdd == null) {
+            Toast undoErrorToast = Toast.makeText(getApplicationContext(), "Can Only Undo Most Recent Shape Addition", Toast.LENGTH_SHORT);
+            undoErrorToast.show();
+        } else {
+            if (copiedShape != null && copiedShape.equals(undoShapeAdd)) copiedShape = null;
+            currentPage.removeShape(undoShapeAdd);
+            editorView.renderBitmaps(currentPage);
+            numShapes--;
+            undoShapeAdd = null;
+            Toast undoShapeToast = Toast.makeText(getApplicationContext(), "Shape Addition Undone", Toast.LENGTH_SHORT);
             undoShapeToast.show();
         }
     }
@@ -549,6 +633,7 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newPageName = input.getText().toString();
+                newPageName = newPageName.toLowerCase();
                 if (pageList.contains(newPageName)) {
                     Toast pageRenameError = Toast.makeText(getApplicationContext(), "Page Name Already Used", Toast.LENGTH_SHORT);
                     pageRenameError.show();
@@ -605,7 +690,7 @@ public class EditorActivity extends AppCompatActivity {
     private void backgroundDialog(final String uniqueID) {
         final String[] backgroundList = new String[]{"coffeeshop",
                 "gates", "moon", "mounteverest",
-                "egyptianpyramid", "molly"};
+                "egyptianpyramid", "molly", "nobackground"};
         final String[] backgroundFiles = new String[]{"coffeeshop",
                 "gates", "moon", "mounteverest",
                 "egyptianpyramid", "molly"};
@@ -664,7 +749,7 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void undoPageDelete() {
         if (undoPageDelete == null) {
-            Toast undoPageError = Toast.makeText(getApplicationContext(), "No Page Deletion To Undo", Toast.LENGTH_SHORT);
+            Toast undoPageError = Toast.makeText(getApplicationContext(), "Can Only Undo Most Recent Page Deletion", Toast.LENGTH_SHORT);
             undoPageError.show();
         } else {
             displayNameToID.put(undoPageDelete.getDisplayName(), undoPageDelete.getPageID());
@@ -694,17 +779,15 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String newShapeName = input.getText().toString();
+                newShapeName = newShapeName.toLowerCase();
                 ArrayList<Shape> shapes = currentPage.getShapes();
                 // checks to make sure shape name not already used; if used, prompts user to re-enter name
-                for (int i = 0; i < shapes.size(); i++) {
-                    if (shapes.get(i).getShapeName().equals(newShapeName)) {
-                        Toast shapeRenameError = Toast.makeText(getApplicationContext(), "Shape Name Already Used On This Page", Toast.LENGTH_SHORT);
-                        shapeRenameError.show();
-                        renameShapeDialog();
-                        return;
-                    }
+                if (shapeNameExists(newShapeName)) {
+                    Toast shapeRenameError = Toast.makeText(getApplicationContext(), "Shape Name Already Exists", Toast.LENGTH_SHORT);
+                    shapeRenameError.show();
+                } else {
+                    renameShape(newShapeName);
                 }
-                renameShape(newShapeName);
             }
         });
         // Cancels save
@@ -723,7 +806,8 @@ public class EditorActivity extends AppCompatActivity {
      */
     private void renameShape(String newName) {
         Shape selectedShape = currentPage.getSelected();
-        selectedShape.setShapeName(newName);
+        String name = newName.toLowerCase();
+        selectedShape.setShapeName(name);
     }
 
     /**
@@ -771,7 +855,7 @@ public class EditorActivity extends AppCompatActivity {
         moveInput.setChecked(shape.getMoveableStatus());
 
         CheckBox visibleInput = dialog.findViewById(R.id.visibleInput);
-        visibleInput.setChecked(!shape.getHiddenStatus());
+        visibleInput.setChecked(!shape.isHidden());
 
         EditText imageNameInput = dialog.findViewById(R.id.imageNameInput);
         imageNameInput.setText(shape.getImageName());
@@ -810,7 +894,14 @@ public class EditorActivity extends AppCompatActivity {
 
        EditText shapeName = editShapeDialog.findViewById(R.id.nameInput);
        String name = shapeName.getText().toString();
-       shape.setShapeName(name);
+       ArrayList<Shape> shapes = currentPage.getShapes();
+       if (shapeNameExists(name)) {
+           Toast shapeRenameError = Toast.makeText(getApplicationContext(), "Shape Name Already Exists", Toast.LENGTH_SHORT);
+           shapeRenameError.show();
+       } else {
+           name = name.toLowerCase();
+           shape.setShapeName(name);
+       }
 
        CheckBox moveInput = editShapeDialog.findViewById(R.id.moveInput);
        boolean isMovable = moveInput.isChecked();
@@ -948,6 +1039,8 @@ public class EditorActivity extends AppCompatActivity {
         String uniqueID = displayNameToID.get(pageName);
         Page nextPage = pages.get(uniqueID);
         currentPage = nextPage;
+        undoShapeAdd = null;
+        undoShapeDelete = null;
         editorView.changeCurrentPage(nextPage);
     }
 
@@ -1090,7 +1183,8 @@ public class EditorActivity extends AppCompatActivity {
         initializeResources();
         // Initializes Spinner for page options
         final Spinner pageSpinner = findViewById(R.id.pageSpinner);
-        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page", "Open Page", "Change Background",  "Change Starter Page", "Undo Delete"};
+        String[] pageOptions = new String[]{"Page Options:", "Create Page", "Rename Page", "Delete Page",
+                "Open Page", "Change Background",  "Change Starter Page", "Undo Delete"};
         ArrayAdapter<String> pageAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, pageOptions);
         pageSpinner.setAdapter(pageAdapter);
         pageSpinner.setSelection(0);
@@ -1134,7 +1228,7 @@ public class EditorActivity extends AppCompatActivity {
         // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
         String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape",
-                "Delete Shape", "Copy Shape", "Paste Shape", "Undo Delete"};
+                "Delete Shape", "Copy Shape", "Paste Shape", "Undo Delete", "Undo Add"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1163,6 +1257,9 @@ public class EditorActivity extends AppCompatActivity {
                         break;
                     case 7:
                         undoShapeDelete();
+                        break;
+                    case 8:
+                        undoShapeAdd();
                         break;
                 }
                 shapeSpinner.setSelection(0);
