@@ -65,12 +65,13 @@ public class PlayView extends View {
         if(currentPage != null) currentPage.selectShape(null);
         currentPage = page;
 
-        //((PlayActivity)getContext()).setCurrentPage(currentPage);
-
         renderBitmaps(page); // render all the bitmaps for the page
         renderBitmaps(inventory); // render the inventory
 
-        ((PlayActivity)getContext()).checkForEntryScript();
+        if (currentPage != null) {
+            ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+            ((PlayActivity)getContext()).checkForEntryScript();
+        }
 
         invalidate();
     }
