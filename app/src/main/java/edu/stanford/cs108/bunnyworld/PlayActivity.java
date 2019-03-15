@@ -245,19 +245,21 @@ public class PlayActivity extends AppCompatActivity {
                     // splits each clause into tokens based on whitespace delimiter
                     String[] tokens = clauses[i].split("\\s+");
 
-                    int shapeIndex = 2;
+                    if (tokens[1].equals(DROP)) {
+                        int shapeIndex = 2;
 
-                    String shapeName = tokens[2];
-                    String internalShapeID = displayNameToID.get(shapeName);
-                    // Loop through all shapes to find the indicated shape
-                    Iterator it = pageMap.values().iterator();
-                    while (it.hasNext()) {
-                        Page page = (Page) it.next();
-                        ArrayList<Shape> shapes = page.getList();
-                        for (int j = 0; j < shapes.size(); j++) {
-                            Shape current = shapes.get(j);
-                            if (current.getShapeID().equals(internalShapeID)) {
-                                return current;
+                        String shapeName = tokens[shapeIndex];
+                        String internalShapeID = displayNameToID.get(shapeName);
+                        // Loop through all shapes to find the indicated shape
+                        Iterator it = pageMap.values().iterator();
+                        while (it.hasNext()) {
+                            Page page = (Page) it.next();
+                            ArrayList<Shape> shapes = page.getList();
+                            for (int j = 0; j < shapes.size(); j++) {
+                                Shape current = shapes.get(j);
+                                if (current.getShapeID().equals(internalShapeID)) {
+                                    return current;
+                                }
                             }
                         }
                     }
