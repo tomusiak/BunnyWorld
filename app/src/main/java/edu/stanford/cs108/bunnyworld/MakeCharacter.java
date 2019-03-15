@@ -19,20 +19,21 @@ import java.util.UUID;
 public class MakeCharacter extends AppCompatActivity implements OnClickListener {
 
     private Button saveButton;
+    private DrawView drawView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_character);
 
-        saveButton = (Button)findViewById(R.id.save);
+        saveButton = findViewById(R.id.save);
         saveButton.setOnClickListener(this);
+
+        drawView = findViewById(R.id.drawView);
     }
 
     @Override
     public void onClick(View view) {
-        setContentView(R.layout.activity_make_character);
-        final View drawView = findViewById(R.id.draw);
 
         if (view.getId()==R.id.save){
             AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
