@@ -201,7 +201,7 @@ public class EditorActivity extends AppCompatActivity {
     private void scriptPlayDialog() {
         // Predetermined list of names of sounds
         final String[] scriptSounds = new String[]{"CarrotCarrotCarrot", "EvilLaugh", "Fire", "Hooray",
-                "Munch", "Munching", "Woof"};
+                "Munch", "Munching", "Scream", "Woof"};
         AlertDialog.Builder playPrompt = new AlertDialog.Builder(this);
         playPrompt.setTitle("Select Script Trigger: ");
         playPrompt.setItems(scriptSounds, new DialogInterface.OnClickListener() {
@@ -235,6 +235,10 @@ public class EditorActivity extends AppCompatActivity {
                         mp.start();
                         break;
                     case 6:
+                        mp = MediaPlayer.create(getApplicationContext(), R.raw.scream);
+                        mp.start();
+                        break;
+                    case 7:
                         mp = MediaPlayer.create(getApplicationContext(), R.raw.woof);
                         mp.start();
                         break;
