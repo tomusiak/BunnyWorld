@@ -1003,23 +1003,16 @@ public class EditorActivity extends AppCompatActivity {
                 displayNameToID = new HashMap<String, String>();
                 String startPage = null;
                 for (String key : getPages().keySet()) { // Finds which page is the starter page, and then makes that the first page to go to.
-                    /*Page currentPage = getPages().get(key);
-                    String pageName = currentPage.getDisplayName();
-                    displayNameToID.put(key,pageName);
-                    if (currentPage.getStarterPageStatus() == true) {
-                        startPage = key;
-                        starterPage = currentPage;
-                    }*/
                     Page currentPage = getPages().get(key);
                     String pageName = currentPage.getDisplayName();
                     displayNameToID.put(pageName, key);
                     if (currentPage.getStarterPageStatus() == true) {
                         startPage = key;
                         starterPage = currentPage;
-                        currentPage = starterPage;
                     }
                 }
                 initializeEditor(); // Makes editor features visible, shifts back into EditorActivity.
+                currentPage = starterPage;
                 editorView.changeCurrentPage(pages.get(startPage)); // Goes to first page.
             }
         });
