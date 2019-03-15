@@ -65,8 +65,12 @@ public class Page {
 
 
     public void changeBackground(String selectedBackground) {
-        if(!hasBackground) hasBackground = true;
-        backgroundName = selectedBackground;
+        if (selectedBackground.equals("nobackground")) {
+            hasBackground = false;
+        } else {
+            if(!hasBackground) hasBackground = true;
+            backgroundName = selectedBackground;
+        }
     }
 
     /**
