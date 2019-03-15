@@ -148,7 +148,7 @@ public class PlayActivity extends AppCompatActivity {
 
                     if (tokens[1].equals(CLICK)) {
                         // add click condition, then call helper method to parse triggers
-                        executeTriggers(tokens, actionStart);
+                        executeTriggers(tokens, actionStart, thisShape);
                         // only calls first click condition
                         break;
                     }
@@ -183,7 +183,7 @@ public class PlayActivity extends AppCompatActivity {
 
                     if (tokens[1].equals(ENTER)) {
                         // add click condition, then call helper method to parse triggers
-                        executeTriggers(tokens, actionStart);
+                        executeTriggers(tokens, actionStart, thisShape);
                     }
                 }
             }
@@ -217,7 +217,7 @@ public class PlayActivity extends AppCompatActivity {
 
                     if (tokens[1].equals(DROP)) {
                         // add click condition, then call helper method to parse triggers
-                        executeTriggers(tokens, actionStart);
+                        executeTriggers(tokens, actionStart, thisShape);
                     }
                 }
             }
@@ -230,13 +230,13 @@ public class PlayActivity extends AppCompatActivity {
      * @param tokens the individual words of a clause in a script
      * @param actionStart the starting index of triggers (after actions are read)
      */
-    private void executeTriggers(String[] tokens, int actionStart) {
+    private void executeTriggers(String[] tokens, int actionStart, Shape thisShape) {
         for (int j = actionStart; j < tokens.length; j+=2) {
             String command = tokens[j];
             // System.out.println(command);
             if (command.equals(GOTO)) {
                 // System.out.println("switching");
-                switchPages(tokens[j+1]);
+                switchPages(tokens[j+1], thisShape);
             } else if (command.equals(PLAY)) {
                 playSound(tokens[j+1]);
             } else if (command.equals(HIDE)) {
@@ -254,19 +254,26 @@ public class PlayActivity extends AppCompatActivity {
      * Helper method to switch between pages
      * @param pageName the page to switch to
      */
-    private void switchPages(String pageName) {
-
+    private void switchPages(String pageName, Shape thisShape) {
+        // thisShape.setHidden(false);
         // System.out.println("switching");
         // currPage = pageName;
         // currentPage = pageMap.get(pageName);
+        // playView.changeCurrentPage(___);
+        // pageName.removeShape(thisShape);
+
+        // TODO: remove/hide current Shapes from screen
+        // create blank Page and automatically render
+
+        // Page blank = new Page
 
         String name = displayNameToID.get(pageName);
+        // remove current Shape
+        // thisShape.setHidden(true); // need to remove (not necessarily hide) before switch
 
+        // setCurrentPage(null);
         Page next = pageMap.get(name);
         playView.changeCurrentPage(next);
-        setCurrentPage(next);
-        // Page nextPage = pageMap.get(pageName);
-        // playView.changeCurrentPage(nextPage);
 
     }
 

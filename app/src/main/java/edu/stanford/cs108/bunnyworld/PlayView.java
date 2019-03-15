@@ -61,8 +61,11 @@ public class PlayView extends View {
      * @param page the new page to be passed in
      */
     public void changeCurrentPage(Page page) {
+
         // set selected to null before changing the page
-        if(currentPage != null) currentPage.selectShape(null);
+        if(currentPage != null) {
+            currentPage.selectShape(null);
+        }
         currentPage = page;
 
         renderBitmaps(page); // render all the bitmaps for the page
