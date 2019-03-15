@@ -444,6 +444,8 @@ public class EditorActivity extends AppCompatActivity {
             shapeSelectedError.show();
         } else {
             copiedShape = selectedShape;
+            Toast copiedShapeToat = Toast.makeText(getApplicationContext(), copiedShape.getShapeName() + " copied to clipboard.", Toast.LENGTH_SHORT);
+            copiedShapeToat.show();
         }
     }
 
