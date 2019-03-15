@@ -329,7 +329,8 @@ public class PlayActivity extends AppCompatActivity {
         ArrayList<Shape> shapes = currentPage.getList();
         for (int i = 0; i < shapes.size(); i++) {
             if (shapes.get(i).getShapeName().equals(shapeName)) {
-                shapes.get(i).setHidden(false);
+                Shape current = shapes.get(i);
+                current.setHidden(false);
                 // redraw page
                 playView.renderBitmaps(currentPage);
                 break;
@@ -350,7 +351,7 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     /**
-     * sets current page
+     * Sets current page
      */
     public void setCurrentPage(Page page) {
         currentPage = page;
