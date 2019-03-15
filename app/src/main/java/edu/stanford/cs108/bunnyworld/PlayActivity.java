@@ -132,7 +132,7 @@ public class PlayActivity extends AppCompatActivity {
      */
     public void executeClickScripts(Shape thisShape) {
         // Executes only if Shape is not hidden/unplayable
-        if (!thisShape.getHiddenStatus()) {
+        if (!thisShape.isHidden()) {
             // not case-sensitive
             String script = thisShape.getScript().toLowerCase();
 
@@ -167,7 +167,7 @@ public class PlayActivity extends AppCompatActivity {
      */
     public void executeEnterScripts(Shape thisShape) {
         // Executes only if Shape is not hidden/unplayable
-        if (!thisShape.getHiddenStatus()) {
+        if (!thisShape.isHidden()) {
             // not case-sensitive
             String script = thisShape.getScript().toLowerCase();
 
@@ -200,7 +200,7 @@ public class PlayActivity extends AppCompatActivity {
      */
     public void executeDropScripts(Shape thisShape) {
         // Executes only if Shape is not hidden/unplayable
-        if (!thisShape.getHiddenStatus()) {
+        if (!thisShape.isHidden()) {
             // not case-sensitive
             String script = thisShape.getScript().toLowerCase();
 
@@ -302,6 +302,9 @@ public class PlayActivity extends AppCompatActivity {
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).getShapeName().equals(shapeName)) {
                 inventory.get(i).setHidden(true);
+                // redraw page
+                // playRender()
+                playView.renderBitmaps(currentPage);
                 break;
             }
         }
@@ -315,6 +318,8 @@ public class PlayActivity extends AppCompatActivity {
         for (int i = 0; i < inventory.size(); i++) {
             if (inventory.get(i).getShapeName().equals(shapeName)) {
                 inventory.get(i).setHidden(false);
+                // redraw page
+                playView.renderBitmaps(currentPage);
                 break;
             }
         }

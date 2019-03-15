@@ -440,7 +440,9 @@ public class EditorActivity extends AppCompatActivity {
         Shape shape;
         if (shapeImgName.equals("textbox")) {
             shape = new Shape(numShapes, shapeImgName, shapeName,
-                    20, 20, 250, 250);
+                    20, 20, 250, 48 );
+            shape.setIsText(true);
+            shape.setText("Text");
         } else {
             shape = new Shape(numShapes, shapeImgName, "",
                     20, 20, 250, 250);
@@ -820,7 +822,7 @@ public class EditorActivity extends AppCompatActivity {
         moveInput.setChecked(shape.getMoveableStatus());
 
         CheckBox visibleInput = dialog.findViewById(R.id.visibleInput);
-        visibleInput.setChecked(!shape.getHiddenStatus());
+        visibleInput.setChecked(!shape.isHidden());
 
         EditText imageNameInput = dialog.findViewById(R.id.imageNameInput);
         imageNameInput.setText(shape.getImageName());
@@ -892,6 +894,10 @@ public class EditorActivity extends AppCompatActivity {
        shape.setText(textText);
 
        lastShapeEdited = shape;
+       // if the text is empty string, we want to mark isText false
+       if(textText.equals("")) {
+           shape.setIsText(false);
+       }
 
        editorView.renderShape(shape);
 
