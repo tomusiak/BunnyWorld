@@ -35,12 +35,12 @@ public class EditorActivity extends AppCompatActivity {
     private String currPage; // Tracks user-selected name of current page
     private Page currentPage; // Tracks current page being displayed
     private Page starterPage; // Tracks user-selected starter page
-    private static String currScript;
+    private String currScript;
     private EditorView editorView;
     private Shape copiedShape;
     private ArrayList<String> resources;    // stores list of addable objects
-    private Page undoPageDelete;
-    private Shape undoShapeDelete;
+    private Page undoPageDelete; // stores last deleted page
+    private Shape undoShapeDelete; // stores last deleted shape
 
     private Dialog editShapeDialog;
     private Dialog addShapeDialog;
@@ -250,7 +250,7 @@ public class EditorActivity extends AppCompatActivity {
             }
         } else {
             // not able to show script because no shape selected
-            Toast showErrorToast = Toast.makeText(getApplicationContext(),"No Shape Was Selected",Toast.LENGTH_SHORT);
+            Toast showErrorToast = Toast.makeText(getApplicationContext(),"No Shape Selected",Toast.LENGTH_SHORT);
             showErrorToast.show();
         }
     }
@@ -260,7 +260,7 @@ public class EditorActivity extends AppCompatActivity {
         if (selectedShape != null) {
             selectedShape.setScript("");
         } else {
-            Toast selectErrorToast = Toast.makeText(getApplicationContext(), "No Shape Was Selected", Toast.LENGTH_SHORT);
+            Toast selectErrorToast = Toast.makeText(getApplicationContext(), "No Shape Selected", Toast.LENGTH_SHORT);
             selectErrorToast.show();
         }
     }
@@ -424,12 +424,12 @@ public class EditorActivity extends AppCompatActivity {
                 }
             }
 
-            Toast addToast = Toast.makeText(getApplicationContext(),"Shape Successfully Deleted.",Toast.LENGTH_SHORT);
+            Toast addToast = Toast.makeText(getApplicationContext(),"Shape Successfully Deleted",Toast.LENGTH_SHORT);
             addToast.show();
             numShapes--;
         } else {
             // show toast message if deletion did not work
-            Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
+            Toast addToast = Toast.makeText(getApplicationContext(),"No Shape Selected",Toast.LENGTH_SHORT);
             addToast.show();
         }
     }
@@ -467,11 +467,16 @@ public class EditorActivity extends AppCompatActivity {
      * Undo functionality to undo Shape deletion
      */
     private void undoShapeDelete() {
-        currentPage.addShape(undoShapeDelete);
-        editorView.renderShape(undoShapeDelete);  // renders the bitmaps for the newly added shape
-        undoShapeDelete = null;
-        Toast undoShapeToast = Toast.makeText(getApplicationContext(), "Deleted Shape Added Back to Game", Toast.LENGTH_SHORT);
-        undoShapeToast.show();
+        if (undoShapeDelete == null) {
+            Toast undoErrorToast = Toast.makeText(getApplicationContext(), "No Shape Deletion To Undo", Toast.LENGTH_SHORT);
+            undoErrorToast.show();
+        } else {
+            currentPage.addShape(undoShapeDelete);
+            editorView.renderShape(undoShapeDelete);  // renders the bitmaps for the newly added shape
+            undoShapeDelete = null;
+            Toast undoShapeToast = Toast.makeText(getApplicationContext(), "Deleted Shape Added Back to Game", Toast.LENGTH_SHORT);
+            undoShapeToast.show();
+        }
     }
 
     /**
@@ -656,12 +661,15 @@ public class EditorActivity extends AppCompatActivity {
      * Undo support for page deletion
      */
     private void undoPageDelete() {
-        displayNameToID.put(undoPageDelete.getDisplayName(), undoPageDelete.getPageID());
-
-        pages.put(undoPageDelete.getPageID(), undoPageDelete);
-
-        Toast undoPageToast = Toast.makeText(getApplicationContext(),"Deleted Page Added Back To Game",Toast.LENGTH_SHORT);
-        undoPageToast.show();
+        if (undoPageDelete == null) {
+            Toast undoPageError = Toast.makeText(getApplicationContext(), "No Page Deletion To Undo", Toast.LENGTH_SHORT);
+            undoPageError.show();
+        } else {
+            displayNameToID.put(undoPageDelete.getDisplayName(), undoPageDelete.getPageID());
+            pages.put(undoPageDelete.getPageID(), undoPageDelete);
+            Toast undoPageToast = Toast.makeText(getApplicationContext(),"Deleted Page Added Back To Game",Toast.LENGTH_SHORT);
+            undoPageToast.show();
+        }
     }
 
     /**
@@ -732,7 +740,7 @@ public class EditorActivity extends AppCompatActivity {
             dialog.show();
         } else {
             // show toast message if there is no shape selected
-            Toast addToast = Toast.makeText(getApplicationContext(),"No shape was selected.",Toast.LENGTH_SHORT);
+            Toast addToast = Toast.makeText(getApplicationContext(),"No Shape Selected",Toast.LENGTH_SHORT);
             addToast.show();
 
         }
@@ -1123,7 +1131,8 @@ public class EditorActivity extends AppCompatActivity {
 
         // Initializes spinner for shape options
         final Spinner shapeSpinner = findViewById(R.id.shapeSpinner);
-        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape", "Delete Shape", "Copy Shape", "Paste Shape", "Undo Delete"};
+        String[] shapeOptions = new String[]{"Shape Options:", "Add Shape", "Rename Shape", "Edit Shape",
+                "Delete Shape", "Copy Shape", "Paste Shape", "Undo Delete"};
         ArrayAdapter<String> shapeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, shapeOptions);
         shapeSpinner.setAdapter(shapeAdapter);
         shapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -1152,6 +1161,7 @@ public class EditorActivity extends AppCompatActivity {
                         break;
                     case 7:
                         undoShapeDelete();
+                        break;
                 }
                 shapeSpinner.setSelection(0);
             }
