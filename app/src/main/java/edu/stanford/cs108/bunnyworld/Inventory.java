@@ -154,12 +154,37 @@ public class Inventory {
         // render each shape onto the canvas
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
-            // if shape has a valid bitmap image AND is visible
-            if(currentShape.isHidden() && currentShape.getImageName() != "") {
+            // if shape has a valid bitmap image
+            if(currentShape.getImageName() != "") {
+
+                // if the shape to be drawn is selected, render a box around it
+                if(currentShape == selected) {
+
+                    // use rectangle that is larger than the image as a border
+                    RectF shapeBorder = new RectF((float)currentShape.getLeft() - 10,
+                            (float)currentShape.getTop() - 10,
+                            (float)currentShape.getRight() + 10,
+                            (float)currentShape.getBottom() + 10);
+
+                    // draw transparent box and colored selection border
+                    canvas.drawRect(shapeBorder, transBoxFill);
+                    canvas.drawRect(shapeBorder, borderColor);
+
+                }
+
+                // if this shape is hidden, display it as semi-transparent
+                if(currentShape.isHidden()) {
+                    paint = new Paint();
+                    paint.setAlpha(0);
+                }
 
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                         (float)currentShape.getY(), paint);
+
             }
+
+
+
         }
     }
 

@@ -1,7 +1,7 @@
-Project: 
+Project:
 BunnyWorld
 
-Team Members: 
+Team Members:
 Natalie Cygan, Meilan Steimle, Alan Tomusiak, Avalon Wolfe, Isabelle Zhou
 
 Features:
@@ -12,12 +12,22 @@ Meilan Steimle
 -
 
 Alan Tomusiak
-- 
+- Implemented Database functionality.
+- Implemented saving and loading into Editor; loading into Play.
+- Performed bug-fixing on own code as well as across the entire program.
+
+EXTENSIONS:
+1) Saving and loading UI.
+2) Saving of multiple saves.
+3) Auto-save functionality (pressing back button will automatically save editor state).
+4) Deleting of saves.
+5) Re-naming of saves.
+6) Error checking (prevents multiple saves with same name, saves with nothing in them).
 
 Avalon Wolfe
 -
 
 Isabelle Zhou
-- 
+-
 
 Code References:

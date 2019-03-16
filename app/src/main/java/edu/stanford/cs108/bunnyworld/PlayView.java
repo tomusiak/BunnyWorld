@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,8 @@ public class PlayView extends View {
     Paint myPaint = new Paint();
     Paint selectPaint = new Paint();
     Paint linePaint = new Paint();
+    Paint numPaint = new Paint();
+    Paint bigPaint = new Paint();
 
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -132,8 +135,9 @@ public class PlayView extends View {
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
-            renderShape(currentShape);
-
+            if (!currentShape.isHidden()) {
+                renderShape(currentShape);
+            }
         }
         invalidate();
     }
@@ -214,8 +218,8 @@ public class PlayView extends View {
      * page's render function.
      */
     public void drawPage(Canvas canvas) {
-        if(currentPage != null) currentPage.render(canvas);
-        if (inventory != null) inventory.render(canvas);
+        if(currentPage != null) currentPage.playRender(canvas);
+        if (inventory != null) inventory.playRender(canvas);
     }
 
     /**
@@ -334,8 +338,28 @@ public class PlayView extends View {
                             notSelectedShapeAtXY(x2+(height), y2) != null  ||
                             notSelectedShapeAtXY(x2, y2+(height)) != null  ||
                             notSelectedShapeAtXY(x2+(height), y2+(height)) != null ) {
-                        ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
-                        ((PlayActivity)this.getContext()).executeDropScripts(currentPage.getSelected());
+
+                        Shape dropped;
+
+                        if (notSelectedShapeAtXY(x2, y2) != null) {
+                            dropped = notSelectedShapeAtXY(x2, y2);
+                        }
+                        else if (notSelectedShapeAtXY(x2+(height), y2) != null) {
+                            dropped = notSelectedShapeAtXY(x2+(height), y2);
+                        }
+                        else if (notSelectedShapeAtXY(x2, y2+(height)) != null) {
+                            dropped = (notSelectedShapeAtXY(x2, y2+(height)));
+                        }
+                        else {
+                            dropped = notSelectedShapeAtXY(x2+(height), y2+(height));
+                        }
+                        if (((PlayActivity)this.getContext()).checkOnDrop(dropped) != null) {
+                            Shape dropTrigger = ((PlayActivity)this.getContext()).checkOnDrop(dropped);
+                            if (dropTrigger.equals(currentPage.getSelected())) {
+                                ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+                                ((PlayActivity)this.getContext()).executeDropScripts(dropped);
+                            }
+                        }
                     }
                 }
 
@@ -356,6 +380,8 @@ public class PlayView extends View {
                     if (y1 <= inventoryY+halfHeight && yDelta >= inventoryY+halfHeight) {
                         inventory.addShape(currentPage.getSelected());
                         currentPage.removeShape(currentPage.getSelected());
+                        Toast inventoryInToast = Toast.makeText(this.getContext(),"Moved to inventory.",Toast.LENGTH_SHORT); // Informs user of move to inventory.
+                        inventoryInToast.show();
                     }
 
                 }
@@ -368,6 +394,8 @@ public class PlayView extends View {
                     if (y1 >= inventoryY+halfHeight && yDelta <= inventoryY+halfHeight) {
                         currentPage.addShape(inventory.getSelected());
                         inventory.removeShape(inventory.getSelected());
+                        Toast inventoryOutToast = Toast.makeText(this.getContext(),"Moved to page.",Toast.LENGTH_SHORT); // Informs user of move to inventory.
+                        inventoryOutToast.show();
                         inventorySelected = false;
                     }
                 }
@@ -395,6 +423,10 @@ public class PlayView extends View {
         float height = canvas.getHeight();
 
         inventoryY = (float)0.75 * height;
+
+        numPaint.setColor(Color.BLACK);
+        numPaint.setTextSize(80);
+        canvas.drawText(currentPage.getDisplayName(), 10, 65, numPaint);
 
         linePaint.setColor(Color.BLACK);
         linePaint.setStrokeWidth(2);

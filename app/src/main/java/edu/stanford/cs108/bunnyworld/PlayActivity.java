@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Play mode for BunnyWorld
@@ -224,6 +225,53 @@ public class PlayActivity extends AppCompatActivity {
     }
 
     /**
+     * Returns the top Shape in first onDrop script
+     * @return Shape on top (not the parameter)
+     */
+    public Shape checkOnDrop(Shape thisShape) {
+        // Executes only if Shape is not hidden/unplayable
+        if (!thisShape.isHidden()) {
+            // not case-sensitive
+            String script = thisShape.getScript().toLowerCase();
+
+            // Accounts for null script, in which case script will not execute
+            if (!script.equals("")) {
+                // splits block of script into clauses
+                String[] clauses = script.split(";");
+
+                // uses loop to execute each clause
+                for (int i = 0; i < clauses.length; i++) {
+
+                    // splits each clause into tokens based on whitespace delimiter
+                    String[] tokens = clauses[i].split("\\s+");
+
+                    if (tokens[1].equals(DROP)) {
+                        int shapeIndex = 2;
+
+                        String shapeName = tokens[shapeIndex];
+                        // String internalShapeID = displayNameToID.get(shapeName);
+                        // Loop through all shapes to find the indicated shape
+                        Iterator it = pageMap.values().iterator();
+                        while (it.hasNext()) {
+                            Page page = (Page) it.next();
+                            ArrayList<Shape> shapes = page.getList();
+                            for (int j = 0; j < shapes.size(); j++) {
+                                Shape current = shapes.get(j);
+                                // if (current.getShapeID().equals(internalShapeID)) {
+                                if (current.getShapeName().equals(shapeName)) {
+                                    return current;
+                                }
+                                // }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Executes appropriate command given provided trigger word
      * Pre-condition: Script is valid and called correctly
      * @param tokens the individual words of a clause in a script
@@ -318,34 +366,50 @@ public class PlayActivity extends AppCompatActivity {
         if (soundName.equals("carrotcarrotcarrot")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.carrotcarrotcarrot);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*carrot carrot carrot*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("evillaugh")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.evillaugh);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*mwa ha ha ha ha*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("fire")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.fire);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*burning sounds intensify*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("hooray")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.hooray);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"HOORAY!!!",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("munch")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.munch);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*munch*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("munching")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.munching);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*munch munch munch*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("scream")) {
             MediaPlayer mp = MediaPlayer.create(this, R.raw.scream);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"aAAAaaaAAaAAAaaAAaaAaA",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
         else if (soundName.equals("woof")) {
             MediaPlayer mp = MediaPlayer.create(this,R.raw.woof);
             mp.start();
+            Toast soundToast = Toast.makeText(getApplicationContext(),"*bork bork*",Toast.LENGTH_SHORT);
+            soundToast.show();
         }
     }
 
