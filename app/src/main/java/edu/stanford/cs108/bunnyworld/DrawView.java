@@ -14,6 +14,7 @@ import android.view.View;
 /**
  * Creates custom view for MakeCharacter
  */
+
 public class DrawView extends View {
 
     //drawing path
