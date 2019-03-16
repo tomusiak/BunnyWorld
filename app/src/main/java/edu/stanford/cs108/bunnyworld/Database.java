@@ -60,37 +60,37 @@ class Database extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         Shape carrot1 = new Shape(1, "carrot", "", 20, 20, 250, 250);
-        String shapeName = carrot1.getShapeName();
-        String imageName = carrot1.getImageName();
-        String text = carrot1.getText();
-        double x = carrot1.getX();
-        double y = carrot1.getY();
-        double height = carrot1.getHeight();
-        double width = carrot1.getWidth();
-        int moveable = carrot1.getMoveableStatus() ? 1 : 0;
-        int hidden = carrot1.isHidden() ? 1 : 0;
-        int fontSize = 48;
-        String script = "";
-        int starterPage = 1;
-        String pageName = "page1";
-        String pageID = "page1";
-        String saveName = "Sample Game";
+        String carrot1shapeName = carrot1.getShapeName();
+        String carrot1imageName = carrot1.getImageName();
+        String carrot1text = carrot1.getText();
+        double carrot1x = carrot1.getX();
+        double carrot1y = carrot1.getY();
+        double carrot1height = carrot1.getHeight();
+        double carrot1width = carrot1.getWidth();
+        int carrot1moveable = carrot1.getMoveableStatus() ? 1 : 0;
+        int carrot1hidden = carrot1.isHidden() ? 1 : 0;
+        int carrot1fontSize = 48;
+        String carrot1script = "";
+        int carrot1starterPage = 1;
+        String carrot1pageName = "page1";
+        String carrot1pageID = "page1";
+        String carrot1saveName = "Sample Game";
         String carrot1Str = "INSERT INTO ShapeDatabase VALUES "
-                + "('" + shapeName + "', '" +
-                imageName + "', '" +
-                text + "'," +
-                x + "," +
-                y + "," +
-                height + "," +
-                width + "," +
-                moveable + "," +
-                hidden + "," +
-                fontSize + "," +
-                starterPage + ", '" +
-                script + "', '" +
-                pageName + "', '" +
-                pageID + "', '" +
-                saveName + "', NULL)";
+                + "('" + carrot1shapeName + "', '" +
+                carrot1imageName + "', '" +
+                carrot1text + "'," +
+                carrot1x + "," +
+                carrot1y + "," +
+                carrot1height + "," +
+                carrot1width + "," +
+                carrot1moveable + "," +
+                carrot1hidden + "," +
+                carrot1fontSize + "," +
+                carrot1starterPage + ", '" +
+                carrot1script + "', '" +
+                carrot1pageName + "', '" +
+                carrot1pageID + "', '" +
+                carrot1saveName + "', NULL)";
         db.execSQL(carrot1Str);
 
         Shape bunny1 = new Shape(1, "carrot", "", 20, 20, 250, 250);
@@ -110,21 +110,21 @@ class Database extends SQLiteOpenHelper {
         String bunny1pageID = "page1";
         String bunny1saveName = "Sample Game";
         String bunny1Str = "INSERT INTO ShapeDatabase VALUES "
-                + "('" + shapeName + "', '" +
-                imageName + "', '" +
-                text + "'," +
-                x + "," +
-                y + "," +
-                height + "," +
-                width + "," +
-                moveable + "," +
-                hidden + "," +
-                fontSize + "," +
-                starterPage + ", '" +
-                script + "', '" +
-                pageName + "', '" +
-                pageID + "', '" +
-                saveName + "', NULL)";
+                + "('" + bunny1shapeName + "', '" +
+                bunny1imageName + "', '" +
+                bunny1text + "'," +
+                bunny1x + "," +
+                bunny1y + "," +
+                bunny1height + "," +
+                bunny1width + "," +
+                bunny1moveable + "," +
+                bunny1hidden + "," +
+                bunny1fontSize + "," +
+                bunny1starterPage + ", '" +
+                bunny1script + "', '" +
+                bunny1pageName + "', '" +
+                bunny1pageID + "', '" +
+                bunny1saveName + "', NULL)";
         db.execSQL(bunny1Str);
     }
 
