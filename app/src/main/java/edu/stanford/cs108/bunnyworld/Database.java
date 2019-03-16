@@ -624,7 +624,7 @@ class Database extends SQLiteOpenHelper {
         int winhidden = win.isHidden() ? 1 : 0;
         int winfontSize = 24;
         String winscript = "on enter play victory";
-        int winstarterPage = 1;
+        int winstarterPage = 0;
         String winpageName = "page5";
         String winpageID = "page5";
         String winsaveName = "Sample Game";
@@ -645,6 +645,40 @@ class Database extends SQLiteOpenHelper {
                 winpageID + "', '" +
                 winsaveName + "', NULL)";
         db.execSQL(winStr);
+        
+        Shape appease = new Shape(15, "carrot", "You must appease the Bunny of Death!", 100, 900, 50, 50);
+        String appeaseName = appease.getShapeName();
+        String appeaseimageName = appease.getImageName();
+        String appeasetext = "You must appease the Bunny of Death!";
+        double appeasex = appease.getX();
+        double appeasey = appease.getY();
+        double appeaseheight = appease.getHeight();
+        double appeasewidth = appease.getWidth();
+        int appeasemoveable = appease.getMoveableStatus() ? 1 : 0;
+        int appeasehidden = appease.isHidden() ? 1 : 0;
+        int appeasefontSize = 4;
+        String appeasescript = "";
+        int appeasestarterPage = 0;
+        String appeasepageName = "page4";
+        String appeasepageID = "page4";
+        String appeasesaveName = "Sample Game";
+        String appeaseStr = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + appeaseName + "', '" +
+                appeaseimageName + "', '" +
+                appeasetext + "'," +
+                appeasex + "," +
+                appeasey + "," +
+                appeaseheight + "," +
+                appeasewidth + "," +
+                appeasemoveable + "," +
+                appeasehidden + "," +
+                appeasefontSize + "," +
+                appeasestarterPage + ", '" +
+                appeasescript + "', '" +
+                appeasepageName + "', '" +
+                appeasepageID + "', '" +
+                appeasesaveName + "', NULL)";
+        db.execSQL(appeaseStr);
     }
 
 
