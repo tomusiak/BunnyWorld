@@ -547,40 +547,40 @@ class Database extends SQLiteOpenHelper {
                 carrotasaveName + "', NULL)";
         db.execSQL(carrotaStr);
 
-//        // page 1
-//        Shape carrota = new Shape(14, "carrot", "Bunny World", 20, 20, 250, 150);
-//        String carrotashapeName = carrota.getShapeName();
-//        String carrotaimageName = carrota.getImageName();
-//        String carrotatext = "Bunny World";
-//        double carrotax = carrot1.getX();
-//        double carrotay = carrot1.getY();
-//        double carrotaheight = carrota.getHeight();
-//        double carrotawidth = carrota.getWidth();
-//        int carrotamoveable = carrota.getMoveableStatus() ? 1 : 0;
-//        int carrotahidden = carrota.isHidden() ? 1 : 0;
-//        int carrotafontSize = 48;
-//        String carrotascript = "";
-//        int carrotastarterPage = 1;
-//        String carrotapageName = "page1";
-//        String carrotapageID = "page1";
-//        String carrotasaveName = "Sample Game";
-//        String carrotaStr = "INSERT INTO ShapeDatabase VALUES "
-//                + "('" + carrotashapeName + "', '" +
-//                carrotaimageName + "', '" +
-//                carrotatext + "'," +
-//                carrotax + "," +
-//                carrotay + "," +
-//                carrotaheight + "," +
-//                carrotawidth + "," +
-//                carrotamoveable + "," +
-//                carrotahidden + "," +
-//                carrotafontSize + "," +
-//                carrotastarterPage + ", '" +
-//                carrotascript + "', '" +
-//                carrotapageName + "', '" +
-//                carrotapageID + "', '" +
-//                carrotasaveName + "', NULL)";
-//        db.execSQL(carrotaStr);s
+        // page 1
+        Shape carrotab = new Shape(14, "carrot", "You are in a maze of twisty little passages, all alike.", 20, 20, 250, 36);
+        String carrotabshapeName = carrotab.getShapeName();
+        String carrotabimageName = carrotab.getImageName();
+        String carrotabtext = "You are in a maze of twisty little passages, all alike.";
+        double carrotabx = carrotab.getX();
+        double carrotaby = carrotab.getY() + 200;
+        double carrotabheight = carrotab.getHeight();
+        double carrotabwidth = carrotab.getWidth();
+        int carrotabmoveable = carrotab.getMoveableStatus() ? 1 : 0;
+        int carrotabhidden = carrotab.isHidden() ? 1 : 0;
+        int carrotabfontSize = 48;
+        String carrotabscript = "";
+        int carrotabstarterPage = 1;
+        String carrotabpageName = "page1";
+        String carrotabpageID = "page1";
+        String carrotabsaveName = "Sample Game";
+        String carrotabStr = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + carrotashapeName + "', '" +
+                carrotabimageName + "', '" +
+                carrotabtext + "'," +
+                carrotabx + "," +
+                carrotaby + "," +
+                carrotabheight + "," +
+                carrotabwidth + "," +
+                carrotabmoveable + "," +
+                carrotabhidden + "," +
+                carrotabfontSize + "," +
+                carrotabstarterPage + ", '" +
+                carrotabscript + "', '" +
+                carrotabpageName + "', '" +
+                carrotabpageID + "', '" +
+                carrotabsaveName + "', NULL)";
+        db.execSQL(carrotabStr);
     }
 
 
