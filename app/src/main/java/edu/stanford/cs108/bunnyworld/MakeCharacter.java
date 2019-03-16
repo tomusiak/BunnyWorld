@@ -36,15 +36,14 @@ public class MakeCharacter extends AppCompatActivity implements OnClickListener 
 
     private Button saveButton;
     private DrawView drawView;
+    public Bitmap savedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_character);
-
         saveButton = findViewById(R.id.save);
         saveButton.setOnClickListener(this);
-
         drawView = findViewById(R.id.drawView);
     }
 
@@ -54,32 +53,30 @@ public class MakeCharacter extends AppCompatActivity implements OnClickListener 
         if (view.getId()==R.id.save){
             AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
             saveDialog.setTitle("Save drawing");
-            saveDialog.setMessage("Save drawing to device Gallery?");
+            saveDialog.setMessage("Save your character?");
             saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    drawView.setBackgroundColor(Color.TRANSPARENT);
-                    Bitmap b = Bitmap.createBitmap(drawView.getWidth(), drawView.getHeight(), Bitmap.Config.ARGB_8888);
+                    //Define a bitmap with the same size as the view
+                    Bitmap b = Bitmap.createBitmap(drawView.getWidth(), drawView.getHeight(),Bitmap.Config.ARGB_8888);
+                    //Bind a canvas to it
+                    Canvas canvas = new Canvas(b);
+                    //Get the view's background
+                    Drawable bgDrawable =drawView.getBackground();
+                    if (bgDrawable!=null)
+                        //has background drawable, then draw it on the canvas
+                        bgDrawable.draw(canvas);
+                    else
+                        //does not have background drawable, then draw white background on the canvas
+                        canvas.drawColor(Color.WHITE);
+                    // draw the view on the canvas
+                    drawView.draw(canvas);
+                    //return the bitmap
+                    savedImage = b;
 
-                    String path = saveToInternalStorage(b);
-
-                    loadImageFromStorage(path);
-
-
-//                    drawView.setDrawingCacheEnabled(true);
-//
-//                    String imgSaved = MediaStore.Images.Media.insertImage(
-//                            getContentResolver(), drawView.getDrawingCache(),
-//                            "save"+".png", "drawing");
-//                    if (imgSaved != null) {
-//                        Toast savedToast = Toast.makeText(getApplicationContext(),
-//                                "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
-//                        savedToast.show();
-//                    } else {
-//                        Toast unsavedToast = Toast.makeText(getApplicationContext(),
-//                                "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
-//                        unsavedToast.show();
-//                    }
-//                    drawView.destroyDrawingCache();
+                    if (savedImage != null) {
+                        Toast successToast = Toast.makeText(getApplicationContext(),"Saved successfully.",Toast.LENGTH_SHORT); // Informs user of successful save.
+                        successToast.show();
+                    }
                 }
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
@@ -89,45 +86,4 @@ public class MakeCharacter extends AppCompatActivity implements OnClickListener 
             saveDialog.show();
         }
     }
-
-    private String saveToInternalStorage(Bitmap bitmapImage){
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath=new File(directory,"profile.jpg");
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return directory.getAbsolutePath();
-    }
-
-    public void loadImageFromStorage(String path)
-    {
-
-        try {
-            File f=new File(path, "profile.jpg");
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-            ImageView img=findViewById(R.id.imgPicker);
-            img.setImageBitmap(b);
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-
-    }
-
 }
