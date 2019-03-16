@@ -192,8 +192,10 @@ public class Shape {
 
         for (int i = 0; i < clauses.length; i++) {
             String[] tokens = clauses[i].split("\\s+");
-            if (tokens[2].equals("goto")) {
-                return true;
+            for (int j = 2; j < tokens.length; j+=2) {
+                if (tokens[j].equals("goto")) {
+                    return true;
+                }
             }
         }
         return false;

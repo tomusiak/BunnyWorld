@@ -74,8 +74,8 @@ class Database extends SQLiteOpenHelper {
         int carrot1fontSize = 48;
         String carrot1script = "";
         int carrot1starterPage = 1;
-        String carrot1pageName = "page1";
-        String carrot1pageID = "page1";
+        String carrot1pageName = "page3";
+        String carrot1pageID = "page3";
         String carrot1saveName = "Sample Game";
         String carrot1Str = "INSERT INTO ShapeDatabase VALUES "
                 + "('" + carrot1shapeName + "', '" +
@@ -109,8 +109,8 @@ class Database extends SQLiteOpenHelper {
         int carrot2fontSize = 48;
         String carrot2script = "";
         int carrot2starterPage = 1;
-        String carrot2pageName = "page1";
-        String carrot2pageID = "page1";
+        String carrot2pageName = "page5";
+        String carrot2pageID = "page5";
         String carrot2saveName = "Sample Game";
         String carrot2Str = "INSERT INTO ShapeDatabase VALUES "
                 + "('" + carrot2shapeName + "', '" +
@@ -144,8 +144,8 @@ class Database extends SQLiteOpenHelper {
         int carrot3fontSize = 48;
         String carrot3script = "";
         int carrot3starterPage = 1;
-        String carrot3pageName = "page1";
-        String carrot3pageID = "page1";
+        String carrot3pageName = "page5";
+        String carrot3pageID = "page5";
         String carrot3saveName = "Sample Game";
         String carrot3Str = "INSERT INTO ShapeDatabase VALUES "
                 + "('" + carrot3shapeName + "', '" +
@@ -165,6 +165,76 @@ class Database extends SQLiteOpenHelper {
                 carrot3saveName + "', NULL)";
         db.execSQL(carrot3Str);
 
+        // CARROT 4
+        Shape carrot4 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        String carrot4shapeName = carrot4.getShapeName();
+        String carrot4imageName = carrot4.getImageName();
+        String carrot4text = carrot4.getText();
+        double carrot4x = carrot4.getX();
+        double carrot4y = carrot4.getY();
+        double carrot4height = carrot4.getHeight();
+        double carrot4width = carrot4.getWidth();
+        int carrot4moveable = carrot4.getMoveableStatus() ? 1 : 0;
+        int carrot4hidden = carrot4.isHidden() ? 1 : 0;
+        int carrot4fontSize = 48;
+        String carrot4script = "";
+        int carrot4starterPage = 1;
+        String carrot4pageName = "page5";
+        String carrot4pageID = "page5";
+        String carrot4saveName = "Sample Game";
+        String carrot4Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + carrot4shapeName + "', '" +
+                carrot4imageName + "', '" +
+                carrot4text + "'," +
+                carrot4x + "," +
+                carrot4y + "," +
+                carrot4height + "," +
+                carrot4width + "," +
+                carrot4moveable + "," +
+                carrot4hidden + "," +
+                carrot4fontSize + "," +
+                carrot4starterPage + ", '" +
+                carrot4script + "', '" +
+                carrot4pageName + "', '" +
+                carrot4pageID + "', '" +
+                carrot4saveName + "', NULL)";
+        db.execSQL(carrot4Str);
+
+        // FIRE
+        Shape fire = new Shape(1, "fire", "", 20, 20, 250, 250);
+        String fireshapeName = fire.getShapeName();
+        String fireimageName = fire.getImageName();
+        String firetext = fire.getText();
+        double firex = fire.getX();
+        double firey = fire.getY();
+        double fireheight = fire.getHeight();
+        double firewidth = fire.getWidth();
+        int firemoveable = fire.getMoveableStatus() ? 1 : 0;
+        int firehidden = fire.isHidden() ? 1 : 0;
+        int firefontSize = 48;
+        String firescript = "";
+        int firestarterPage = 1;
+        String firepageName = "page3";
+        String firepageID = "page3";
+        String firesaveName = "Sample Game";
+        String fireStr = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + fireshapeName + "', '" +
+                fireimageName + "', '" +
+                firetext + "'," +
+                firex + "," +
+                firey + "," +
+                fireheight + "," +
+                firewidth + "," +
+                firemoveable + "," +
+                firehidden + "," +
+                firefontSize + "," +
+                firestarterPage + ", '" +
+                firescript + "', '" +
+                firepageName + "', '" +
+                firepageID + "', '" +
+                firesaveName + "', NULL)";
+        db.execSQL(fireStr);
+
         // BUNNY 1
         Shape bunny1 = new Shape(1, "carrot", "", 20, 20, 250, 250);
         String bunny1shapeName = bunny1.getShapeName();
@@ -179,8 +249,8 @@ class Database extends SQLiteOpenHelper {
         int bunny1fontSize = 48;
         String bunny1script = "";
         int bunny1starterPage = 1;
-        String bunny1pageName = "page1";
-        String bunny1pageID = "page1";
+        String bunny1pageName = "page2";
+        String bunny1pageID = "page2";
         String bunny1saveName = "Sample Game";
         String bunny1Str = "INSERT INTO ShapeDatabase VALUES "
                 + "('" + bunny1shapeName + "', '" +
