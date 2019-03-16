@@ -98,7 +98,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot1Str);
 
         // CARROT 2
-        Shape carrot2 = new Shape(2, "carrot", "", 20, 20, 250, 150);
+        Shape carrot2 = new Shape(2, "carrot", "", 20, 20, 250, 250);
         String carrot2shapeName = carrot2.getShapeName();
         String carrot2imageName = carrot2.getImageName();
         String carrot2text = carrot2.getText();
@@ -511,45 +511,12 @@ class Database extends SQLiteOpenHelper {
                 exitsaveName + "', NULL)";
         db.execSQL(exitStr);
 
-//        Shape text1 = new Shape(14, "carrot", "", 20, 20, 250, 250);
-//        String text1shapeName = text1.getShapeName();
-//        String text1imageName = text1.getImageName();
-//        String text1text = text1.getText();
-//        double text1x = text1.getX();
-//        double text1y = text1.getY();
-//        double text1height = text1.getHeight();
-//        double text1width = text1.getWidth();
-//        int text1moveable = text1.getMoveableStatus() ? 1 : 0;
-//        int text1hidden = text1.isHidden() ? 1 : 0;
-//        int text1fontSize = 48;
-//        String text1script = "";
-//        int text1starterPage = 1;
-//        String text1pageName = "page1";
-//        String text1pageID = "page1";
-//        String text1saveName = "Sample Game";
-//        String text1Str = "INSERT INTO ShapeDatabase VALUES "
-//                + "('" + text1shapeName + "', '" +
-//                text1imageName + "', '" +
-//                text1text + "'," +
-//                text1x + "," +
-//                text1y + "," +
-//                text1height + "," +
-//                text1width + "," +
-//                text1moveable + "," +
-//                text1hidden + "," +
-//                text1fontSize + "," +
-//                text1starterPage + ", '" +
-//                text1script + "', '" +
-//                text1pageName + "', '" +
-//                text1pageID + "', '" +
-//                text1saveName + "', NULL)";
-//        db.execSQL(text1Str);
 
-        // CARROT 1
-        Shape carrota = new Shape(14, "carrot", "Bunny World", 20, 20, 250, 250);
+        // Bunny World
+        Shape carrota = new Shape(14, "carrot", "Bunny World", 20, 20, 250, 150);
         String carrotashapeName = carrota.getShapeName();
         String carrotaimageName = carrota.getImageName();
-        String carrotatext = "carrot text";
+        String carrotatext = "Bunny World";
         double carrotax = carrot1.getX();
         double carrotay = carrot1.getY();
         double carrotaheight = carrota.getHeight();
@@ -579,6 +546,41 @@ class Database extends SQLiteOpenHelper {
                 carrotapageID + "', '" +
                 carrotasaveName + "', NULL)";
         db.execSQL(carrotaStr);
+
+//        // page 1
+//        Shape carrota = new Shape(14, "carrot", "Bunny World", 20, 20, 250, 150);
+//        String carrotashapeName = carrota.getShapeName();
+//        String carrotaimageName = carrota.getImageName();
+//        String carrotatext = "Bunny World";
+//        double carrotax = carrot1.getX();
+//        double carrotay = carrot1.getY();
+//        double carrotaheight = carrota.getHeight();
+//        double carrotawidth = carrota.getWidth();
+//        int carrotamoveable = carrota.getMoveableStatus() ? 1 : 0;
+//        int carrotahidden = carrota.isHidden() ? 1 : 0;
+//        int carrotafontSize = 48;
+//        String carrotascript = "";
+//        int carrotastarterPage = 1;
+//        String carrotapageName = "page1";
+//        String carrotapageID = "page1";
+//        String carrotasaveName = "Sample Game";
+//        String carrotaStr = "INSERT INTO ShapeDatabase VALUES "
+//                + "('" + carrotashapeName + "', '" +
+//                carrotaimageName + "', '" +
+//                carrotatext + "'," +
+//                carrotax + "," +
+//                carrotay + "," +
+//                carrotaheight + "," +
+//                carrotawidth + "," +
+//                carrotamoveable + "," +
+//                carrotahidden + "," +
+//                carrotafontSize + "," +
+//                carrotastarterPage + ", '" +
+//                carrotascript + "', '" +
+//                carrotapageName + "', '" +
+//                carrotapageID + "', '" +
+//                carrotasaveName + "', NULL)";
+//        db.execSQL(carrotaStr);s
     }
 
 
