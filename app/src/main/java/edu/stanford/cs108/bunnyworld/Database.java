@@ -61,7 +61,7 @@ class Database extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // CARROT 1
-        Shape carrot1 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        Shape carrot1 = new Shape(1, "carrot", "", 150, 150, 250, 250);
         String carrot1shapeName = carrot1.getShapeName();
         String carrot1imageName = carrot1.getImageName();
         String carrot1text = carrot1.getText();
@@ -201,7 +201,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot4Str);
 
         // FIRE
-        Shape fire = new Shape(1, "fire", "", 20, 20, 250, 250);
+        Shape fire = new Shape(1, "fire", "", 50, 50, 250, 250);
         String fireshapeName = fire.getShapeName();
         String fireimageName = fire.getImageName();
         String firetext = fire.getText();
