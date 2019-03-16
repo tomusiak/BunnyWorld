@@ -33,7 +33,19 @@ EXTENSIONS:
 6) Error checking (prevents multiple saves with same name, saves with nothing in them).
 
 Avalon Wolfe
--
+- Editor Activity
+- some work with pre-built copy of BunnyWorld example
+- some work with text shapes and gray shapes
+
+EXTENSIONS:
+1) Error checking in Editor (select from pages, select from script options (actions not added to script unless script fully
+   completed), must select shape/page for some actions,  etc.)
+2) Undo add/delete/edit shape
+3) Undo delete page
+4) Some work with change background
+5) Copy/paste shape
+6) Delete Script
+7) Change starter page
 
 Isabelle Zhou
 -
