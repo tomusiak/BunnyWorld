@@ -241,10 +241,10 @@ class Database extends SQLiteOpenHelper {
         double bunny1y = bunny1.getY();
         double bunny1height = bunny1.getHeight();
         double bunny1width = bunny1.getWidth();
-        int bunny1moveable = bunny1.getMoveableStatus() ? 1 : 0;
+        int bunny1moveable = 0;
         int bunny1hidden = bunny1.isHidden() ? 1 : 0;
         int bunny1fontSize = bunny1.getFontSize();
-        String bunny1script = "on click hide carrot1 play munch;on enter show door2";
+        String bunny1script = "on click hide carrot1 play munch;on click show door2";
         int bunny1starterPage = 0;
         String bunny1pageName = "page2";
         String bunny1pageID = "page2";
@@ -266,6 +266,41 @@ class Database extends SQLiteOpenHelper {
                 bunny1pageID + "', '" +
                 bunny1saveName + "', NULL)";
         db.execSQL(bunny1Str);
+
+        // page 1
+        Shape carrotz = new Shape(14, "carrot", "Mystic bunny - rub my tummy for a big surprise", 20, 20, 250, 36);
+        String carrotzshapeName = carrotz.getShapeName();
+        String carrotzimageName = carrotz.getImageName();
+        String carrotztext = "Mystic bunny - rub my tummy for a big surprise";
+        double carrotzx = carrotz.getX();
+        double carrotzy = carrotz.getY() + 200;
+        double carrotzheight = carrotz.getHeight();
+        double carrotzwidth = carrotz.getWidth();
+        int carrotzmoveable = carrotz.getMoveableStatus() ? 1 : 0;
+        int carrotzhidden = carrotz.isHidden() ? 1 : 0;
+        int carrotzfontSize = 48;
+        String carrotzscript = "";
+        int carrotzstarterPage = 1;
+        String carrotzpageName = "page2";
+        String carrotzpageID = "page2";
+        String carrotzsaveName = "Sample Game";
+        String carrotzStr = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + carrotzshapeName + "', '" +
+                carrotzimageName + "', '" +
+                carrotztext + "'," +
+                carrotzx + "," +
+                carrotzy + "," +
+                carrotzheight + "," +
+                carrotzwidth + "," +
+                carrotzmoveable + "," +
+                carrotzhidden + "," +
+                carrotzfontSize + "," +
+                carrotzstarterPage + ", '" +
+                carrotzscript + "', '" +
+                carrotzpageName + "', '" +
+                carrotzpageID + "', '" +
+                carrotzsaveName + "', NULL)";
+        db.execSQL(carrotzStr);
 
         Shape bunny2 = new Shape(7, "death", "", 450, 450, 250, 250);
         String bunny2shapeName = bunny2.getShapeName();
@@ -345,7 +380,7 @@ class Database extends SQLiteOpenHelper {
         double door2height = door2.getHeight();
         double door2width = door2.getWidth();
         int door2moveable = door2.getMoveableStatus() ? 1 : 0;
-        int door2hidden = 1;
+        int door2hidden = 0;
         int door2fontSize = door2.getFontSize();
         String door2script = "on click goto page3";
         int door2starterPage = 1;
