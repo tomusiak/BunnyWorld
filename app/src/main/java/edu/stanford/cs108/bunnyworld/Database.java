@@ -575,7 +575,41 @@ class Database extends SQLiteOpenHelper {
 //                carrotapageName + "', '" +
 //                carrotapageID + "', '" +
 //                carrotasaveName + "', NULL)";
-//        db.execSQL(carrotaStr);s
+//        db.execSQL(carrotaStr);
+        
+        Shape win = new Shape(15, "carrot", "You Win! Yay!", 100, 900, 150, 150);
+        String winshapeName = win.getShapeName();
+        String winimageName = win.getImageName();
+        String wintext = "You Win! Yay!";
+        double winx = win.getX();
+        double winy = win.getY();
+        double winheight = win.getHeight();
+        double winwidth = win.getWidth();
+        int winmoveable = win.getMoveableStatus() ? 1 : 0;
+        int winhidden = win.isHidden() ? 1 : 0;
+        int winfontSize = 24;
+        String winscript = "on enter play victory";
+        int winstarterPage = 1;
+        String winpageName = "page5";
+        String winpageID = "page5";
+        String winsaveName = "Sample Game";
+        String winStr = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + winshapeName + "', '" +
+                winimageName + "', '" +
+                wintext + "'," +
+                winx + "," +
+                winy + "," +
+                winheight + "," +
+                winwidth + "," +
+                winmoveable + "," +
+                winhidden + "," +
+                winfontSize + "," +
+                winstarterPage + ", '" +
+                winscript + "', '" +
+                winpageName + "', '" +
+                winpageID + "', '" +
+                winsaveName + "', NULL)";
+        db.execSQL(winStr);
     }
 
 
