@@ -59,41 +59,184 @@ class Database extends SQLiteOpenHelper {
     private void populateSampleGame() {
 
         SQLiteDatabase db = this.getWritableDatabase();
+
+        // CARROT 1
         Shape carrot1 = new Shape(1, "carrot", "", 20, 20, 250, 250);
-        String shapeName = carrot1.getShapeName();
-        String imageName = carrot1.getImageName();
-        String text = carrot1.getText();
-        double x = carrot1.getX();
-        double y = carrot1.getY();
-        double height = carrot1.getHeight();
-        double width = carrot1.getWidth();
-        int moveable = carrot1.getMoveableStatus() ? 1 : 0;
-        int hidden = carrot1.isHidden() ? 1 : 0;
-        int fontSize = 48;
-        String script = "";
-        int starterPage = 1;
-        String pageName = "page1";
-        String pageID = "page1";
-        String saveName = "Sample Game";
+        String carrot1shapeName = carrot1.getShapeName();
+        String carrot1imageName = carrot1.getImageName();
+        String carrot1text = carrot1.getText();
+        double carrot1x = carrot1.getX();
+        double carrot1y = carrot1.getY();
+        double carrot1height = carrot1.getHeight();
+        double carrot1width = carrot1.getWidth();
+        int carrot1moveable = carrot1.getMoveableStatus() ? 1 : 0;
+        int carrot1hidden = carrot1.isHidden() ? 1 : 0;
+        int carrot1fontSize = 48;
+        String carrot1script = "";
+        int carrot1starterPage = 1;
+        String carrot1pageName = "page3";
+        String carrot1pageID = "page3";
+        String carrot1saveName = "Sample Game";
         String carrot1Str = "INSERT INTO ShapeDatabase VALUES "
-                + "('" + shapeName + "', '" +
-                imageName + "', '" +
-                text + "'," +
-                x + "," +
-                y + "," +
-                height + "," +
-                width + "," +
-                moveable + "," +
-                hidden + "," +
-                fontSize + "," +
-                starterPage + ", '" +
-                script + "', '" +
-                pageName + "', '" +
-                pageID + "', '" +
-                saveName + "', NULL)";
+                + "('" + carrot1shapeName + "', '" +
+                carrot1imageName + "', '" +
+                carrot1text + "'," +
+                carrot1x + "," +
+                carrot1y + "," +
+                carrot1height + "," +
+                carrot1width + "," +
+                carrot1moveable + "," +
+                carrot1hidden + "," +
+                carrot1fontSize + "," +
+                carrot1starterPage + ", '" +
+                carrot1script + "', '" +
+                carrot1pageName + "', '" +
+                carrot1pageID + "', '" +
+                carrot1saveName + "', NULL)";
         db.execSQL(carrot1Str);
 
-        Shape bunny1 = new Shape(1, "mystic", "", 450, 450, 250, 250);
+        // CARROT 2
+        Shape carrot2 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        String carrot2shapeName = carrot2.getShapeName();
+        String carrot2imageName = carrot2.getImageName();
+        String carrot2text = carrot2.getText();
+        double carrot2x = carrot2.getX();
+        double carrot2y = carrot2.getY();
+        double carrot2height = carrot2.getHeight();
+        double carrot2width = carrot2.getWidth();
+        int carrot2moveable = carrot2.getMoveableStatus() ? 1 : 0;
+        int carrot2hidden = carrot2.isHidden() ? 1 : 0;
+        int carrot2fontSize = 48;
+        String carrot2script = "";
+        int carrot2starterPage = 1;
+        String carrot2pageName = "page5";
+        String carrot2pageID = "page5";
+        String carrot2saveName = "Sample Game";
+        String carrot2Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + carrot2shapeName + "', '" +
+                carrot2imageName + "', '" +
+                carrot2text + "'," +
+                carrot2x + "," +
+                carrot2y + "," +
+                carrot2height + "," +
+                carrot2width + "," +
+                carrot2moveable + "," +
+                carrot2hidden + "," +
+                carrot2fontSize + "," +
+                carrot2starterPage + ", '" +
+                carrot2script + "', '" +
+                carrot2pageName + "', '" +
+                carrot2pageID + "', '" +
+                carrot2saveName + "', NULL)";
+        db.execSQL(carrot2Str);
+
+        // CARROT 3
+        Shape carrot3 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        String carrot3shapeName = carrot3.getShapeName();
+        String carrot3imageName = carrot3.getImageName();
+        String carrot3text = carrot3.getText();
+        double carrot3x = carrot3.getX();
+        double carrot3y = carrot3.getY();
+        double carrot3height = carrot3.getHeight();
+        double carrot3width = carrot3.getWidth();
+        int carrot3moveable = carrot3.getMoveableStatus() ? 1 : 0;
+        int carrot3hidden = carrot3.isHidden() ? 1 : 0;
+        int carrot3fontSize = 48;
+        String carrot3script = "";
+        int carrot3starterPage = 1;
+        String carrot3pageName = "page5";
+        String carrot3pageID = "page5";
+        String carrot3saveName = "Sample Game";
+        String carrot3Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + carrot3shapeName + "', '" +
+                carrot3imageName + "', '" +
+                carrot3text + "'," +
+                carrot3x + "," +
+                carrot3y + "," +
+                carrot3height + "," +
+                carrot3width + "," +
+                carrot3moveable + "," +
+                carrot3hidden + "," +
+                carrot3fontSize + "," +
+                carrot3starterPage + ", '" +
+                carrot3script + "', '" +
+                carrot3pageName + "', '" +
+                carrot3pageID + "', '" +
+                carrot3saveName + "', NULL)";
+        db.execSQL(carrot3Str);
+
+        // CARROT 4
+        Shape carrot4 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        String carrot4shapeName = carrot4.getShapeName();
+        String carrot4imageName = carrot4.getImageName();
+        String carrot4text = carrot4.getText();
+        double carrot4x = carrot4.getX();
+        double carrot4y = carrot4.getY();
+        double carrot4height = carrot4.getHeight();
+        double carrot4width = carrot4.getWidth();
+        int carrot4moveable = carrot4.getMoveableStatus() ? 1 : 0;
+        int carrot4hidden = carrot4.isHidden() ? 1 : 0;
+        int carrot4fontSize = 48;
+        String carrot4script = "";
+        int carrot4starterPage = 1;
+        String carrot4pageName = "page5";
+        String carrot4pageID = "page5";
+        String carrot4saveName = "Sample Game";
+        String carrot4Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + carrot4shapeName + "', '" +
+                carrot4imageName + "', '" +
+                carrot4text + "'," +
+                carrot4x + "," +
+                carrot4y + "," +
+                carrot4height + "," +
+                carrot4width + "," +
+                carrot4moveable + "," +
+                carrot4hidden + "," +
+                carrot4fontSize + "," +
+                carrot4starterPage + ", '" +
+                carrot4script + "', '" +
+                carrot4pageName + "', '" +
+                carrot4pageID + "', '" +
+                carrot4saveName + "', NULL)";
+        db.execSQL(carrot4Str);
+
+        // FIRE
+        Shape fire = new Shape(1, "fire", "", 20, 20, 250, 250);
+        String fireshapeName = fire.getShapeName();
+        String fireimageName = fire.getImageName();
+        String firetext = fire.getText();
+        double firex = fire.getX();
+        double firey = fire.getY();
+        double fireheight = fire.getHeight();
+        double firewidth = fire.getWidth();
+        int firemoveable = fire.getMoveableStatus() ? 1 : 0;
+        int firehidden = fire.isHidden() ? 1 : 0;
+        int firefontSize = 48;
+        String firescript = "";
+        int firestarterPage = 1;
+        String firepageName = "page3";
+        String firepageID = "page3";
+        String firesaveName = "Sample Game";
+        String fireStr = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + fireshapeName + "', '" +
+                fireimageName + "', '" +
+                firetext + "'," +
+                firex + "," +
+                firey + "," +
+                fireheight + "," +
+                firewidth + "," +
+                firemoveable + "," +
+                firehidden + "," +
+                firefontSize + "," +
+                firestarterPage + ", '" +
+                firescript + "', '" +
+                firepageName + "', '" +
+                firepageID + "', '" +
+                firesaveName + "', NULL)";
+        db.execSQL(fireStr);
+
+        // BUNNY 1
+        Shape bunny1 = new Shape(1, "carrot", "", 20, 20, 250, 250);
         String bunny1shapeName = bunny1.getShapeName();
         String bunny1imageName = bunny1.getImageName();
         String bunny1text = bunny1.getText();

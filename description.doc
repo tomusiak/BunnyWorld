@@ -9,7 +9,15 @@ Natalie Cygan
 -
 
 Meilan Steimle
--
+- Main Activity
+- some work with pop up menu for add shape
+- PlayView
+- PlayActivity
+
+EXTENSIONS: 
+1) animated view for home screen
+2) sound/moving between inventory & page toasts
+3) highlight color changes between page & inventory
 
 Alan Tomusiak
 - Implemented Database functionality.

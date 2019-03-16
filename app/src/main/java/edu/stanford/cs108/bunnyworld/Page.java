@@ -19,6 +19,8 @@ public class Page {
     private Shape selected;     // holds onto the selected shape
     private Paint borderColor;  // color for selection box
     private Paint transBoxFill;
+    private Paint dragBubbleBorder;
+    private Paint dragBubbleFill;
     private Paint fontColor;
 
     private boolean hasBackground;
@@ -41,12 +43,23 @@ public class Page {
         borderColor = new Paint();
         borderColor.setStyle(Paint.Style.STROKE);
         borderColor.setStrokeWidth(10);
-        borderColor.setColor(Color.rgb(190, 21, 21));
+        borderColor.setColor(Color.rgb(21, 21, 150));
 
         // initialize transparent box color
         transBoxFill = new Paint();
         transBoxFill.setStyle(Paint.Style.FILL);
         transBoxFill.setColor(Color.TRANSPARENT);
+
+        // initialize drag bubble border
+        dragBubbleBorder = new Paint();
+        dragBubbleBorder.setStyle(Paint.Style.STROKE);
+        dragBubbleBorder.setStrokeWidth(20);
+        dragBubbleBorder.setColor(Color.rgb(21, 21, 150));
+
+        // initialize drag bubble fill
+        dragBubbleFill = new Paint();
+        dragBubbleFill.setStyle(Paint.Style.FILL);
+        dragBubbleFill.setColor(Color.rgb(121, 121, 250));
 
         fontColor = new Paint();
         fontColor.setColor(Color.BLACK);
@@ -145,6 +158,15 @@ public class Page {
                     canvas.drawRect(shapeBorder, transBoxFill);
                     canvas.drawRect(shapeBorder, borderColor);
 
+                    // draw the size adjust bubble
+                    RectF corner = new RectF((float)currentShape.getRight() - 30,
+                            (float)currentShape.getBottom() - 30,
+                            (float)currentShape.getRight() + 30,
+                            (float) currentShape.getBottom() + 30);
+                    canvas.drawOval(corner, dragBubbleBorder);
+                    canvas.drawOval(corner, dragBubbleFill);
+
+
                 }
 
                 // if this shape is hidden, display it as semi-transparent
@@ -193,6 +215,7 @@ public class Page {
             if(!currentShape.isHidden() && currentShape.getImageName() != "") {
                 canvas.drawBitmap(currentShape.getBitmap(), (float)currentShape.getX(),
                         (float)currentShape.getY(), paint);
+
                 // if this shape is text, render it as such
                 // if the shape to be drawn is selected, render a box around it
                 if(currentShape == selected) {
