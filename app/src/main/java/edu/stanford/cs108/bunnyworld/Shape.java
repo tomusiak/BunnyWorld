@@ -183,6 +183,24 @@ public class Shape {
     }
 
     /**
+     * Checks to see if script has goto action
+     * @return true if present, false if not
+     */
+    public boolean scriptHasGoto() {
+        this.script = this.script.toLowerCase();
+        String[] clauses = script.split(";");
+
+        for (int i = 0; i < clauses.length; i++) {
+            String[] tokens = clauses[i].split("\\s+");
+            if (tokens[2].equals("goto")) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    /**
      * The following are accessor methods for Shape properties (x, y, width, height)
      */
     public double getX() {
