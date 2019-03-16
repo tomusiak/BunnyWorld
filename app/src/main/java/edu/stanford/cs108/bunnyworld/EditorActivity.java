@@ -50,6 +50,7 @@ public class EditorActivity extends AppCompatActivity {
     private Shape undoShapeEdit;
     private Shape lastShapeEdited;
     private String defaultImageName = "grayshape";
+    private boolean gameLoaded = false;
 
     private Dialog editShapeDialog;
     private Dialog addShapeDialog;
@@ -1068,6 +1069,7 @@ public class EditorActivity extends AppCompatActivity {
         addPage();
         Toast addToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
         addToast.show();
+        gameLoaded = true;
     }
 
     /** Loads an existing game.
@@ -1109,6 +1111,7 @@ public class EditorActivity extends AppCompatActivity {
                  listView.setAdapter( itemsAdapter );
              }
         }
+        gameLoaded = true;
     }
 
     /**
@@ -1325,26 +1328,28 @@ public class EditorActivity extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
-                        addPage();
-                        Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
-                        addPageToast.show();
+                        if (checkGameStatus()) {
+                            addPage();
+                            Toast addPageToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
+                            addPageToast.show();
+                        }
                         break;
                     case 2:
-                        selectPageToRenameDialog();
+                        if (checkGameStatus()) selectPageToRenameDialog();
                         break;
                     case 3:
-                        deletePageDialog();
+                        if (checkGameStatus()) deletePageDialog();
                         break;
                     case 4:
-                        goToNewPageDialog();
+                        if (checkGameStatus()) goToNewPageDialog();
                         break;
                     case 5:
-                        changePageBackground();
+                        if (checkGameStatus()) changePageBackground();
                         break;
                     case 6:
-                        selectStarterPage();
+                        if (checkGameStatus()) selectStarterPage();
                     case 7:
-                        undoPageDelete();
+                        if (checkGameStatus()) undoPageDelete();
                 }
                 pageSpinner.setSelection(0);
             }
@@ -1368,22 +1373,22 @@ public class EditorActivity extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
-                        addShape();
+                        if (checkGameStatus()) addShape();
                         break;
                     case 2:
-                        editShapeDialog();
+                        if (checkGameStatus()) editShapeDialog();
                         break;
                     case 3:
-                        deleteShape();
+                        if (checkGameStatus()) deleteShape();
                         break;
                     case 4:
-                        copyShape();
+                        if (checkGameStatus()) copyShape();
                         break;
                     case 5:
-                        pasteShape();
+                        if (checkGameStatus()) pasteShape();
                         break;
                     case 6:
-                        undoShapeDialog();
+                        if (checkGameStatus()) undoShapeDialog();
                         break;
                 }
                 shapeSpinner.setSelection(0);
@@ -1407,13 +1412,13 @@ public class EditorActivity extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
-                        handleScript(view);
+                        if (checkGameStatus()) handleScript(view);
                         break;
                     case 2:
-                        showScript();
+                        if (checkGameStatus()) showScript();
                         break;
                     case 3:
-                        deleteScript();
+                        if (checkGameStatus()) deleteScript();
                         break;
                 }
                 scriptSpinner.setSelection(0);
@@ -1472,5 +1477,18 @@ public class EditorActivity extends AppCompatActivity {
         }
         Toast pageRenameError = Toast.makeText(getApplicationContext(), "Auto-saved!", Toast.LENGTH_SHORT);
         pageRenameError.show();
+    }
+
+    /**
+     * Checks to see that a new game has been created or a new game has been loaded
+     */
+    private boolean checkGameStatus() {
+        if (!gameLoaded) {
+            Toast gameErrorToast = Toast.makeText(getApplicationContext(), "No Game Loaded", Toast.LENGTH_SHORT);
+            gameErrorToast.show();
+            showCustomDialog();
+            return false;
+        }
+        return true;
     }
 }
