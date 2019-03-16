@@ -67,6 +67,7 @@ public class Shape {
 
         // set text defaults
         this.isText = false;
+        if(!textName.equals("")) this.isText = true;
         this.fontColor = Color.BLACK;
         this.text = "";
     }
