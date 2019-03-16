@@ -143,10 +143,8 @@ public class Shape {
      * @param text the user-set text
      */
     public void setText(String text) {
-        if(!text.equals("")) {
+        if(text != null && !text.equals("")) {
             isText = true;
-        } else {
-            isText = false;
         }
         this.text = text;
     };

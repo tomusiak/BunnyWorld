@@ -1073,6 +1073,7 @@ public class EditorActivity extends AppCompatActivity {
         Toast addToast = Toast.makeText(getApplicationContext(),currPage + " Added",Toast.LENGTH_SHORT);
         addToast.show();
         gameLoaded = true;
+        //editorView.renderBitmaps();
     }
 
     /** Loads an existing game.
@@ -1115,6 +1116,8 @@ public class EditorActivity extends AppCompatActivity {
              }
         }
         gameLoaded = true;
+
+        if(currentPage != null) editorView.renderBitmaps(currentPage);
     }
 
     /**
