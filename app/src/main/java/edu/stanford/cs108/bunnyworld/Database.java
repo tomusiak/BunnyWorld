@@ -98,7 +98,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot1Str);
 
         // CARROT 2
-        Shape carrot2 = new Shape(2, "carrot", "", 20, 20, 250, 250);
+        Shape carrot2 = new Shape(2, "carrot", "", 20, 20, 250, 150);
         String carrot2shapeName = carrot2.getShapeName();
         String carrot2imageName = carrot2.getImageName();
         String carrot2text = carrot2.getText();
@@ -544,6 +544,41 @@ class Database extends SQLiteOpenHelper {
 //                text1pageID + "', '" +
 //                text1saveName + "', NULL)";
 //        db.execSQL(text1Str);
+
+        // CARROT 1
+        Shape carrota = new Shape(14, "carrot", "Bunny World", 20, 20, 250, 250);
+        String carrotashapeName = carrota.getShapeName();
+        String carrotaimageName = carrota.getImageName();
+        String carrotatext = "carrot text";
+        double carrotax = carrot1.getX();
+        double carrotay = carrot1.getY();
+        double carrotaheight = carrota.getHeight();
+        double carrotawidth = carrota.getWidth();
+        int carrotamoveable = carrota.getMoveableStatus() ? 1 : 0;
+        int carrotahidden = carrota.isHidden() ? 1 : 0;
+        int carrotafontSize = 48;
+        String carrotascript = "";
+        int carrotastarterPage = 1;
+        String carrotapageName = "page1";
+        String carrotapageID = "page1";
+        String carrotasaveName = "Sample Game";
+        String carrotaStr = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + carrotashapeName + "', '" +
+                carrotaimageName + "', '" +
+                carrotatext + "'," +
+                carrotax + "," +
+                carrotay + "," +
+                carrotaheight + "," +
+                carrotawidth + "," +
+                carrotamoveable + "," +
+                carrotahidden + "," +
+                carrotafontSize + "," +
+                carrotastarterPage + ", '" +
+                carrotascript + "', '" +
+                carrotapageName + "', '" +
+                carrotapageID + "', '" +
+                carrotasaveName + "', NULL)";
+        db.execSQL(carrotaStr);
     }
 
 

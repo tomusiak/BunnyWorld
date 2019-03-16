@@ -69,7 +69,7 @@ public class Shape {
         this.isText = false;
         if(!textName.equals("")) this.isText = true;
         this.fontColor = Color.BLACK;
-        this.text = "";
+
     }
 
     public Shape(Shape copyShape) {
