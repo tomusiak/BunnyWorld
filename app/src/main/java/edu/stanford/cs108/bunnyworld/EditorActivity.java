@@ -61,8 +61,6 @@ public class EditorActivity extends AppCompatActivity {
     private int blue;
     private int green;
 
-    Bitmap savedImage;
-
     String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
             "fire", "mystic", "textbox", "patrick"};
     int[] imageIds = {R.drawable.carrot,
