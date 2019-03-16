@@ -421,16 +421,20 @@ public class PlayActivity extends AppCompatActivity {
         // refer to toasts (checks in PlayView for isHidden() etc)
         // if it's hidden, it's not playable
 
-        ArrayList<Shape> shapes = currentPage.getList();
+        for (String key : pageMap.keySet()) {
+            Page blarg = pageMap.get(key);
 
-        // check to see if it exists, then sets
-        for (int i = 0; i < shapes.size(); i++) {
-            if (shapes.get(i).getShapeName().equals(shapeName)) {
-                Shape current = shapes.get(i);
-                current.setHidden(true);
-                // redraw page
-                playView.renderBitmaps(currentPage);
-                break;
+            ArrayList<Shape> shapes = blarg.getList();
+
+            // check to see if it exists, then sets
+            for (int i = 0; i < shapes.size(); i++) {
+                if (shapes.get(i).getShapeName().equals(shapeName)) {
+                    Shape current = shapes.get(i);
+                    current.setHidden(true);
+                    // redraw page
+                    playView.renderBitmaps(currentPage);
+                    break;
+                }
             }
         }
     }
@@ -440,14 +444,18 @@ public class PlayActivity extends AppCompatActivity {
      * @param shapeName the name of the Shape to be shown
      */
     private void showShape (String shapeName) {
-        ArrayList<Shape> shapes = currentPage.getList();
-        for (int i = 0; i < shapes.size(); i++) {
-            if (shapes.get(i).getShapeName().equals(shapeName)) {
-                Shape current = shapes.get(i);
-                current.setHidden(false);
-                // redraw page
-                playView.renderBitmaps(currentPage);
-                break;
+        for (String key : pageMap.keySet()) {
+            Page blarg = pageMap.get(key);
+            ArrayList<Shape> shapes = blarg.getList();
+
+            for (int i = 0; i < shapes.size(); i++) {
+                if (shapes.get(i).getShapeName().equals(shapeName)) {
+                    Shape current = shapes.get(i);
+                    current.setHidden(false);
+                    // redraw page
+                    playView.renderBitmaps(currentPage);
+                    break;
+                }
             }
         }
     }
