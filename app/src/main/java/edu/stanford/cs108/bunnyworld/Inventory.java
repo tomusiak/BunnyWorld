@@ -138,9 +138,6 @@ public class Inventory {
                         (float)currentShape.getY(), paint);
 
             }
-
-
-
         }
     }
 
@@ -171,7 +168,6 @@ public class Inventory {
                     canvas.drawRect(shapeBorder, borderColor);
 
                 }
-
                 // if this shape is hidden, display it as semi-transparent
                 if(currentShape.isHidden()) {
                     paint = new Paint();
@@ -182,9 +178,6 @@ public class Inventory {
                         (float)currentShape.getY(), paint);
 
             }
-
-
-
         }
     }
 
