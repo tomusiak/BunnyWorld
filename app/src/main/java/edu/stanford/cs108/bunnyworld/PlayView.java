@@ -316,7 +316,7 @@ public class PlayView extends View {
                     ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
                     ((PlayActivity)this.getContext()).executeClickScripts(selected);
                     String script = selected.getScript().toLowerCase();
-                    if (script.contains("goto")) {
+                    if (script.contains("goto") && script.contains("click")) {
                         break;
                     }
                 }
