@@ -221,8 +221,12 @@ public class Shape {
      */
     public void move(double newX, double newY) {
 
+        double xdist = newX - getLeft();
+        double ydist = newY - getTop();
         this.x = newX - (width / 2);
         this.y = newY - (height / 2);
+//        this.x += xdist;
+//        this.y += ydist;
     }
 
     /**
