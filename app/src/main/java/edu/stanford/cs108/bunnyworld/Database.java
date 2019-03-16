@@ -246,9 +246,9 @@ class Database extends SQLiteOpenHelper {
         double bunny1width = bunny1.getWidth();
         int bunny1moveable = bunny1.getMoveableStatus() ? 1 : 0;
         int bunny1hidden = bunny1.isHidden() ? 1 : 0;
-        int bunny1fontSize = 48;
-        String bunny1script = "";
-        int bunny1starterPage = 1;
+        int bunny1fontSize = bunny1.getFontSize();
+        String bunny1script = bunny1.getScript();
+        int bunny1starterPage = 0;
         String bunny1pageName = "page2";
         String bunny1pageID = "page2";
         String bunny1saveName = "Sample Game";
@@ -269,7 +269,247 @@ class Database extends SQLiteOpenHelper {
                 bunny1pageID + "', '" +
                 bunny1saveName + "', NULL)";
         db.execSQL(bunny1Str);
+
+        Shape bunny2 = new Shape(1, "mystic", "", 450, 450, 250, 250);
+        String bunny2shapeName = bunny2.getShapeName();
+        String bunny2imageName = bunny2.getImageName();
+        String bunny2text = bunny2.getText();
+        double bunny2x = bunny2.getX();
+        double bunny2y = bunny2.getY();
+        double bunny2height = bunny2.getHeight();
+        double bunny2width = bunny2.getWidth();
+        int bunny2moveable = bunny2.getMoveableStatus() ? 1 : 0;
+        int bunny2hidden = bunny2.isHidden() ? 1 : 0;
+        int bunny2fontSize = bunny2.getFontSize();
+        String bunny2script = bunny2.getScript();
+        int bunny2starterPage = 0;
+        String bunny2pageName = "page4";
+        String bunny2pageID = "page4";
+        String bunny2saveName = "Sample Game";
+        String bunny2Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + bunny2shapeName + "', '" +
+                bunny2imageName + "', '" +
+                bunny2text + "'," +
+                bunny2x + "," +
+                bunny2y + "," +
+                bunny2height + "," +
+                bunny2width + "," +
+                bunny2moveable + "," +
+                bunny2hidden + "," +
+                bunny2fontSize + "," +
+                bunny2starterPage + ", '" +
+                bunny2script + "', '" +
+                bunny2pageName + "', '" +
+                bunny2pageID + "', '" +
+                bunny2saveName + "', NULL)";
+        db.execSQL(bunny2Str);
+
+        Shape gray1 = new Shape(1, "grayshape", "", 150, 900, 200, 200);
+        String gray1shapeName = gray1.getShapeName();
+        String gray1imageName = gray1.getImageName();
+        String gray1text = gray1.getText();
+        double gray1x = gray1.getX();
+        double gray1y = gray1.getY();
+        double gray1height = gray1.getHeight();
+        double gray1width = gray1.getWidth();
+        int gray1moveable = gray1.getMoveableStatus() ? 1 : 0;
+        int gray1hidden = gray1.isHidden() ? 1 : 0;
+        int gray1fontSize = gray1.getFontSize();
+        String gray1script = "on click goto page2";
+        int gray1starterPage = 1;
+        String gray1pageName = "page1";
+        String gray1pageID = "page1";
+        String gray1saveName = "Sample Game";
+        String gray1Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + gray1shapeName + "', '" +
+                gray1imageName + "', '" +
+                gray1text + "'," +
+                gray1x + "," +
+                gray1y + "," +
+                gray1height + "," +
+                gray1width + "," +
+                gray1moveable + "," +
+                gray1hidden + "," +
+                gray1fontSize + "," +
+                gray1starterPage + ", '" +
+                gray1script + "', '" +
+                gray1pageName + "', '" +
+                gray1pageID + "', '" +
+                gray1saveName + "', NULL)";
+        db.execSQL(gray1Str);
+
+        Shape gray2 = new Shape(1, "grayshape", "", 450, 900, 200, 200);
+        String gray2shapeName = gray2.getShapeName();
+        String gray2imageName = gray2.getImageName();
+        String gray2text = gray2.getText();
+        double gray2x = gray2.getX();
+        double gray2y = gray2.getY();
+        double gray2height = gray2.getHeight();
+        double gray2width = gray2.getWidth();
+        int gray2moveable = gray2.getMoveableStatus() ? 1 : 0;
+        int gray2hidden = gray2.isHidden() ? 1 : 0;
+        int gray2fontSize = gray2.getFontSize();
+        String gray2script = "on click goto page3";
+        int gray2starterPage = 1;
+        String gray2pageName = "page1";
+        String gray2pageID = "page1";
+        String gray2saveName = "Sample Game";
+        String gray2Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + gray2shapeName + "', '" +
+                gray2imageName + "', '" +
+                gray2text + "'," +
+                gray2x + "," +
+                gray2y + "," +
+                gray2height + "," +
+                gray2width + "," +
+                gray2moveable + "," +
+                gray2hidden + "," +
+                gray2fontSize + "," +
+                gray2starterPage + ", '" +
+                gray2script + "', '" +
+                gray2pageName + "', '" +
+                gray2pageID + "', '" +
+                gray2saveName + "', NULL)";
+        db.execSQL(gray2Str);
+
+        Shape gray3 = new Shape(1, "grayshape", "", 750, 900, 200, 200);
+        String gray3shapeName = gray3.getShapeName();
+        String gray3imageName = gray3.getImageName();
+        String gray3text = gray3.getText();
+        double gray3x = gray3.getX();
+        double gray3y = gray3.getY();
+        double gray3height = gray3.getHeight();
+        double gray3width = gray3.getWidth();
+        int gray3moveable = gray3.getMoveableStatus() ? 1 : 0;
+        int gray3hidden = gray3.isHidden() ? 1 : 0;
+        int gray3fontSize = gray3.getFontSize();
+        String gray3script = "on click goto page4";
+        int gray3starterPage = 1;
+        String gray3pageName = "page1";
+        String gray3pageID = "page1";
+        String gray3saveName = "Sample Game";
+        String gray3Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + gray3shapeName + "', '" +
+                gray3imageName + "', '" +
+                gray3text + "'," +
+                gray3x + "," +
+                gray3y + "," +
+                gray3height + "," +
+                gray3width + "," +
+                gray3moveable + "," +
+                gray3hidden + "," +
+                gray3fontSize + "," +
+                gray3starterPage + ", '" +
+                gray3script + "', '" +
+                gray3pageName + "', '" +
+                gray3pageID + "', '" +
+                gray3saveName + "', NULL)";
+        db.execSQL(gray3Str);
+
+        Shape gray4 = new Shape(1, "grayshape", "", 150, 900, 200, 200);
+        String gray4shapeName = gray4.getShapeName();
+        String gray4imageName = gray4.getImageName();
+        String gray4text = gray4.getText();
+        double gray4x = gray4.getX();
+        double gray4y = gray4.getY();
+        double gray4height = gray4.getHeight();
+        double gray4width = gray4.getWidth();
+        int gray4moveable = gray4.getMoveableStatus() ? 1 : 0;
+        int gray4hidden = gray4.isHidden() ? 1 : 0;
+        int gray4fontSize = gray4.getFontSize();
+        String gray4script = "on click goto page1";
+        int gray4starterPage = 1;
+        String gray4pageName = "page2";
+        String gray4pageID = "page2";
+        String gray4saveName = "Sample Game";
+        String gray4Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + gray4shapeName + "', '" +
+                gray4imageName + "', '" +
+                gray4text + "'," +
+                gray4x + "," +
+                gray4y + "," +
+                gray4height + "," +
+                gray4width + "," +
+                gray4moveable + "," +
+                gray4hidden + "," +
+                gray4fontSize + "," +
+                gray4starterPage + ", '" +
+                gray4script + "', '" +
+                gray4pageName + "', '" +
+                gray4pageID + "', '" +
+                gray4saveName + "', NULL)";
+        db.execSQL(gray4Str);
+
+        Shape gray5 = new Shape(1, "grayshape", "", 450, 900, 200, 200);
+        String gray5shapeName = gray5.getShapeName();
+        String gray5imageName = gray5.getImageName();
+        String gray5text = gray5.getText();
+        double gray5x = gray5.getX();
+        double gray5y = gray5.getY();
+        double gray5height = gray5.getHeight();
+        double gray5width = gray5.getWidth();
+        int gray5moveable = gray5.getMoveableStatus() ? 1 : 0;
+        int gray5hidden = gray5.isHidden() ? 1 : 0;
+        int gray5fontSize = gray5.getFontSize();
+        String gray5script = "on click goto page2";
+        int gray5starterPage = 0;
+        String gray5pageName = "page3";
+        String gray5pageID = "page3";
+        String gray5saveName = "Sample Game";
+        String gray5Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + gray5shapeName + "', '" +
+                gray5imageName + "', '" +
+                gray5text + "'," +
+                gray5x + "," +
+                gray5y + "," +
+                gray5height + "," +
+                gray5width + "," +
+                gray5moveable + "," +
+                gray5hidden + "," +
+                gray5fontSize + "," +
+                gray5starterPage + ", '" +
+                gray5script + "', '" +
+                gray5pageName + "', '" +
+                gray5pageID + "', '" +
+                gray5saveName + "', NULL)";
+        db.execSQL(gray5Str);
+
+        Shape gray6 = new Shape(1, "grayshape", "", 750, 700, 200, 200);
+        String gray6shapeName = gray6.getShapeName();
+        String gray6imageName = gray6.getImageName();
+        String gray6text = gray6.getText();
+        double gray6x = gray6.getX();
+        double gray6y = gray6.getY();
+        double gray6height = gray6.getHeight();
+        double gray6width = gray6.getWidth();
+        int gray6moveable = gray6.getMoveableStatus() ? 1 : 0;
+        int gray6hidden = gray6.isHidden() ? 1 : 0;
+        int gray6fontSize = gray6.getFontSize();
+        String gray6script = "on click goto page5";
+        int gray6starterPage = 1;
+        String gray6pageName = "page4";
+        String gray6pageID = "page4";
+        String gray6saveName = "Sample Game";
+        String gray6Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + gray6shapeName + "', '" +
+                gray6imageName + "', '" +
+                gray6text + "'," +
+                gray6x + "," +
+                gray6y + "," +
+                gray6height + "," +
+                gray6width + "," +
+                gray6moveable + "," +
+                gray6hidden + "," +
+                gray6fontSize + "," +
+                gray6starterPage + ", '" +
+                gray6script + "', '" +
+                gray6pageName + "', '" +
+                gray6pageID + "', '" +
+                gray6saveName + "', NULL)";
+        db.execSQL(gray6Str);
     }
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
