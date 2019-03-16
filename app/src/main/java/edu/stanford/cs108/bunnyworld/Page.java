@@ -43,7 +43,7 @@ public class Page {
         borderColor = new Paint();
         borderColor.setStyle(Paint.Style.STROKE);
         borderColor.setStrokeWidth(10);
-        borderColor.setColor(Color.rgb(21, 21, 150));
+        borderColor.setColor(Color.rgb(150, 21, 21));
 
         // initialize transparent box color
         transBoxFill = new Paint();
