@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,8 @@ public class PlayView extends View {
     Paint myPaint = new Paint();
     Paint selectPaint = new Paint();
     Paint linePaint = new Paint();
+    Paint numPaint = new Paint();
+    Paint bigPaint = new Paint();
 
     public PlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,6 +47,7 @@ public class PlayView extends View {
         selectPaint.setStyle(Paint.Style.STROKE);
 
         inventorySelected = false;
+
     }
 
     /**
@@ -52,6 +56,7 @@ public class PlayView extends View {
     private void init() {
         selected = null;
         inventory = new Inventory();
+        currentPage = null;
     }
 
     /**
@@ -60,12 +65,49 @@ public class PlayView extends View {
      * @param page the new page to be passed in
      */
     public void changeCurrentPage(Page page) {
+
+        // currentPage = page;
+
         // set selected to null before changing the page
-        if(currentPage != null) currentPage.selectShape(null);
+        if(currentPage != null) {
+            currentPage.selectShape(null);
+        }
         currentPage = page;
+
         renderBitmaps(page); // render all the bitmaps for the page
+
         renderBitmaps(inventory); // render the inventory
+
+        if (currentPage != null) {
+            ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+            ((PlayActivity)getContext()).checkForEntryScript();
+        }
+
         invalidate();
+    }
+
+    /**
+     * Deletes the currently selected shape if one exists & returns true
+     * upon success. Also will force the canvas to reflect this update.
+     * @return true/false bases upon success of deletion
+     */
+    public boolean deleteShape() {
+
+        // try to delete a shape
+        if(currentPage != null && currentPage.getSelected() != null) {
+            currentPage.removeShape(currentPage.getSelected());
+            invalidate();
+            return true;
+        }
+        return false;   // no shape to delete
+    }
+
+    /**
+     * Accessor method for inventory
+     * @return current Inventory
+     */
+    public Inventory getInventory() {
+        return inventory;
     }
 
     /**
@@ -93,8 +135,9 @@ public class PlayView extends View {
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
-            renderShape(currentShape);
-
+            if (!currentShape.isHidden()) {
+                renderShape(currentShape);
+            }
         }
         invalidate();
     }
@@ -124,8 +167,9 @@ public class PlayView extends View {
         // render the bitmap for each shape
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
-            renderShape(currentShape);
-
+            if (!currentShape.isHidden()) {
+                renderShape(currentShape);
+            }
         }
         invalidate();
     }
@@ -133,7 +177,7 @@ public class PlayView extends View {
     /**
      * Renders a single shape's bitmap.
      *
-     * Note: must be called manuallly after a new shape with
+     * Note: must be called manually after a new shape with
      * an image is created.
      * @param shape to render the bitmap for
      */
@@ -174,8 +218,8 @@ public class PlayView extends View {
      * page's render function.
      */
     public void drawPage(Canvas canvas) {
-        if(currentPage != null) currentPage.render(canvas);
-        if (inventory != null) inventory.render(canvas);
+        if(currentPage != null) currentPage.playRender(canvas);
+        if (inventory != null) inventory.playRender(canvas);
     }
 
     /**
@@ -216,6 +260,37 @@ public class PlayView extends View {
         }
 
         inventorySelected = false;
+        selected = null;
+        return null; // no shape is here
+    }
+
+    /**
+     * Finds a shape that exists at the specified x, y coordinate and isn't the currently selected shape
+     * and returns it. null is returned if no shape is found. Only works for stuff in the page (not inventory).
+     * Used exclusively for onDrop detection.
+     *
+     * @param x coordinate to search for shape at
+     * @param y coordinate to search for shape at
+     * @return the found shape, or null if no shape is found at x, y (not counting currently selected)
+     */
+    public Shape notSelectedShapeAtXY(double x, double y) {
+
+        if(currentPage == null && inventory == null) return null; // don't do anything if page just loaded
+
+        ArrayList<Shape> shapes = currentPage.getList();
+
+        // search from back to get the images closet to the front
+        for(int i = shapes.size() - 1; i >= 0; i--) {
+            Shape s = shapes.get(i);
+            // if the click is in bounds of this shape, return it
+            if(x <= s.getRight() && x >= s.getLeft() &&
+                    y >= s.getTop() && y <= s.getBottom()) {
+                if (!s.equals(currentPage.getSelected())) {
+                    return s;
+                }
+            }
+        }
+
         return null; // no shape is here
     }
 
@@ -237,25 +312,67 @@ public class PlayView extends View {
                 y1 = event.getY();
 
                 Shape selected = shapeAtXY(x1, y1);
-                if (currentPage != null && !inventorySelected) {
-                    currentPage.selectShape(selected);
-                }
-                if (inventory != null && inventorySelected) {
-                    inventory.selectShape(selected);
+                if (selected != null) {
+                    ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+                    ((PlayActivity)this.getContext()).executeClickScripts(selected);
+                    String script = selected.getScript().toLowerCase();
+                    if (script.contains("goto") && script.contains("click")) {
+                        break;
+                    }
                 }
 
+                if (currentPage != null && !inventorySelected && selected != null) {
+                    currentPage.selectShape(selected);
+                }
+                if (inventory != null && inventorySelected && selected != null) {
+                    inventory.selectShape(selected);
+                }
                 break;
+
             // record coordinate where user lifts finger
             case MotionEvent.ACTION_UP:
                 x2 = event.getX();
                 y2 = event.getY();
 
+                if (currentPage.getSelected() != null) {
+                    double height = currentPage.getSelected().getHeight();
+
+                    // drop script code
+                    if (notSelectedShapeAtXY(x2, y2) != null ||
+                            notSelectedShapeAtXY(x2+(height), y2) != null  ||
+                            notSelectedShapeAtXY(x2, y2+(height)) != null  ||
+                            notSelectedShapeAtXY(x2+(height), y2+(height)) != null ) {
+
+                        Shape dropped;
+
+                        if (notSelectedShapeAtXY(x2, y2) != null) {
+                            dropped = notSelectedShapeAtXY(x2, y2);
+                        }
+                        else if (notSelectedShapeAtXY(x2+(height), y2) != null) {
+                            dropped = notSelectedShapeAtXY(x2+(height), y2);
+                        }
+                        else if (notSelectedShapeAtXY(x2, y2+(height)) != null) {
+                            dropped = (notSelectedShapeAtXY(x2, y2+(height)));
+                        }
+                        else {
+                            dropped = notSelectedShapeAtXY(x2+(height), y2+(height));
+                        }
+                        if (((PlayActivity)this.getContext()).checkOnDrop(dropped) != null) {
+                            Shape dropTrigger = ((PlayActivity)this.getContext()).checkOnDrop(dropped);
+                            if (dropTrigger.equals(currentPage.getSelected())) {
+                                ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
+                                ((PlayActivity)this.getContext()).executeDropScripts(dropped);
+                            }
+                        }
+                    }
+                }
+
+                currentPage.selectShape(null);
+                inventory.selectShape(null);
+
             case MotionEvent.ACTION_MOVE:
                 xDelta = event.getX();
                 yDelta = event.getY();
-
-                double starterY = currentPage.getSelected().getTop();
-                double halfHeight = currentPage.getSelected().getHeight()/2;
 
                 // only enable moving the page if isMoveable == true
                 if (currentPage != null && currentPage.getSelected() != null
@@ -263,19 +380,27 @@ public class PlayView extends View {
                     currentPage.getSelected().move(xDelta, yDelta);
 
                     // move from play area to inventory
+                    double halfHeight = currentPage.getSelected().getHeight()/2;
                     if (y1 <= inventoryY+halfHeight && yDelta >= inventoryY+halfHeight) {
                         inventory.addShape(currentPage.getSelected());
                         currentPage.removeShape(currentPage.getSelected());
+                        Toast inventoryInToast = Toast.makeText(this.getContext(),"Moved to inventory.",Toast.LENGTH_SHORT); // Informs user of move to inventory.
+                        inventoryInToast.show();
                     }
+
                 }
 
                 if (inventory != null && inventory.getSelected() != null) {
                     inventory.getSelected().move(xDelta, yDelta);
 
-                    // move from inventory to play area IN PROGRESS
+                    // move from inventory to play area
+                    double halfHeight = inventory.getSelected().getHeight()/2;
                     if (y1 >= inventoryY+halfHeight && yDelta <= inventoryY+halfHeight) {
                         currentPage.addShape(inventory.getSelected());
                         inventory.removeShape(inventory.getSelected());
+                        Toast inventoryOutToast = Toast.makeText(this.getContext(),"Moved to page.",Toast.LENGTH_SHORT); // Informs user of move to inventory.
+                        inventoryOutToast.show();
+                        inventorySelected = false;
                     }
                 }
 
@@ -301,13 +426,16 @@ public class PlayView extends View {
         float width = canvas.getWidth();
         float height = canvas.getHeight();
 
-        inventoryY = (float)0.75*height;
+        inventoryY = (float)0.75 * height;
+
+        numPaint.setColor(Color.BLACK);
+        numPaint.setTextSize(80);
+        canvas.drawText(currentPage.getDisplayName(), 10, 65, numPaint);
 
         linePaint.setColor(Color.BLACK);
         linePaint.setStrokeWidth(2);
 
-        canvas.drawLine((float)0, (float)0.75*height, (float)width, (float)0.75*height, linePaint);
+        canvas.drawLine((float)0, (float)0.75 * height, (float)width,
+                (float)0.75 * height, linePaint);
     }
-
-
 }

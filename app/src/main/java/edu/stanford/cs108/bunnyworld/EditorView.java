@@ -36,6 +36,10 @@ public class EditorView extends View {
     Paint myPaint = new Paint();
     Paint selectPaint = new Paint();
 
+    boolean resizing;
+
+    float inventoryY;
+
     /**
      * Sets up EditorView
      */
@@ -56,6 +60,7 @@ public class EditorView extends View {
      */
     private void init() {
         selected = null;
+        resizing = false;
     }
 
     /**
@@ -97,7 +102,6 @@ public class EditorView extends View {
         for(int i = 0; i < shapes.size(); i++) {
             Shape currentShape = shapes.get(i);
             renderShape(currentShape);
-
         }
         invalidate();
     }
@@ -158,7 +162,7 @@ public class EditorView extends View {
      */
     public boolean deleteShape() {
 
-        // try to delete to a shape
+        // try to delete a shape
         if(currentPage != null && currentPage.getSelected() != null) {
             currentPage.removeShape(currentPage.getSelected());
             invalidate();
@@ -166,8 +170,6 @@ public class EditorView extends View {
         }
         return false;   // no shape to delete
     }
-
-
 
     /**
      * Finds a shape that exists at the specified x, y coordinate and returns
@@ -209,6 +211,9 @@ public class EditorView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawPage(canvas);
+
+        float height = canvas.getWidth();
+        inventoryY = (float)0.75 * height;
     }
 
     /**
@@ -229,7 +234,15 @@ public class EditorView extends View {
                 y1 = event.getY();
 
                 Shape selected = shapeAtXY(x1, y1);
-                if(currentPage != null) currentPage.selectShape(selected);
+
+                if(currentPage != null) {
+                    if(currentPage.getSelected() != null && clickInBubble(x1, y1)) {
+                        resizing = true;
+                    } else {
+                        currentPage.selectShape(selected);
+                        resizing = false;
+                    }
+                }
 
                 break;
             // record coordinate where user lifts finger
@@ -252,16 +265,54 @@ public class EditorView extends View {
                     top = y1;
                     bottom = y2;
                 }
+
+                resizing = false;
+                break;
+
             case MotionEvent.ACTION_MOVE:
                 xDelta = event.getX();
                 yDelta = event.getY();
 
-                if(currentPage != null && currentPage.getSelected() != null) {
+                // if the user is clicking on the resize bubble, resize
+                if(resizing && currentPage != null && currentPage.getSelected() != null) {
+
+
+                    float width = (float)currentPage.getSelected().getX() +
+                            (float)(xDelta - currentPage.getSelected().getX());
+
+                    float height = (float)currentPage.getSelected().getY() +
+                            (float)(yDelta - currentPage.getSelected().getY());
+
+                    System.out.println("width: " + width);
+                    System.out.println("height: " + height);
+
+                    // no negative dimensions
+                    if(width > 1 && height > 1) {
+                        currentPage.getSelected().setWidth((double)width);
+                        currentPage.getSelected().setHeight((double)height);
+                    }
+
+
+                    renderShape(currentPage.getSelected());
+
+                } else if(currentPage != null && currentPage.getSelected() != null
+                        && !resizing) {
+
+                    System.out.println("case 5");
                     currentPage.getSelected().move(xDelta, yDelta);
+                    renderShape(currentPage.getSelected());
                 }
 
-                invalidate();   // forces canvas update
         }
+
+        invalidate(); // forces canvas update
         return true;
     }
+
+    private boolean clickInBubble(float x1, float y1) {
+        Shape s = currentPage.getSelected();
+        return ((x1 >= s.getRight() - 100) && (x1 <= s.getRight() + 100)
+            && (y1 >= s.getBottom() - 100) && (y1 <= s.getBottom() + 100));
+    }
+
 }

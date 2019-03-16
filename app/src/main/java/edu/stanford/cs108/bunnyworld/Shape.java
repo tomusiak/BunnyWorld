@@ -1,6 +1,7 @@
 package edu.stanford.cs108.bunnyworld;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 
 /*
     The edu.stanford.cs108.bunnyworld.Shape class represents an object that has been added
@@ -12,6 +13,10 @@ public class Shape {
     private String image;
     private String text;
 
+    private boolean isText;
+    private int fontSize;
+    private int fontColor;
+
     private double x;
     private double y;
     private double height;
@@ -19,9 +24,7 @@ public class Shape {
 
     private boolean moveable;
     private boolean hidden;
-    private boolean isSelected;
 
-    private int fontSize;
     private static final int DEFAULT_FONT_SIZE = 24; // Sets default font size to 24
 
     // Script, which may contain multiple executable clauses, is stored as a String
@@ -61,7 +64,34 @@ public class Shape {
 
         // Script will be set once it's read in from interface
         this.script = "";
+
+        // set text defaults
+        this.isText = false;
+        if(!textName.equals("")) this.isText = true;
+        this.fontColor = Color.BLACK;
+        this.text = "";
     }
+
+    public Shape(Shape copyShape) {
+
+        // Default format is "shape1", "shape2", etc.
+        this.shapeName = copyShape.getShapeName();
+        this.shapeID = this.shapeName; // internal ID and shape name are the same, but user can set shape name to be something else
+
+        this.image = copyShape.getImageName();
+        this.text = copyShape.getText();
+        this.x = copyShape.getX();
+        this.y = copyShape.getY();
+        this.height = copyShape.getHeight();
+        this.width = copyShape.getWidth();
+
+        this.moveable = copyShape.getMoveableStatus();
+        this.hidden = copyShape.isHidden();
+
+        this.fontSize = copyShape.getFontSize();
+
+        this.script = copyShape.getScript();
+        }
 
     /**
      * Accessor method for shape's internal ID
@@ -112,7 +142,37 @@ public class Shape {
      * Modifier method for text being displayed
      * @param text the user-set text
      */
-    public void setText(String text) { this.text = text; };
+    public void setText(String text) {
+        if(!text.equals("")) {
+            isText = true;
+        } else {
+            isText = false;
+        }
+        this.text = text;
+    };
+
+    /**
+     * update the boolean variable that tracks whether this shape is actually text
+     * @param isText
+     */
+    public void setIsText(boolean isText) { this.isText = isText; }
+
+    /**
+     * see if this shape is actually text
+     */
+    public boolean isText() { return isText; }
+
+    /**
+     * Set the font color of this shape
+     * @param c color to be selected
+     */
+    public void setFontColor(int c) { fontColor = c; }
+
+    /**
+     * Get the font color of this shape
+     * @return font color
+     */
+    public int getFontColor() { return fontColor; }
 
     /**
      * Modifier method that sets the script of the shape
@@ -128,6 +188,26 @@ public class Shape {
      */
     public String getScript() {
         return this.script;
+    }
+
+    /**
+     * Checks to see if script has goto action
+     * @return true if present, false if not
+     */
+    public boolean scriptHasGoto() {
+        this.script = this.script.toLowerCase();
+        String[] clauses = script.split(";");
+
+        for (int i = 0; i < clauses.length; i++) {
+            String[] tokens = clauses[i].split("\\s+");
+            for (int j = 2; j < tokens.length; j+=2) {
+                if (tokens[j].equals("goto")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
     }
 
     /**
@@ -169,8 +249,12 @@ public class Shape {
      */
     public void move(double newX, double newY) {
 
+        double xdist = newX - getLeft();
+        double ydist = newY - getTop();
         this.x = newX - (width / 2);
         this.y = newY - (height / 2);
+//        this.x += xdist;
+//        this.y += ydist;
     }
 
     /**
@@ -253,7 +337,7 @@ public class Shape {
      * Returns whether the shape is hidden or not
      * @return true and false for hidden and not hidden
      */
-    public boolean getHiddenStatus() { return hidden; }
+    public boolean isHidden() { return hidden; }
 
     /**
      * Updates the internal shape to store its current bitmap representation

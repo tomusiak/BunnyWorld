@@ -6,6 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.content.Context;
+import android.widget.Toast;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Main Activity for BunnyWorld
@@ -44,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
      */
     public void playGame(View view) {
         Intent intent = new Intent(this,PlayActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Launches character creator
+     * @param view the MakeCharacter view
+     */
+    public void makeCharacter(View view) {
+        Intent intent = new Intent(this,MakeCharacter.class);
         startActivity(intent);
     }
 }
