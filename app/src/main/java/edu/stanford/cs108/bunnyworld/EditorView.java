@@ -241,6 +241,11 @@ public class EditorView extends View {
                     } else {
                         currentPage.selectShape(selected);
                         resizing = false;
+
+                        if(currentPage.getSelected() != null) {
+                            System.out.println("isText: " + currentPage.getSelected().isText());
+                            System.out.println("text: " + currentPage.getSelected().getText());
+                        }
                     }
                 }
 

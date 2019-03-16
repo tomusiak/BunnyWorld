@@ -511,73 +511,39 @@ class Database extends SQLiteOpenHelper {
                 exitsaveName + "', NULL)";
         db.execSQL(exitStr);
 
-        Shape text1 = new Shape(14, "textbox", "", 20, 20, 250, 250);
-        String text1shapeName = text1.getShapeName();
-        String text1imageName = text1.getImageName();
-        String text1text = text1.getText();
-        double text1x = text1.getX();
-        double text1y = text1.getY();
-        double text1height = text1.getHeight();
-        double text1width = text1.getWidth();
-        int text1moveable = text1.getMoveableStatus() ? 1 : 0;
-        int text1hidden = text1.isHidden() ? 1 : 0;
-        int text1fontSize = 48;
-        String text1script = "";
-        int text1starterPage = 1;
-        String text1pageName = "page1";
-        String text1pageID = "page1";
-        String text1saveName = "Sample Game";
-        String text1Str = "INSERT INTO ShapeDatabase VALUES "
-                + "('" + text1shapeName + "', '" +
-                text1imageName + "', '" +
-                text1text + "Bunny World!'," +
-                text1x + "," +
-                text1y + "," +
-                text1height + "," +
-                text1width + "," +
-                text1moveable + "," +
-                text1hidden + "," +
-                text1fontSize + "," +
-                text1starterPage + ", '" +
-                text1script + "', '" +
-                text1pageName + "', '" +
-                text1pageID + "', '" +
-                text1saveName + "', NULL)";
-        db.execSQL(text1Str);
-
-        Shape text2 = new Shape(14, "textbox", "", 20, 20, 250, 250);
-        String text2shapeName = text1.getShapeName();
-        String text2imageName = text1.getImageName();
-        String text2text = text1.getText();
-        double text2x = text1.getX();
-        double text2y = text1.getY();
-        double text2height = text1.getHeight();
-        double text2width = text1.getWidth();
-        int text2moveable = text1.getMoveableStatus() ? 1 : 0;
-        int text2hidden = text1.isHidden() ? 1 : 0;
-        int text2fontSize = 48;
-        String text2script = "";
-        int text2starterPage = 1;
-        String text2pageName = "page1";
-        String text2pageID = "page1";
-        String text2saveName = "Sample Game";
-        String text2Str = "INSERT INTO ShapeDatabase VALUES "
-                + "('" + text1shapeName + "', '" +
-                text2imageName + "', '" +
-                text2text + "You are in a maze of twisty little passages, all alike'," +
-                text2x + "," +
-                text2y + "," +
-                text2height + "," +
-                text2width + "," +
-                text2moveable + "," +
-                text2hidden + "," +
-                text2fontSize + "," +
-                text2starterPage + ", '" +
-                text2script + "', '" +
-                text2pageName + "', '" +
-                text2pageID + "', '" +
-                text2saveName + "', NULL)";
-        db.execSQL(text1Str);
+//        Shape text1 = new Shape(14, "carrot", "", 20, 20, 250, 250);
+//        String text1shapeName = text1.getShapeName();
+//        String text1imageName = text1.getImageName();
+//        String text1text = text1.getText();
+//        double text1x = text1.getX();
+//        double text1y = text1.getY();
+//        double text1height = text1.getHeight();
+//        double text1width = text1.getWidth();
+//        int text1moveable = text1.getMoveableStatus() ? 1 : 0;
+//        int text1hidden = text1.isHidden() ? 1 : 0;
+//        int text1fontSize = 48;
+//        String text1script = "";
+//        int text1starterPage = 1;
+//        String text1pageName = "page1";
+//        String text1pageID = "page1";
+//        String text1saveName = "Sample Game";
+//        String text1Str = "INSERT INTO ShapeDatabase VALUES "
+//                + "('" + text1shapeName + "', '" +
+//                text1imageName + "', '" +
+//                text1text + "'," +
+//                text1x + "," +
+//                text1y + "," +
+//                text1height + "," +
+//                text1width + "," +
+//                text1moveable + "," +
+//                text1hidden + "," +
+//                text1fontSize + "," +
+//                text1starterPage + ", '" +
+//                text1script + "', '" +
+//                text1pageName + "', '" +
+//                text1pageID + "', '" +
+//                text1saveName + "', NULL)";
+//        db.execSQL(text1Str);
     }
 
 
@@ -681,6 +647,7 @@ class Database extends SQLiteOpenHelper {
                 int fontSize = cursor.getInt(9);
                 String script = cursor.getString(11);
                 Shape newShape = new Shape(shapeCounter, imageName, text, x, y, width, height);
+                newShape.setText(text);
                 newShape.setMoveable(moveable);
                 newShape.setHidden(hidden);
                 newShape.setFontSize(fontSize);
