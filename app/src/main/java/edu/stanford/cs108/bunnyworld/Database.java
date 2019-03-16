@@ -267,7 +267,7 @@ class Database extends SQLiteOpenHelper {
                 bunny1saveName + "', NULL)";
         db.execSQL(bunny1Str);
 
-        Shape bunny2 = new Shape(7, "mystic", "", 450, 450, 250, 250);
+        Shape bunny2 = new Shape(7, "death", "", 450, 450, 250, 250);
         String bunny2shapeName = bunny2.getShapeName();
         String bunny2imageName = bunny2.getImageName();
         String bunny2text = bunny2.getText();
