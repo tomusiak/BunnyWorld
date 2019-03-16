@@ -9,52 +9,15 @@
     tools:context=".PlayActivity">
 
     <Button
-        android:id="@+id/draw"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toTopOf="@id/drawView"
-
-        android:text="Draw"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </Button>
-
-    <Button
-        android:id="@+id/erase"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toTopOf="@id/drawView"
-        android:text="Erase"
-        app:layout_constraintStart_toStartOf="parent">
-
-    </Button>
-
-    <Button
         android:id="@+id/save"
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
-        android:layout_marginLeft="200dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
         android:layout_marginBottom="0dp"
         app:layout_constraintBottom_toTopOf="@id/drawView"
         android:text="Save"
         app:layout_constraintStart_toStartOf="parent"></Button>
-
-    <Spinner
-        android:id="@+id/colorSpinner"
-        android:layout_width="93dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="300dp"
-        android:layout_marginLeft="300dp"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toTopOf="@id/drawView"
-        android:spinnerMode="dropdown"
-        app:layout_constraintStart_toStartOf="parent"></Spinner>
 
     <View
         android:layout_width="match_parent"
@@ -75,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintDimensionRatio="w,1:1"
-        app:layout_constraintStart_toStartOf="@+id/draw" />
+        app:layout_constraintStart_toStartOf="@+id/save" />
 
     <View
         android:layout_width="match_parent"

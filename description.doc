@@ -1,13 +1,11 @@
-Project:
-BunnyWorld
-
-Team Members:
-Natalie Cygan, Meilan Steimle, Alan Tomusiak, Avalon Wolfe, Isabelle Zhou
-
-Features:
+PROJECT: BunnyWorld
+TEAM: Natalie Cygan, Meilan Steimle, Alan Tomusiak, Avalon Wolfe, Isabelle Zhou
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+FEATURES
+_______________________________________________________________________________
 Natalie Cygan
 -
-
+_______________________________________________________________________________
 Meilan Steimle
 - Main Activity
 - some work with pop up menu for add shape
@@ -18,7 +16,7 @@ EXTENSIONS:
 1) animated view for home screen
 2) sound/moving between inventory & page toasts
 3) highlight color changes between page & inventory
-
+_______________________________________________________________________________
 Alan Tomusiak
 - Implemented Database functionality.
 - Implemented saving and loading into Editor; loading into Play.
@@ -31,7 +29,7 @@ EXTENSIONS:
 4) Deleting of saves.
 5) Re-naming of saves.
 6) Error checking (prevents multiple saves with same name, saves with nothing in them).
-
+_______________________________________________________________________________
 Avalon Wolfe
 - Editor Activity
 - some work with pre-built copy of BunnyWorld example
@@ -46,8 +44,28 @@ EXTENSIONS:
 5) Copy/paste shape
 6) Delete Script
 7) Change starter page
-
+_______________________________________________________________________________
 Isabelle Zhou
--
+- Shape 
+  1) Implemented all class variables, methods, and functionality after creating class design based on spec
+  2) Implemented additional helper methods (i.e. scriptHasGoto()) as needed for ease of use with other project files
+- PlayActivity
+  1) Built multi-part script parsing algorithm that reads in Shape scripts and executes appropriate actions
+    a) Parsed all triggers (on click, on enter, on drop)
+    b) Parsed all actions (goto, play, hide, show)
+    c) Parsed all relevant objects (Shapes, sounds, Pages)
+  2) Implemented hide, show, and switch page methods called during execution of scripts
+  3) Created helper methods to enable ease of access to script parsing results through other project files
+- PlayView
+  1) Developed support for interfacing with PlayActivity through hide, show, and switch page methods
+- Database
+  1) Initialized carrot and fire images for pre-loaded starter game
+- EXTENSIONS
+  1) Robust error checking with regards to scripts
+     1) Once a Shape is deleted, references to that Shape are removed from the scripts of all other Shapes
+     2) Support for duplicate page/shape names and renaming page/shape names through an immutable internal ID system 
+     connected to these external names through HashMap and data structure design
+     3) Empty or invalid scripts will not execute
+  2) Created original image and sound resource files (patrick.png and scream.mp3)
 
 Code References:
