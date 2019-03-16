@@ -315,6 +315,10 @@ public class PlayView extends View {
                 if (selected != null) {
                     ((PlayActivity)this.getContext()).setCurrentPage(currentPage);
                     ((PlayActivity)this.getContext()).executeClickScripts(selected);
+                    String script = selected.getScript().toLowerCase();
+                    if (script.contains("goto")) {
+                        break;
+                    }
                 }
 
                 if (currentPage != null && !inventorySelected && selected != null) {
