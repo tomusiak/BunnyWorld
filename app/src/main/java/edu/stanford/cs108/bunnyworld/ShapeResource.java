@@ -1,6 +1,5 @@
 package edu.stanford.cs108.bunnyworld;
 
-import android.graphics.Bitmap;
 
 public class ShapeResource {
 
