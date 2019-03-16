@@ -142,7 +142,14 @@ public class Shape {
      * Modifier method for text being displayed
      * @param text the user-set text
      */
-    public void setText(String text) { this.text = text; };
+    public void setText(String text) {
+        if(!text.equals("")) {
+            isText = true;
+        } else {
+            isText = false;
+        }
+        this.text = text;
+    };
 
     /**
      * update the boolean variable that tracks whether this shape is actually text
