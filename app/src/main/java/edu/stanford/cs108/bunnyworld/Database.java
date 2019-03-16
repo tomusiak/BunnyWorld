@@ -576,6 +576,41 @@ class Database extends SQLiteOpenHelper {
                 carrotabpageID + "', '" +
                 carrotabsaveName + "', NULL)";
         db.execSQL(carrotabStr);
+
+        // page 1
+        Shape acarrotab = new Shape(14, "carrot", "Eek! Fire-room! Run away!.", 20, 20, 250, 48);
+        String acarrotabshapeName = acarrotab.getShapeName();
+        String acarrotabimageName = acarrotab.getImageName();
+        String acarrotabtext = "Eek! Fire-room! Run away!.";
+        double acarrotabx = acarrotab.getX();
+        double acarrotaby = acarrotab.getY() + 200;
+        double acarrotabheight = acarrotab.getHeight();
+        double acarrotabwidth = acarrotab.getWidth();
+        int acarrotabmoveable = acarrotab.getMoveableStatus() ? 1 : 0;
+        int acarrotabhidden = acarrotab.isHidden() ? 1 : 0;
+        int acarrotabfontSize = 48;
+        String acarrotabscript = "";
+        int acarrotabstarterPage = 1;
+        String acarrotabpageName = "page3";
+        String acarrotabpageID = "page3";
+        String acarrotabsaveName = "Sample Game";
+        String acarrotabStr = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + acarrotabshapeName + "', '" +
+                acarrotabimageName + "', '" +
+                acarrotabtext + "'," +
+                acarrotabx + "," +
+                acarrotaby + "," +
+                acarrotabheight + "," +
+                acarrotabwidth + "," +
+                acarrotabmoveable + "," +
+                acarrotabhidden + "," +
+                acarrotabfontSize + "," +
+                acarrotabstarterPage + ", '" +
+                acarrotabscript + "', '" +
+                acarrotabpageName + "', '" +
+                acarrotabpageID + "', '" +
+                acarrotabsaveName + "', NULL)";
+        db.execSQL(acarrotabStr);
         
         Shape win = new Shape(15, "carrot", "You Win! Yay!", 100, 900, 150, 150);
         String winshapeName = win.getShapeName();
