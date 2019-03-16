@@ -96,7 +96,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot1Str);
 
         // CARROT 2
-        Shape carrot2 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        Shape carrot2 = new Shape(2, "carrot", "", 20, 20, 250, 250);
         String carrot2shapeName = carrot2.getShapeName();
         String carrot2imageName = carrot2.getImageName();
         String carrot2text = carrot2.getText();
@@ -131,7 +131,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot2Str);
 
         // CARROT 3
-        Shape carrot3 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        Shape carrot3 = new Shape(3, "carrot", "", 20, 20, 250, 250);
         String carrot3shapeName = carrot3.getShapeName();
         String carrot3imageName = carrot3.getImageName();
         String carrot3text = carrot3.getText();
@@ -166,7 +166,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot3Str);
 
         // CARROT 4
-        Shape carrot4 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        Shape carrot4 = new Shape(4, "carrot", "", 20, 20, 250, 250);
         String carrot4shapeName = carrot4.getShapeName();
         String carrot4imageName = carrot4.getImageName();
         String carrot4text = carrot4.getText();
@@ -201,7 +201,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot4Str);
 
         // FIRE
-        Shape fire = new Shape(1, "fire", "", 20, 20, 250, 250);
+        Shape fire = new Shape(5, "fire", "", 20, 20, 250, 250);
         String fireshapeName = fire.getShapeName();
         String fireimageName = fire.getImageName();
         String firetext = fire.getText();
@@ -236,7 +236,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(fireStr);
 
         // BUNNY 1
-        Shape bunny1 = new Shape(1, "mystic", "", 450, 450, 250, 250);
+        Shape bunny1 = new Shape(6, "mystic", "", 450, 450, 250, 250);
         String bunny1shapeName = bunny1.getShapeName();
         String bunny1imageName = bunny1.getImageName();
         String bunny1text = bunny1.getText();
@@ -270,7 +270,7 @@ class Database extends SQLiteOpenHelper {
                 bunny1saveName + "', NULL)";
         db.execSQL(bunny1Str);
 
-        Shape bunny2 = new Shape(1, "mystic", "", 450, 450, 250, 250);
+        Shape bunny2 = new Shape(7, "mystic", "", 450, 450, 250, 250);
         String bunny2shapeName = bunny2.getShapeName();
         String bunny2imageName = bunny2.getImageName();
         String bunny2text = bunny2.getText();
@@ -305,7 +305,7 @@ class Database extends SQLiteOpenHelper {
                 bunny2saveName + "', NULL)";
         db.execSQL(bunny2Str);
 
-        Shape gray1 = new Shape(1, "grayshape", "", 150, 900, 200, 200);
+        Shape gray1 = new Shape(8, "grayshape", "", 150, 900, 200, 200);
         String gray1shapeName = gray1.getShapeName();
         String gray1imageName = gray1.getImageName();
         String gray1text = gray1.getText();
@@ -339,7 +339,7 @@ class Database extends SQLiteOpenHelper {
                 gray1saveName + "', NULL)";
         db.execSQL(gray1Str);
 
-        Shape door2 = new Shape(1, "grayshape", "", 450, 900, 200, 200);
+        Shape door2 = new Shape(9, "grayshape", "", 450, 900, 200, 200);
         String door2shapeName = door2.getShapeName();
         String door2imageName = door2.getImageName();
         String door2text = door2.getText();
@@ -373,7 +373,7 @@ class Database extends SQLiteOpenHelper {
                 door2saveName + "', NULL)";
         db.execSQL(door2Str);
 
-        Shape gray3 = new Shape(1, "grayshape", "", 750, 900, 200, 200);
+        Shape gray3 = new Shape(10, "grayshape", "", 750, 900, 200, 200);
         String gray3shapeName = gray3.getShapeName();
         String gray3imageName = gray3.getImageName();
         String gray3text = gray3.getText();
@@ -407,7 +407,7 @@ class Database extends SQLiteOpenHelper {
                 gray3saveName + "', NULL)";
         db.execSQL(gray3Str);
 
-        Shape gray4 = new Shape(1, "grayshape", "", 150, 900, 200, 200);
+        Shape gray4 = new Shape(11, "grayshape", "", 150, 900, 200, 200);
         String gray4shapeName = gray4.getShapeName();
         String gray4imageName = gray4.getImageName();
         String gray4text = gray4.getText();
@@ -441,7 +441,7 @@ class Database extends SQLiteOpenHelper {
                 gray4saveName + "', NULL)";
         db.execSQL(gray4Str);
 
-        Shape gray5 = new Shape(1, "grayshape", "", 450, 900, 200, 200);
+        Shape gray5 = new Shape(12, "grayshape", "", 450, 900, 200, 200);
         String gray5shapeName = gray5.getShapeName();
         String gray5imageName = gray5.getImageName();
         String gray5text = gray5.getText();
@@ -475,7 +475,7 @@ class Database extends SQLiteOpenHelper {
                 gray5saveName + "', NULL)";
         db.execSQL(gray5Str);
 
-        Shape exit = new Shape(1, "grayshape", "", 750, 700, 200, 200);
+        Shape exit = new Shape(13, "grayshape", "", 750, 700, 200, 200);
         String exitshapeName = exit.getShapeName();
         String exitimageName = exit.getImageName();
         String exittext = exit.getText();
