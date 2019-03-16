@@ -39,7 +39,7 @@ Avalon Wolfe
 
 EXTENSIONS:
 1) Error checking in Editor (select from pages, select from script options (actions not added to script unless script fully
-   completed)
+   completed), must select shape/page for some actions,  etc.)
 2) Undo add/delete/edit shape
 3) Undo delete page
 4) Some work with change background
