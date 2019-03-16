@@ -165,6 +165,41 @@ class Database extends SQLiteOpenHelper {
                 carrot3saveName + "', NULL)";
         db.execSQL(carrot3Str);
 
+        // CARROT 4
+        Shape carrot4 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        String carrot4shapeName = carrot4.getShapeName();
+        String carrot4imageName = carrot4.getImageName();
+        String carrot4text = carrot4.getText();
+        double carrot4x = carrot4.getX();
+        double carrot4y = carrot4.getY();
+        double carrot4height = carrot4.getHeight();
+        double carrot4width = carrot4.getWidth();
+        int carrot4moveable = carrot4.getMoveableStatus() ? 1 : 0;
+        int carrot4hidden = carrot4.isHidden() ? 1 : 0;
+        int carrot4fontSize = 48;
+        String carrot4script = "";
+        int carrot4starterPage = 1;
+        String carrot4pageName = "page1";
+        String carrot4pageID = "page1";
+        String carrot4saveName = "Sample Game";
+        String carrot4Str = "INSERT INTO ShapeDatabase VALUES "
+                + "('" + carrot4shapeName + "', '" +
+                carrot4imageName + "', '" +
+                carrot4text + "'," +
+                carrot4x + "," +
+                carrot4y + "," +
+                carrot4height + "," +
+                carrot4width + "," +
+                carrot4moveable + "," +
+                carrot4hidden + "," +
+                carrot4fontSize + "," +
+                carrot4starterPage + ", '" +
+                carrot4script + "', '" +
+                carrot4pageName + "', '" +
+                carrot4pageID + "', '" +
+                carrot4saveName + "', NULL)";
+        db.execSQL(carrot4Str);
+
         // BUNNY 1
         Shape bunny1 = new Shape(1, "carrot", "", 20, 20, 250, 250);
         String bunny1shapeName = bunny1.getShapeName();
