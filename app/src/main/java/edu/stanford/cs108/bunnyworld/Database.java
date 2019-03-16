@@ -58,7 +58,7 @@ class Database extends SQLiteOpenHelper {
 
 
         // CARROT 1
-        Shape carrot1 = new Shape(1, "carrot", "", 20, 20, 250, 250);
+        Shape carrot1 = new Shape(1, "carrot", "", 750, 900, 250, 250);
         String carrot1shapeName = carrot1.getShapeName();
         String carrot1imageName = carrot1.getImageName();
         String carrot1text = carrot1.getText();
@@ -70,7 +70,7 @@ class Database extends SQLiteOpenHelper {
         int carrot1hidden = carrot1.isHidden() ? 1 : 0;
         int carrot1fontSize = 48;
         String carrot1script = "";
-        int carrot1starterPage = 1;
+        int carrot1starterPage = 0;
         String carrot1pageName = "page3";
         String carrot1pageID = "page3";
         String carrot1saveName = "Sample Game";
@@ -93,7 +93,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot1Str);
 
         // CARROT 2
-        Shape carrot2 = new Shape(2, "carrot", "", 20, 20, 250, 250);
+        Shape carrot2 = new Shape(2, "carrot", "", 100, 100, 250, 250);
         String carrot2shapeName = carrot2.getShapeName();
         String carrot2imageName = carrot2.getImageName();
         String carrot2text = carrot2.getText();
@@ -105,7 +105,7 @@ class Database extends SQLiteOpenHelper {
         int carrot2hidden = carrot2.isHidden() ? 1 : 0;
         int carrot2fontSize = 48;
         String carrot2script = "";
-        int carrot2starterPage = 1;
+        int carrot2starterPage = 0;
         String carrot2pageName = "page5";
         String carrot2pageID = "page5";
         String carrot2saveName = "Sample Game";
@@ -128,7 +128,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot2Str);
 
         // CARROT 3
-        Shape carrot3 = new Shape(3, "carrot", "", 20, 20, 250, 250);
+        Shape carrot3 = new Shape(3, "carrot", "", 300, 300, 250, 250);
         String carrot3shapeName = carrot3.getShapeName();
         String carrot3imageName = carrot3.getImageName();
         String carrot3text = carrot3.getText();
@@ -140,7 +140,7 @@ class Database extends SQLiteOpenHelper {
         int carrot3hidden = carrot3.isHidden() ? 1 : 0;
         int carrot3fontSize = 48;
         String carrot3script = "";
-        int carrot3starterPage = 1;
+        int carrot3starterPage = 0;
         String carrot3pageName = "page5";
         String carrot3pageID = "page5";
         String carrot3saveName = "Sample Game";
@@ -163,7 +163,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot3Str);
 
         // CARROT 4
-        Shape carrot4 = new Shape(4, "carrot", "", 20, 20, 250, 250);
+        Shape carrot4 = new Shape(4, "carrot", "", 500, 500, 250, 250);
         String carrot4shapeName = carrot4.getShapeName();
         String carrot4imageName = carrot4.getImageName();
         String carrot4text = carrot4.getText();
@@ -175,7 +175,7 @@ class Database extends SQLiteOpenHelper {
         int carrot4hidden = carrot4.isHidden() ? 1 : 0;
         int carrot4fontSize = 48;
         String carrot4script = "";
-        int carrot4starterPage = 1;
+        int carrot4starterPage = 0;
         String carrot4pageName = "page5";
         String carrot4pageID = "page5";
         String carrot4saveName = "Sample Game";
@@ -198,7 +198,7 @@ class Database extends SQLiteOpenHelper {
         db.execSQL(carrot4Str);
 
         // FIRE
-        Shape fire = new Shape(5, "fire", "", 20, 20, 250, 250);
+        Shape fire = new Shape(5, "fire", "", 100, 100, 250, 250);
         String fireshapeName = fire.getShapeName();
         String fireimageName = fire.getImageName();
         String firetext = fire.getText();
@@ -210,7 +210,7 @@ class Database extends SQLiteOpenHelper {
         int firehidden = fire.isHidden() ? 1 : 0;
         int firefontSize = 48;
         String firescript = "";
-        int firestarterPage = 1;
+        int firestarterPage = 0;
         String firepageName = "page3";
         String firepageID = "page3";
         String firesaveName = "Sample Game";
@@ -576,41 +576,6 @@ class Database extends SQLiteOpenHelper {
                 carrotabpageID + "', '" +
                 carrotabsaveName + "', NULL)";
         db.execSQL(carrotabStr);
-
-        // page 1
-        Shape acarrotab = new Shape(14, "carrot", "Eek! Fire-room! Run away!.", 20, 20, 250, 48);
-        String acarrotabshapeName = acarrotab.getShapeName();
-        String acarrotabimageName = acarrotab.getImageName();
-        String acarrotabtext = "Eek! Fire-room! Run away!.";
-        double acarrotabx = acarrotab.getX();
-        double acarrotaby = acarrotab.getY() + 200;
-        double acarrotabheight = acarrotab.getHeight();
-        double acarrotabwidth = acarrotab.getWidth();
-        int acarrotabmoveable = acarrotab.getMoveableStatus() ? 1 : 0;
-        int acarrotabhidden = acarrotab.isHidden() ? 1 : 0;
-        int acarrotabfontSize = 48;
-        String acarrotabscript = "";
-        int acarrotabstarterPage = 1;
-        String acarrotabpageName = "page3";
-        String acarrotabpageID = "page3";
-        String acarrotabsaveName = "Sample Game";
-        String acarrotabStr = "INSERT INTO ShapeDatabase VALUES "
-                + "('" + acarrotabshapeName + "', '" +
-                acarrotabimageName + "', '" +
-                acarrotabtext + "'," +
-                acarrotabx + "," +
-                acarrotaby + "," +
-                acarrotabheight + "," +
-                acarrotabwidth + "," +
-                acarrotabmoveable + "," +
-                acarrotabhidden + "," +
-                acarrotabfontSize + "," +
-                acarrotabstarterPage + ", '" +
-                acarrotabscript + "', '" +
-                acarrotabpageName + "', '" +
-                acarrotabpageID + "', '" +
-                acarrotabsaveName + "', NULL)";
-        db.execSQL(acarrotabStr);
         
         Shape win = new Shape(15, "carrot", "You Win! Yay!", 100, 900, 150, 150);
         String winshapeName = win.getShapeName();
