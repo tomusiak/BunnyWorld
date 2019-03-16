@@ -32,15 +32,15 @@ EXTENSIONS:
 _______________________________________________________________________________
 Avalon Wolfe
 - Editor Activity
-- some work with pre-built copy of BunnyWorld example
-- some work with text shapes and gray shapes
+- Work with pre-built copy of BunnyWorld example
+- Work with text shapes and gray shapes
 
 EXTENSIONS:
-1) Error checking in Editor (select from pages, select from script options (actions not added to script unless script fully
-   completed), must select shape/page for some actions,  etc.)
+1) Error checking in Editor (must select from pages, must select from script options (actions not added to script unless script fully
+   completed), must select shape/page for some actions, user unable to do anything until game loaded/ created, etc.)
 2) Undo add/delete/edit shape
 3) Undo delete page
-4) Some work with change background
+4) Work with change background
 5) Copy/paste shape
 6) Delete Script
 7) Change starter page

@@ -1,5 +1,6 @@
 package edu.stanford.cs108.bunnyworld;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -59,6 +60,8 @@ public class EditorActivity extends AppCompatActivity {
     private int red;
     private int blue;
     private int green;
+
+    Bitmap savedImage;
 
     String[] resourceFiles = {"carrot", "carrot2", "death", "duck",
             "fire", "mystic", "textbox", "patrick"};

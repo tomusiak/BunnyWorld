@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Make New Charačter"
+            android:text="Take a break!"
             android:textSize="20sp"
             android:onClick="makeCharacter"/>
 
