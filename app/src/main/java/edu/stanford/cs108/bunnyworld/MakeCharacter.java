@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,7 +37,7 @@ public class MakeCharacter extends AppCompatActivity implements OnClickListener 
 
     private Button saveButton;
     private DrawView drawView;
-    public Bitmap savedImage;
+    private Bitmap savedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +74,6 @@ public class MakeCharacter extends AppCompatActivity implements OnClickListener 
                     //return the bitmap
                     savedImage = b;
 
-                    if (savedImage != null) {
-                        Toast successToast = Toast.makeText(getApplicationContext(),"Saved successfully.",Toast.LENGTH_SHORT); // Informs user of successful save.
-                        successToast.show();
-                    }
                 }
             }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
@@ -85,5 +82,12 @@ public class MakeCharacter extends AppCompatActivity implements OnClickListener 
             });
             saveDialog.show();
         }
+    }
+
+    public Bitmap getCharacter () {
+        if (savedImage != null) {
+            return savedImage;
+        }
+        return null;
     }
 }
