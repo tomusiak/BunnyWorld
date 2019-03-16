@@ -48,6 +48,26 @@ EXTENSIONS:
 7) Change starter page
 
 Isabelle Zhou
--
+- Shape 
+  1) Implemented all class variables, methods, and functionality after creating class design based on spec
+  2) Implemented additional helper methods (i.e. scriptHasGoto()) as needed for ease of use with other project files
+- PlayActivity
+  1) Built multi-part script parsing algorithm that reads in Shape scripts and executes appropriate actions
+    a) Parsed all triggers (on click, on enter, on drop)
+    b) Parsed all actions (goto, play, hide, show)
+    c) Parsed all relevant objects (Shapes, sounds, Pages)
+  2) Implemented hide, show, and switch page methods called during execution of scripts
+  3) Created helper methods to enable ease of access to script parsing results through other project files
+- PlayView
+  1) Developed support for interfacing with PlayActivity through hide, show, and switch page methods
+- Database
+  1) Initialized carrot and fire images for pre-loaded starter game
+- EXTENSIONS
+  1) Robust error checking with regards to scripts
+     1) Once a Shape is deleted, references to that Shape are removed from the scripts of all other Shapes
+     2) Support for duplicate page/shape names and renaming page/shape names through an immutable internal ID system 
+     connected to these external names through HashMap and data structure design
+     3) Empty or invalid scripts will not execute
+  3) Created original image and sound resource files (patrick.png and scream.mp3)
 
 Code References:
